@@ -47,6 +47,8 @@ func App() *buffalo.App {
 
 		app.GET("/", HomeHandler)
 
+		app.POST("/email/{emailAddr}", EmailHandler)
+
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 	}
 
