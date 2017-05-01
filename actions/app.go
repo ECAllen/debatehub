@@ -33,7 +33,7 @@ func App() *buffalo.App {
 		}
 		// Protect against CSRF attacks. https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
 		// Remove to disable this.
-		app.Use(middleware.CSRF)
+		// app.Use(middleware.CSRF)
 
 		app.Use(middleware.PopTransaction(models.DB))
 
@@ -47,7 +47,7 @@ func App() *buffalo.App {
 
 		app.GET("/", HomeHandler)
 
-		app.POST("/email/{emailAddr}", EmailHandler)
+		app.POST("/email", EmailHandler)
 
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 	}
