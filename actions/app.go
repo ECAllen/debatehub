@@ -50,6 +50,11 @@ func App() *buffalo.App {
 		app.POST("/email", EmailHandler)
 
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
+
+		app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
+		app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
+		app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
+		app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
 	}
 
 	return app
