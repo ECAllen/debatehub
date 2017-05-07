@@ -16,6 +16,7 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 	Name      string    `json:"name" db:"name"`
 	Email     string    `json:"email" db:"email"`
+	Bias      string    `json:"bias" db:"bias"`
 }
 
 // String is not required by pop and may be deleted
@@ -39,6 +40,7 @@ func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: u.Name, Name: "Name"},
 		&validators.StringIsPresent{Field: u.Email, Name: "Email"},
+		&validators.StringIsPresent{Field: u.Bias, Name: "Bias"},
 	), nil
 }
 

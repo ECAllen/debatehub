@@ -45,16 +45,12 @@ func App() *buffalo.App {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		app.Use(T.Middleware())
-
 		app.GET("/", HomeHandler)
-
 		app.POST("/email", EmailHandler)
-
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
-
 		app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
-
 	}
 
 	return app
