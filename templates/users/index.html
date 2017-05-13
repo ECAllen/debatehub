@@ -8,22 +8,18 @@
 <table class="table table-striped">
   <thead>
   
-    <th>Name</th>
+    <th>Username</th>
     
     <th>Email</th>
-    
-    <th>Bias</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
     <%= for (user) in users { %>
       <tr>
       
-        <td><%= user.Name %></td>
+        <td><%= user.Username %></td>
         
         <td><%= user.Email %></td>
-        
-        <td><%= user.Bias %></td>
         <td>
           <div class="pull-right">
             <a href="/users/<%= user.ID %>" class="btn btn-info">View</a>
