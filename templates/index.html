@@ -6,6 +6,10 @@
     <p>the unsocial network</p>
     <hr>
     <h2>Banner demagogues Trump/Sanders</h2>
+
+    <form action="/emails" method="POST" accept-charset="utf-8">
+	<%= partial("emailForm.html") %>
+    </form>
     <h2>News</h2>
 
     <h2>Trends</h2>
@@ -48,10 +52,7 @@
         </form>
       </li>
     </ul>
-    <form action="/emails" method="POST">
-      <input value="email" type="email" name="Email">
-      <input type="submit" value="Subscribe">
-    </form>
+
     <p>We won't send you spam. Unsubscribe at anytime.</p>
     <h2>Blog</h2>
     <ul>

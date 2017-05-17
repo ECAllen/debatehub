@@ -95,9 +95,10 @@ func (v EmailsResource) Create(c buffalo.Context) error {
 		return c.Render(422, r.HTML("emails/new.html"))
 	}
 	// If there are no errors set a success message
-	c.Flash().Add("success", "Email was created successfully")
+	c.Flash().Add("success", "Thank you for subscribing.")
 	// and redirect to the emails index page
-	return c.Redirect(302, "/emails/%s", email.ID)
+	//return c.Redirect(302, "/emails/%s", email.ID)
+	return c.Redirect(302, "/")
 }
 
 // Edit renders a edit formular for a email. This function is

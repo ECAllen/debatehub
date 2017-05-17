@@ -49,7 +49,7 @@ func App() *buffalo.App {
 		app.Use(T.Middleware())
 		app.GET("/", HomeHandler)
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
-		app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
+		// app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
 		app.Resource("/emails", EmailsResource{&buffalo.BaseResource{}})
 
 	}
