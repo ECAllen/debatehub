@@ -1,0 +1,29 @@
+
+<h1>Emails</h1>
+
+<p>
+  <a href="/emails/new" class="btn btn-primary">Create New Email</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  
+    <th>Email</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (email) in emails { %>
+      <tr>
+      
+        <td><%= email.Email %></td>
+        <td>
+          <div class="pull-right">
+            <a href="/emails/<%= email.ID %>" class="btn btn-info">View</a>
+            <a href="/emails/<%= email.ID %>/edit" class="btn btn-warning">Edit</a>
+            <a href="/emails/<%= email.ID %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
