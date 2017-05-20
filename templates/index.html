@@ -10,50 +10,65 @@
 		<div class="six columns">
 			<form action="/emails" method="POST" accept-charset="utf-8">
 				<%= partial("emailForm.html") %> 
-			<sub>I won't send you spam. Unsubscribe at anytime.</sub>
+				<sub>I won't send you spam. Unsubscribe at anytime.</sub>
 			</form>
 		</div>
-		<hr>
 		<!-- TODO need menu -->
+		<div class="navbar-spacer"></div>
+		<nav class="navbar"
+			<ul class="navbar-list">
+				<li class="navbar-item"><a class="navbar-link" href="">Blog</a></li>
+			</ul>
+		</nav>
+
+
 	</div><!-- row1 -->
 	<div class="row"><!-- row2 -->
 		<div class="seven columns"><!-- col7 -->
 			<h2>News</h2>
 		</div><!-- col7 -->
 		<div class="five columns"><!-- col7 -->
-			<h2>Debate Topics</h2>
 			<!--
-			<h2>Predictions</h2>
-			<ul>
-				<li>prediction title, small blurb, user name</li>
-				<li>Trump to kill the dollar (link to page), Trump will enact policies which cause the dollars demise as a world currency,
-					user: therewillbewar</li>
-				<li>
-					<form action="/addPrediction" method="POST">
-						<input value="Title" type="text" name="title">
-						<input type="submit" value="Submit">
-					</form>
-				</li>
-			</ul> 
+	   <h2>Debate Topics</h2>
 			-->
+			<!--
+	   <h2>Predictions</h2>
+	   <ul>
+	   <li>prediction title, small blurb, user name</li>
+	   <li>Trump to kill the dollar (link to page), Trump will enact policies which cause the dollars demise as a world currency,
+	   user: therewillbewar</li>
+	   <li>
+	   <form action="/addPrediction" method="POST">
+	   <input value="Title" type="text" name="title">
+	   <input type="submit" value="Submit">
+	   </form>
+	   </li>
+	   </ul> 
+			-->
+			<h2>Blog</h2>
+			<ul>
+				<li>The problem is not the mainstream media, it is us</li>
+				<li>Levels of perspective and what political ideologies apply</li>
+			</ul>
+			<h2>Speculations</h2>
+			<ul>
+				<li>we are reaching max info processing, you can tell bc of the rise of self improvement books, is this like the early 20\s</li>
+				<li>
+					<a href="http://longbets.org/predictions/">
+						Long Bets</a>
+				</li>
+			</ul>
 			<h2>Trends</h2>
 			<ul>
 				<li>
 					<a href="https://www.aei.org/publication/the-coming-white-underclass/">
 						The coming white underclass by Charles Murray</a>
 				</li>
-				<li>
-					<a href="http://longbets.org/predictions/">
-						Long Bets</a>
-				</li>
 			</ul>
 			<h2>Reading</h2>
 			<ul>
 				<li><a href="">
 						Tainter The Collapse of Complex Civilizations</a></li>
-				<li><a href="https://www.amazon.com/dp/B000UZJRIG/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1">
-						Age of Turbulence by Alan Greenspan</a>
-				</li>
 
 			</ul>
 			<!-- <h2>Difference between lib and cons sites</h2> --> 
@@ -72,19 +87,9 @@
 				Antiwar.com
 			</ul>
 
-			<h2>Blog</h2>
-			<ul>
-				<li>The problem is not the MSM, it is us</li>
-				<li>Levels of perspective and what political ideologies apply</li>
-				<li>What the singularity means to me. Change has reached the limit of the organism to process it or for other organisms to analyze and summarize. Signs I am correct: you see more amish like communities, more disinfo, less think tanks more easy answers</li>
-			</ul>
-			<h2>Speculations</h2>
-			<ul>
-				<li>we are reaching max info processing, you can tell bc of the rise of self improvement books, is this like the early 20\s</li>
-			</ul>
 		</div><!-- col5 -->
 	</div><!-- row2 -->
 	<div class="row"><!-- row3 -->
-		<p>chat area</p>
+		<!-- <p>chat area</p> -->
 	</div><!-- row3 -->
 </div> <!-- container -->
