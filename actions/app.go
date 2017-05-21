@@ -48,9 +48,12 @@ func App() *buffalo.App {
 
 		app.Use(T.Middleware())
 		app.GET("/", HomeHandler)
-		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
+		app.GET("/blog/{post}", func(c buffalo.Context) error {
+			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
+		})
 		// app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
 		app.Resource("/emails", EmailsResource{&buffalo.BaseResource{}})
+		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 
 	}
 
