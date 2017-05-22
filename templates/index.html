@@ -1,23 +1,23 @@
 
-<%= partial("menu.html") %> 
 <!-- .container is main centered wrapper -->
 <div class="container">
 	<section class="header">
+		<div class="row"><!-- row1 -->
+			<div class="five columns">
+				<!-- Banner img <h3>Banner demagogues Trump/Sanders</h3> --> 
+				<h1>DebateHub</h1>
+			</div>
+			<div class="seven columns">
+				<form action="/emails" method="POST" accept-charset="utf-8">
+					<%= partial("emailForm.html") %> 
+					<sub>I won't send you spam. Unsubscribe at anytime.</sub>
+				</form>
+			</div>
+		</div><!-- row1 -->
 	</section>
-	<div class="row"><!-- row1 -->
-		<!-- Banner img <h3>Banner demagogues Trump/Sanders</h3> --> 
-		<!-- TODO Move this to top menu -->
-		<div class="six columns">
-			<h1>DebateHub</h1>
-		</div>
-		<div class="six columns">
-			<form action="/emails" method="POST" accept-charset="utf-8">
-				<%= partial("emailForm.html") %> 
-				<sub>I won't send you spam. Unsubscribe at anytime.</sub>
-			</form>
-		</div>
-		<!-- TODO need menu -->
-	</div><!-- row1 -->
+	<div class="navbar-spacer"></div>
+	<%= partial("menu.html") %> 
+	<div class="navbar-spacer"></div>
 	<div class="row"><!-- row2 -->
 		<div class="seven columns"><!-- col7 -->
 			<h3>News</h3>
@@ -30,26 +30,30 @@
 			<ul>
 				<li><a href="http://www.marketwatch.com/story/turkish-leaders-bodyguards-beat-up-protesters-in-washington-dc-2017-05-17">Turkish leader’s bodyguards beat up protesters in Washington, D.C.</a></li>
 			</ul>
-			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
 		</div><!-- col7 -->
-		<div class="five columns"><!-- col7 -->
-			<!--
-	   <h3>Debate Topics</h3>
-			-->
-			<!--
-	   <h3>Predictions</h3>
-	   <ul>
-	   <li>prediction title, small blurb, user name</li>
-	   <li>Trump to kill the dollar (link to page), Trump will enact policies which cause the dollars demise as a world currency,
-	   user: therewillbewar</li>
-	   <li>
-	   <form action="/addPrediction" method="POST">
-	   <input value="Title" type="text" name="title">
-	   <input type="submit" value="Submit">
-	   </form>
-	   </li>
-	   </ul> 
-			-->
+		<div class="five columns"><!-- col5 -->
+			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
+		</div><!-- col5 -->
+	</div><!-- row2 -->
+	<!--
+	 <h3>Debate Topics</h3>
+	-->
+	<!--
+	 <h3>Predictions</h3>
+	 <ul>
+	 <li>prediction title, small blurb, user name</li>
+	 <li>Trump to kill the dollar (link to page), Trump will enact policies which cause the dollars demise as a world currency,
+	 user: therewillbewar</li>
+	 <li>
+	 <form action="/addPrediction" method="POST">
+	 <input value="Title" type="text" name="title">
+	 <input type="submit" value="Submit">
+	 </form>
+	 </li>
+	 </ul> 
+	-->
+	<div class="row"><!-- row3 -->
+		<div class="twelve columns"><!-- col5 -->
 			<h3>Blog</h3>
 			<ul>
 				<li><a href="blog/MSM">The problem is not the mainstream media, it is us</a></li>
@@ -64,12 +68,19 @@
 			<h3>Trends</h3>
 			<ul>
 				<li>
+					<a href="trends/celebrity-politicians">Celebrity politicians</a>
+				</li>
+				<li>
+					<a href="trends/unstable-us">The world will grow tired of a unstable US</a>
+				</li>
+				<li>
 					<a href="https://trends.google.com/trends/explore?date=today%2012-m&geo=US&q=%2Fm%2F05gd9,authoritarian">
 						Rise of nationalism and authoritarianism</a>
-					<li>
-						<a href="https://www.aei.org/publication/the-coming-white-underclass/">
-							The coming white underclass by Charles Murray</a>
-					</li>
+				</li>
+				<li>
+					<a href="https://www.aei.org/publication/the-coming-white-underclass/">
+						The coming white underclass by Charles Murray</a>
+				</li>
 			</ul>
 			<!-- <h3>Difference between lib and cons sites</h3> --> 
 			<h3>War Pulse</h3>
@@ -89,13 +100,7 @@
 				<li><a href="">Tainter The Collapse of Complex Civilizations</a></li>
 
 			</ul>
-
-		</div><!-- col5 -->
-	</div><!-- row2 -->
-	<div class="row"><!-- row3 -->
-		<!-- <p>chat area</p> -->
-	</div><!-- row3 -->
+		</div>
+	</div>
 	<section class="footer">
 	</section>
-	<div class="row"><!-- row1 -->
-	</div> <!-- container -->
