@@ -13,6 +13,8 @@ import (
 	"github.com/gobuffalo/packr"
 
 	"github.com/markbates/goth/gothic"
+
+	"github.com/markbates/goth/gothic"
 )
 
 // ENV is used to help switch settings based on where the
