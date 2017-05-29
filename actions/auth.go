@@ -15,8 +15,14 @@ func init() {
 	gothic.Store = App().SessionStore
 
 	goth.UseProviders(
-		twitter.New(os.Getenv("TWITTER_KEY"), os.Getenv("TWITTER_SECRET"), fmt.Sprintf("%s%s", App().Host, "/auth/twitter/callback")),
-		discord.New(os.Getenv("DISCORD_KEY"), os.Getenv("DISCORD_SECRET"), fmt.Sprintf("%s%s", App().Host, "/auth/discord/callback")),
+		twitter.New(
+			os.Getenv("TWITTER_KEY"),
+			os.Getenv("TWITTER_SECRET"),
+			fmt.Sprintf("%s%s", App().Host, "/auth/twitter/callback")),
+		discord.New(
+			os.Getenv("DISCORD_KEY"),
+			os.Getenv("DISCORD_SECRET"),
+			fmt.Sprintf("%s%s", App().Host, "/auth/discord/callback")),
 	)
 }
 
