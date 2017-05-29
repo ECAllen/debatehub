@@ -34,6 +34,7 @@ func App() *buffalo.App {
 			Env:         ENV,
 			SessionName: "_debatehub_session",
 		})
+
 		if ENV == "development" {
 			app.Use(middleware.ParameterLogger)
 		}
@@ -64,6 +65,11 @@ func App() *buffalo.App {
 		auth := app.Group("/auth")
 		auth.GET("/{provider}", buffalo.WrapHandlerFunc(gothic.BeginAuthHandler))
 		auth.GET("/{provider}/callback", AuthCallback)
+
+		auth.GET("/login",
+			func(c buffalo.Context) error {
+				return c.Render(200, r.HTML("secure/index.html"))
+			})
 	}
 
 	return app
