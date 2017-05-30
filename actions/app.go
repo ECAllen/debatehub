@@ -70,12 +70,30 @@ func App() *buffalo.App {
 		auth := app.Group("/auth")
 		auth.GET("/{provider}", buffalo.WrapHandlerFunc(gothic.BeginAuthHandler))
 		auth.GET("/{provider}/callback", AuthCallback)
-
 		auth.GET("/login",
 			func(c buffalo.Context) error {
 				return c.Render(200, r.HTML("login/index.html"))
 			})
 
+		// ------------------
+		//   Secure Content
+		// ------------------
+		secure := app.Group("/secure")
+		secure.Use(CheckAuth)
+		secure.GET("/",
+			func(c buffalo.Context) error {
+				return c.Render(200, r.HTML("secure/index.html"))
+			})
+
+		secure.DELETE("/logout",
+			func(c buffalo.Context) error {
+				session := c.Session()
+				session.Delete("userID")
+				session.Save()
+				return c.Redirect(301, "/login")
+			})
+
+		app.Redirect(301, "/", "/login")
 	}
 
 	return app
