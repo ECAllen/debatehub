@@ -13,8 +13,6 @@ import (
 	"github.com/gobuffalo/packr"
 
 	"github.com/markbates/goth/gothic"
-
-	"github.com/markbates/goth/gothic"
 )
 
 // ENV is used to help switch settings based on where the
@@ -51,6 +49,8 @@ func App() *buffalo.App {
 			log.Fatal(err)
 		}
 
+		// TODO review all URL paths for authorization, use a grift
+		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 		app.Use(T.Middleware())
 		app.GET("/", HomeHandler)
 
@@ -58,18 +58,24 @@ func App() *buffalo.App {
 			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
 		})
 
+		// TODO move users to auth
 		// app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
-		app.Resource("/emails", EmailsResource{&buffalo.BaseResource{}})
-		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 
+		// TODO verify emails URL paths needs auth
+		app.Resource("/emails", EmailsResource{&buffalo.BaseResource{}})
+
+		// -----------------
+		//   Authorization
+		// -----------------
 		auth := app.Group("/auth")
 		auth.GET("/{provider}", buffalo.WrapHandlerFunc(gothic.BeginAuthHandler))
 		auth.GET("/{provider}/callback", AuthCallback)
 
 		auth.GET("/login",
 			func(c buffalo.Context) error {
-				return c.Render(200, r.HTML("secure/index.html"))
+				return c.Render(200, r.HTML("login/index.html"))
 			})
+
 	}
 
 	return app
