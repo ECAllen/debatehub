@@ -31,6 +31,7 @@ func App() *buffalo.App {
 		app = buffalo.Automatic(buffalo.Options{
 			Env:         ENV,
 			SessionName: "_debatehub_session",
+			// Host:        "http://localhost:3000",
 		})
 
 		if ENV == "development" {
@@ -52,7 +53,7 @@ func App() *buffalo.App {
 		// TODO review all URL paths for authorization, use a grift
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 		app.Use(T.Middleware())
-		app.GET("/", HomeHandler)
+		// app.GET("/", HomeHandler)
 
 		app.GET("/blog/{post}", func(c buffalo.Context) error {
 			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
@@ -70,7 +71,7 @@ func App() *buffalo.App {
 		auth := app.Group("/auth")
 		auth.GET("/{provider}", buffalo.WrapHandlerFunc(gothic.BeginAuthHandler))
 		auth.GET("/{provider}/callback", AuthCallback)
-		auth.GET("/login",
+		app.GET("/login",
 			func(c buffalo.Context) error {
 				return c.Render(200, r.HTML("login/index.html"))
 			})
