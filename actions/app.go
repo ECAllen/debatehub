@@ -64,6 +64,7 @@ func App() *buffalo.App {
 
 		// TODO verify emails URL paths needs auth
 		app.Resource("/emails", EmailsResource{&buffalo.BaseResource{}})
+		app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 
 		// -----------------
 		//   Authorization
