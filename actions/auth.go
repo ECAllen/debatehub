@@ -2,14 +2,15 @@ package actions
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/discord"
 	"github.com/markbates/goth/providers/github"
 	"github.com/markbates/goth/providers/twitter"
-	"net/http"
-	"os"
 )
 
 func init() {
@@ -44,6 +45,12 @@ func AuthCallback(c buffalo.Context) error {
 	if err != nil {
 		return c.Error(401, err)
 	}
+
+	// TODO middleware ??
+	// check user has profile
+	// if does not exist then creates profile
+	// else insert profile
+
 	// The default value jus renders the data we get by GitHub
 	// return c.Render(200, r.JSON(user))
 
