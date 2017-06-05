@@ -353,7 +353,7 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context","html","html/atom"]
-  revision = "e4fa1c5465ad6111f206fc92186b8c83d64adbe1"
+  revision = "59a0b19b5533c7977ddeb86b017bf507ed407b12"
 
 [[projects]]
   branch = "master"
