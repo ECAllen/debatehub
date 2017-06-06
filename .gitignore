@@ -12,3 +12,6 @@ debatehub
 database.yaml
 database.yml
 notes.md
+migrations/
+models/.buffalo.dev.yml
+dev.sh

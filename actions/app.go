@@ -53,7 +53,7 @@ func App() *buffalo.App {
 		// TODO review all URL paths for authorization, use a grift
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 		app.Use(T.Middleware())
-		// app.GET("/", HomeHandler)
+		app.GET("/", HomeHandler)
 
 		app.GET("/blog/{post}", func(c buffalo.Context) error {
 			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
@@ -95,7 +95,7 @@ func App() *buffalo.App {
 				return c.Redirect(301, "/login")
 			})
 
-		app.Redirect(301, "/", "/login")
+		// app.Redirect(301, "/", "/login")
 	}
 
 	return app
