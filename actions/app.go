@@ -11,7 +11,6 @@ import (
 
 	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/packr"
-
 	"github.com/markbates/goth/gothic"
 )
 
@@ -34,11 +33,13 @@ func App() *buffalo.App {
 			// Host:        "http://localhost:3000",
 		})
 
+		// TODO update ENV for deployment
 		if ENV == "development" {
 			app.Use(middleware.ParameterLogger)
 		}
 		// Protect against CSRF attacks. https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
 		// Remove to disable this.
+		// TODO
 		// app.Use(middleware.CSRF)
 
 		app.Use(middleware.PopTransaction(models.DB))
@@ -53,18 +54,21 @@ func App() *buffalo.App {
 		// TODO review all URL paths for authorization, use a grift
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 		app.Use(T.Middleware())
-		app.GET("/", HomeHandler)
 
+		//---------------------
+		//	Routes
+		//---------------------
+		app.GET("/", func(c buffalo.Context) error {
+			return c.Render(200, r.HTML("index.html"))
+		})
+
+		// TODO check this for injection
 		app.GET("/blog/{post}", func(c buffalo.Context) error {
 			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
 		})
 
-		// TODO move users to auth
-		// app.Resource("/users", UsersResource{&buffalo.BaseResource{}})
-
 		// TODO verify emails URL paths needs auth
 		app.Resource("/emails", EmailsResource{&buffalo.BaseResource{}})
-		app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 
 		// -----------------
 		//   Authorization
@@ -80,14 +84,10 @@ func App() *buffalo.App {
 		// ------------------
 		//   Secure Content
 		// ------------------
-		secure := app.Group("/secure")
-		secure.Use(CheckAuth)
-		secure.GET("/",
-			func(c buffalo.Context) error {
-				return c.Render(200, r.HTML("secure/index.html"))
-			})
-
-		secure.DELETE("/logout",
+		profiles := app.Group("/profiles")
+		profiles.Use(CheckAuth)
+		// app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
+		profiles.DELETE("/logout",
 			func(c buffalo.Context) error {
 				session := c.Session()
 				session.Delete("userID")
