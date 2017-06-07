@@ -1,4 +1,13 @@
 
+.spacer {
+	margin-bottom:20px;
+}
+
+#email-form {
+	display: block;
+    margin: auto;
+}
+
 ul {
 	list-style: none;
 }
