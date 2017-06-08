@@ -15,3 +15,4 @@ notes.md
 migrations/
 models/.buffalo.dev.yml
 dev.sh
+nohup.out
