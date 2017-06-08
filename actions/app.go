@@ -68,7 +68,7 @@ func App() *buffalo.App {
 		})
 
 		// TODO verify emails URL paths needs auth
-		app.Resource("/emails", EmailsResource{&buffalo.BaseResource{}})
+		// app.Resource("/emails", EmailsResource{&buffalo.BaseResource{}})
 
 		// -----------------
 		//   Authorization
@@ -86,7 +86,7 @@ func App() *buffalo.App {
 		// ------------------
 		profiles := app.Group("/profiles")
 		profiles.Use(CheckAuth)
-		// app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
+		app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 		profiles.DELETE("/logout",
 			func(c buffalo.Context) error {
 				session := c.Session()
@@ -94,8 +94,7 @@ func App() *buffalo.App {
 				session.Save()
 				return c.Redirect(301, "/login")
 			})
-
-		// app.Redirect(301, "/", "/login")
+		app.Redirect(301, "/", "/login")
 	}
 
 	return app

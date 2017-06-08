@@ -1,30 +1,28 @@
-
+<%= partial("menu.html") %> 
 <!-- .container is main centered wrapper -->
 <div class="container">
-	<div class="spacer"></div>
 	<section class="header">
-		<div class="row"><!-- row1 -->
-			<div class="five columns">
-				<!-- Banner img <h3>Banner demagogues Trump/Sanders</h3> --> 
-				<h1>DebateHub</h1>
-			</div>
-			<div class="seven columns">
-				<form action="/emails" method="POST" accept-charset="utf-8">
-					<%= partial("emailForm.html") %> 
-				</form>
+		<div class="row">
+			<div class="jumbotron"><!-- row1 -->
+				<div class="container">
+					<!-- Banner img <h3>Banner demagogues Trump/Sanders</h3> --> 
+					<h1>DebateHub</h1>
+					<form action="/emails" method="POST" accept-charset="utf-8">
+						<%= partial("emailForm.html") %> 
+					</form>
+				</div>
 			</div>
 		</div><!-- row1 -->
 	</section>
-	<div class="navbar-spacer"></div>
-	<%= partial("menu.html") %> 
-	<div class="navbar-spacer"></div>
-	<div class="spacer"></div>
 	<div class="row"><!-- row2 -->
-		<div class="seven columns"><!-- col7 -->
+		<div class="col-md-4"><!-- col4 -->
+			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
+		</div><!-- col5 -->
+		<div class="col-md-8"><!-- col8 -->
 			<h3>News</h3>
 			<ul>
 				<li><a href="http://www.theamericanconservative.com/articles/the-danger-with-trumps-budget/"> The Danger with Trump’s Budget</a></li>
-				 <li><a href="https://www.sovereignman.com/trends/the-final-show-of-the-greatest-country-on-earth-21824/">The Final Show of the Greatest Country on Earth</a></li>
+				<li><a href="https://www.sovereignman.com/trends/the-final-show-of-the-greatest-country-on-earth-21824/">The Final Show of the Greatest Country on Earth</a></li>
 			</ul>
 			<ul>
 				<li><a href="https://freedom.press/news/statement-trump-allegedly-telling-comey-prosecute-reporters-publishing-classified-information/">Trump allegedly telling Comey to jail reporters</a></li>
@@ -37,9 +35,6 @@
 				<li><a href="http://www.marketwatch.com/story/turkish-leaders-bodyguards-beat-up-protesters-in-washington-dc-2017-05-17">Turkish leader’s bodyguards beat up protesters in Washington, D.C.</a></li>
 			</ul>
 		</div><!-- col7 -->
-		<div class="five columns"><!-- col5 -->
-			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
-		</div><!-- col5 -->
 	</div><!-- row2 -->
 	<!--
 	 <h3>Debate Topics</h3>
@@ -59,7 +54,7 @@
 	 </ul> 
 	-->
 	<div class="row"><!-- row3 -->
-		<div class="twelve columns"><!-- col5 -->
+		<div class="col-md-12"><!-- col12 -->
 			<h3>Blog</h3>
 			<ul>
 				<li><a href="blog/MSM">The problem is not the mainstream media, it is us</a></li>
@@ -111,17 +106,15 @@
 
 			</ul>
 		</div><!-- col -->
-	</div><!-- row2 -->
+	</div><!-- row3 -->
 	<section class="footer">
 		<div class="row">
-			<div class="columns twelve">
-			Legal
-			Privacy
-			Security
-			Terms of Service
-			Policies
-
-
+			<div class="col-md-12">
+				Legal
+				Privacy
+				Security
+				Terms of Service
+				Policies
 			</div>
 		</div>
 	</section>

@@ -14,4 +14,6 @@ We are animals.
 
 Philosophy of improving things. 
 
+Dont like the vision
+
 

@@ -16,7 +16,6 @@ DebateHub is a platform for solving and age old problem on the internet. How to 
 
 What they don't really get is that a platform needs to fit the level of discussions/debates that you want (TODO awkward). A platform that is created for mass consumption is really created to sell ads and cannot elevate discussion. 
 
-
 First the platform must be collabrative not social... what does that mean? It means that a purely democratic model will not work. Reddit is the perfect example of this:
 
 TODO insert shot of reddit comments with filler
@@ -28,5 +27,10 @@ This helps a little but it is a odd mix of forum like behaviour and chat like. O
 ## How do we fix this?
 
 1. minimum length posts
-## We are not silicon vallet group thinkers
+2. sources
+3. We are not silicon valley group thinkers. We are not Stanford grads trying to make a another bike sharing service or a Vegan recipe site. 
+
+## The mission
+
+Create a platform which can sustain our group and revolutionize collaboration. A platform which allows common men/women to implement collaborative models. 
 

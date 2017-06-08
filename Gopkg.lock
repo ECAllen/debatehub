@@ -71,7 +71,7 @@
   branch = "master"
   name = "github.com/gobuffalo/plush"
   packages = [".","ast","lexer","parser","token"]
-  revision = "5c94dbe731dba4aa56bc4efcd43cf9777f006208"
+  revision = "091c255b7362a3bd01469a152b835b02e528af84"
 
 [[projects]]
   branch = "master"
@@ -149,13 +149,13 @@
   branch = "master"
   name = "github.com/markbates/goth"
   packages = [".","gothic","providers/discord","providers/github","providers/twitter"]
-  revision = "c04864b86001affde4fd368f960f698a27fb9d13"
+  revision = "987bd3f23f8e88e0b5fdda0dd1c2a7977b3e8218"
 
 [[projects]]
   branch = "master"
   name = "github.com/markbates/grift"
   packages = ["grift"]
-  revision = "df531a1c12ae7db5b3deeb45ec29cc353da168e3"
+  revision = "cededb16e7a2440821806e97ea2dda333bb2aff5"
 
 [[projects]]
   branch = "master"
@@ -173,7 +173,7 @@
   branch = "master"
   name = "github.com/markbates/pop"
   packages = [".","columns","fizz","fizz/translators","nulls"]
-  revision = "4468fbc52f997319faa48f4947c5d8046d26b741"
+  revision = "6707cbf96604983413ea8b5a94a11bfff9f22690"
 
 [[projects]]
   name = "github.com/markbates/refresh"
@@ -185,13 +185,13 @@
   branch = "master"
   name = "github.com/markbates/validate"
   packages = [".","validators"]
-  revision = "a54bf3e737cb85a773461923982e9119b343b2a3"
+  revision = "28739c238c87ffa75a7aaff12772cc0d85eb834d"
 
 [[projects]]
   branch = "master"
   name = "github.com/markbates/willie"
   packages = ["."]
-  revision = "cf7c4a7c06ea6a65b79294bbfb4ae18b580f6ecc"
+  revision = "d2cdc733fedaffa28ae6584ba16f16832c10f15e"
 
 [[projects]]
   branch = "master"
@@ -365,7 +365,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "b90f89a1e7a9c1f6b918820b3daa7f08488c8594"
+  revision = "b9e8d468b01f806830d387bd9a1fe96dc68129d1"
 
 [[projects]]
   name = "google.golang.org/appengine"
