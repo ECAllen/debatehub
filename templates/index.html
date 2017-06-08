@@ -1,120 +1,59 @@
-<%= partial("menu.html") %> 
-<!-- .container is main centered wrapper -->
-<div class="container">
-	<section class="header">
-		<div class="row">
-			<div class="jumbotron"><!-- row1 -->
-				<div class="container">
-					<!-- Banner img <h3>Banner demagogues Trump/Sanders</h3> --> 
-					<h1>DebateHub</h1>
-					<form action="/emails" method="POST" accept-charset="utf-8">
-						<%= partial("emailForm.html") %> 
-					</form>
-				</div>
-			</div>
-		</div><!-- row1 -->
-	</section>
-	<div class="row"><!-- row2 -->
-		<div class="col-md-4"><!-- col4 -->
-			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
-		</div><!-- col5 -->
-		<div class="col-md-8"><!-- col8 -->
-			<h3>News</h3>
-			<ul>
-				<li><a href="http://www.theamericanconservative.com/articles/the-danger-with-trumps-budget/"> The Danger with Trump’s Budget</a></li>
-				<li><a href="https://www.sovereignman.com/trends/the-final-show-of-the-greatest-country-on-earth-21824/">The Final Show of the Greatest Country on Earth</a></li>
-			</ul>
-			<ul>
-				<li><a href="https://freedom.press/news/statement-trump-allegedly-telling-comey-prosecute-reporters-publishing-classified-information/">Trump allegedly telling Comey to jail reporters</a></li>
-			</ul>
-			<ul>
-				<li><a href="http://www.debka.com/article/26056/Will-Trump-proclaim-an-Arab-Muslim-NATO-in-Riyadh-">Will Trump proclaim an Arab-Muslim NATO in Riyadh?i</a></li>
-				<li><a href="http://www.mei.edu/content/io/worries-tehran-about-american-arab-nato-trump-set-visit-riyadh-first-foreign-trip">Worries in Tehran about “American-Arab NATO” as Trump Will Visit Riyadh on First Foreign Trip</a></li>
-			</ul>
-			<ul>
-				<li><a href="http://www.marketwatch.com/story/turkish-leaders-bodyguards-beat-up-protesters-in-washington-dc-2017-05-17">Turkish leader’s bodyguards beat up protesters in Washington, D.C.</a></li>
-			</ul>
-		</div><!-- col7 -->
-	</div><!-- row2 -->
-	<!--
-	 <h3>Debate Topics</h3>
-	-->
-	<!--
-	 <h3>Predictions</h3>
-	 <ul>
-	 <li>prediction title, small blurb, user name</li>
-	 <li>Trump to kill the dollar (link to page), Trump will enact policies which cause the dollars demise as a world currency,
-	 user: therewillbewar</li>
-	 <li>
-	 <form action="/addPrediction" method="POST">
-	 <input value="Title" type="text" name="title">
-	 <input type="submit" value="Submit">
-	 </form>
-	 </li>
-	 </ul> 
-	-->
-	<div class="row"><!-- row3 -->
-		<div class="col-md-12"><!-- col12 -->
-			<h3>Blog</h3>
-			<ul>
-				<li><a href="blog/MSM">The problem is not the mainstream media, it is us</a></li>
-				<li>Levels of perspective in political ideologies</li>
-				<li>Why I do not believe in the Libertarian non-agression principle</li>
-			</ul>
-			<h3>Speculations</h3>
-			<ul>
-				<li>Trump's <a href="https://www.google.com/search?q=trump%27s+arab+nato">Muslim NATO</a> will lead to blowback</li>
-				<li>We are reaching max info processing, you can tell because of the rise of self improvement books, gadgits and websites.</li>
-			</ul>
-			<h3>Trends</h3>
-			<ul>
-				<li>Whistling our way past the graveyard</li>
-				<li>US political bifurcation</li>
-				<li>Slow Death of Free Speech</li>
-				<li>Partisan generated scandals are the new normal</li>
-				<li>
-					<a href="trends/celebrity-politicians">Celebrity politicians</a>
-				</li>
-				<li>
-					<a href="trends/unstable-us">The world will grow tired of a unstable US</a>
-				</li>
-				<li>
-					<a href="https://trends.google.com/trends/explore?date=today%2012-m&geo=US&q=%2Fm%2F05gd9,authoritarian">
-						Rise of nationalism and authoritarianism</a>
-				</li>
-				<li>
-					<a href="https://www.aei.org/publication/the-coming-white-underclass/">
-						The coming white underclass by Charles Murray</a>
-				</li>
-			</ul>
-			<!-- <h3>Difference between lib and cons sites</h3> --> 
-			<h3>War Pulse</h3>
-			<ul>
-				<li><a href="http://thebulletin.org/timeline">Doomsday Clock</a></li>
-				<li><a href="https://missilethreat.csis.org/country/dprk/">Chart of N. Korea Missle Threats</a></li>
-			</ul>
-			<h3>Media/Podcasts</h3>
-			<h3>Links</h3>
-			<ul>
-				<li><a href="http://longnow.org/">Long Now Foundation</a></li>
-				<li><a href="http://longbets.org/predictions/">Long Bets</a> </li>
-				<li><a href="http://anitwar.com/">Antiwar.com</a></li>
-			</ul>
-			<h3>Reading</h3>
-			<ul>
-				<li><a href="">Tainter The Collapse of Complex Civilizations</a></li>
-
-			</ul>
-		</div><!-- col -->
-	</div><!-- row3 -->
-	<section class="footer">
-		<div class="row">
-			<div class="col-md-12">
-				Legal
-				Privacy
-				Security
-				Terms of Service
-				Policies
+<div class="row">
+	<div class="col-md-9">
+		<div class="jumbotron">
+			<div class="container">
+				<!-- Banner img <h3> Banner demagogues Trump/Sanders</h3> --> 
+				<h1>DebateHub</h1>
+				<%= partial("emailForm.html") %> 
+				Take the pledge.
 			</div>
 		</div>
-	</section>
+		<% let lsections = ["news", "trends"] %>
+		<%= for (section) in lsections { %>
+		<div id="<%= section %>">
+			<%= partial(section + ".html") %> 
+		</div>
+		<% } %>
+	</div>
+	<div class="col-md-3">
+		<!-- TODO make discord disappear on mobile and tablet -->
+		<!-- TODO make discord dimensions like jumbotron height -->
+		<div class="embed-responsive embed-responsive-4by3">
+			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" allowtransparency="true"></iframe>
+		</div>
+
+		<% let rsections = ["blog", "speculations","warPulse", "reading"] %>
+		<%= for (section) in rsections { %>
+		<div id="<%= section %>">
+			<%= partial(section + ".html") %> 
+		</div>
+		<% } %>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<section class="footer">
+			Legal
+			Privacy
+			Security
+			Terms of Service
+			Policies
+		</section>
+	</div>
+</div>
+<!-- TODO
+	<h3>Debate Topics</h3>
+-->
+<!--
+	<h3>Predictions</h3>
+	<ul>
+	<li>prediction title, small blurb, user name</li>
+	user: therewillbewar</li>
+	<li>
+	<form action="/addPrediction" method="POST">
+	<input value="Title" type="text" name="title">
+	<input type="submit" value="Submit">
+	</form>
+	</li>
+	</ul> 
+-->
