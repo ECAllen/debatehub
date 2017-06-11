@@ -4,8 +4,8 @@
 [[projects]]
   name = "github.com/Sirupsen/logrus"
   packages = ["."]
-  revision = "ba1b36c82c5e05c4f912a88eab0dcd91a171688f"
-  version = "v0.11.5"
+  revision = "202f25545ea4cf9b191ff7f846df5d87c9382c2b"
+  version = "v1.0.0"
 
 [[projects]]
   name = "github.com/ajg/form"
@@ -107,7 +107,7 @@
   branch = "master"
   name = "github.com/gorilla/schema"
   packages = ["."]
-  revision = "1c72d033473165ade8a126ba64180d76a9212dcd"
+  revision = "ca549c5484735df6c48ad233575acc79908c5510"
 
 [[projects]]
   name = "github.com/gorilla/securecookie"
@@ -365,7 +365,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "b9e8d468b01f806830d387bd9a1fe96dc68129d1"
+  revision = "0b25a408a50076fbbcae6b7ac0ea5fbb0b085e79"
 
 [[projects]]
   name = "google.golang.org/appengine"
