@@ -1,22 +1,22 @@
-<%= partial("menu.html") %>
+﻿<%= partial("menu.html") %>
 
 # About
 
 ## The problem
 
-DebateHub is a platform for solving and age old problem on the internet. How to get people to truely communincate and lift the discussion. Most venues on the internet such as Facebook or various chat platforms do nor encourage meaningful communication. They tend to do the following:
+DebateHub is a platform for solving an age-old problem on the Internet- how to get people to truly communicate and lift the discussion. Most venues on the Internet such as Facebook or various chat platforms do nor encourage meaningful communication. They tend to do the following:
 
 1. encourage filter bubbles
 2. crowd bias, clustering
-3. encourage tangential discussion and allow meningful debates to get derailed
+3. encourage tangential discussion and allow meaningful debates to get derailed
 4. they rely on karma schemes which favor righteous comments rather than informative ones
 5. they adopt aspects of mob mentality which tramples controversial and taboo viewpoints
-6. this is the modern internet where everything is online, modern platforms should aloow users to cite source and force people to backup their arguments
+6. this is the modern Internet where everything is online. Modern platforms should allow users to cite source and force people to backup their arguments
 7. they confuse time binding comments (more on that later)
 
 What they don't really get is that a platform needs to fit the level of discussions/debates that you want (TODO awkward). A platform that is created for mass consumption is really created to sell ads and cannot elevate discussion. 
 
-First the platform must be collabrative not social... what does that mean? It means that a purely democratic model will not work. Reddit is the perfect example of this:
+First the platform must be collaborative not social... what does that mean? It means that a purely democratic model will not work. Reddit is the perfect example of this:
 
 TODO insert shot of reddit comments with filler
 
