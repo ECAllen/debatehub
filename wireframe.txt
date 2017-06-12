@@ -1,0 +1,57 @@
+
+Notes: Think git coding workflows
+HOME: http://debatehub.org
+
+
+########## Debates ########## 
+
+#### Data
+
+##### Debate
+
+Topic:Text
+
+Debate Coordinator:Text/User
+
+Argument pointer(s):foreign key
+
+
+##### Realtionships
+
+
+#### Flow
+
+Create Debate   -> Existing Debate
+
+Existing Debate -> add to arguments     |-> Existing Debate
+		-> mark fallacy		|	
+		-> add to counterpoint	|	
+		-> cite sources		|
+
+		-> debate admin
+
+
+##### Entry Points
+
+Create Debate url:HOME/debates|d/
+
+Existing Debate	url:HOME/debates|d/<topic_name> TODO: topic_name coded or REST?
+
+
+##### Exit Points
+
+Existing Debate
+
+
+##### Roles
+
+Debate Coordinator(admin/transferable)
+
+Participant(add args only)
+
+non-partisan(ro)
+
+
+
+
+
