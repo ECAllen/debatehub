@@ -53,7 +53,7 @@
   branch = "master"
   name = "github.com/gobuffalo/buffalo"
   packages = [".","middleware","middleware/csrf","middleware/i18n","render"]
-  revision = "7bf5a2dc152392a9d14107a456db510536873ab9"
+  revision = "e1b5de61cb8304ae02f65cc91e1c44c7754f4c19"
 
 [[projects]]
   branch = "master"
@@ -65,7 +65,7 @@
   branch = "master"
   name = "github.com/gobuffalo/packr"
   packages = ["."]
-  revision = "ca20eb6355222e403f80fa5c6de7f2a230d7cf7a"
+  revision = "9d3b78bfcb56d490ba2cae05965890154f04f6f1"
 
 [[projects]]
   branch = "master"
@@ -89,7 +89,7 @@
   branch = "master"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
-  revision = "5a0f697c9ed9d68fef0116532c6e05cfeae00e55"
+  revision = "e325f446bebc2998605911c0a2650d9920361d4a"
 
 [[projects]]
   name = "github.com/gorilla/context"
@@ -107,7 +107,7 @@
   branch = "master"
   name = "github.com/gorilla/schema"
   packages = ["."]
-  revision = "ca549c5484735df6c48ad233575acc79908c5510"
+  revision = "8b1100835db5bbdae88541510f70d114b91a7e4d"
 
 [[projects]]
   name = "github.com/gorilla/securecookie"
@@ -149,13 +149,13 @@
   branch = "master"
   name = "github.com/markbates/goth"
   packages = [".","gothic","providers/discord","providers/github","providers/twitter"]
-  revision = "987bd3f23f8e88e0b5fdda0dd1c2a7977b3e8218"
+  revision = "afc17deda8a2324fc0e535f17d384c3ed441f38a"
 
 [[projects]]
   branch = "master"
   name = "github.com/markbates/grift"
   packages = ["grift"]
-  revision = "cededb16e7a2440821806e97ea2dda333bb2aff5"
+  revision = "bf7b900b08df6cdda22987897235262dafb86163"
 
 [[projects]]
   branch = "master"
@@ -173,7 +173,7 @@
   branch = "master"
   name = "github.com/markbates/pop"
   packages = [".","columns","fizz","fizz/translators","nulls"]
-  revision = "6707cbf96604983413ea8b5a94a11bfff9f22690"
+  revision = "0a4f72f4653e89c211fb5cc785618d9b049470c3"
 
 [[projects]]
   name = "github.com/markbates/refresh"
@@ -353,7 +353,7 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context","html","html/atom"]
-  revision = "59a0b19b5533c7977ddeb86b017bf507ed407b12"
+  revision = "ddf80d0970594e2e4cccf5a98861cad3d9eaa4cd"
 
 [[projects]]
   branch = "master"
