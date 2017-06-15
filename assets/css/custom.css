@@ -2,6 +2,9 @@
 
 body { padding-top: 70px; }
 
+.section-header {
+	display: inline;
+}
 
 .embed-responsive-350by500 {
   padding-bottom: 142.85%;
