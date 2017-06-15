@@ -185,7 +185,7 @@
   branch = "master"
   name = "github.com/markbates/validate"
   packages = [".","validators"]
-  revision = "28739c238c87ffa75a7aaff12772cc0d85eb834d"
+  revision = "eb46f4bde41b856ea74fec2b1d77ccdc34292dab"
 
 [[projects]]
   branch = "master"
@@ -202,8 +202,8 @@
 [[projects]]
   name = "github.com/mattn/go-colorable"
   packages = ["."]
-  revision = "d228849504861217f796da67fae4f6e347643f15"
-  version = "v0.0.7"
+  revision = "941b50ebc6efddf4c41c8e4537a5f68a4e686b24"
+  version = "v0.0.8"
 
 [[projects]]
   name = "github.com/mattn/go-isatty"
@@ -365,7 +365,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "0b25a408a50076fbbcae6b7ac0ea5fbb0b085e79"
+  revision = "fb4cac33e3196ff7f507ab9b2d2a44b0142f5b5a"
 
 [[projects]]
   name = "google.golang.org/appengine"
