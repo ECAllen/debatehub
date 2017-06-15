@@ -2,6 +2,11 @@
 
 body { padding-top: 70px; }
 
+
+.embed-responsive-350by500 {
+  padding-bottom: 142.85%;
+}
+
 .bs-docs-header {
     color: #cdbfe3;
     text-shadow: 0 1px 0 rgba(0,0,0,.1);
@@ -20,7 +25,6 @@ body { padding-top: 70px; }
 .text-container {
   height:200px;
   width:400px;
-  border: 1px solid #000;
   text-align: center;
 }
 
