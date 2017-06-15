@@ -7,20 +7,10 @@
 <div class="row">
 	<div class="col-md-9">
 		<div class="jumbotron">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6">
-						<!-- Banner img <h3> Banner demagogues Trump/Sanders</h3> --> 
-						<h4>Subscribe to the DebateHub newsletter.</h4>  
-						<%= partial("emailForm.html") %>
-					</div>
-					<div class="col-md-6">
-						<div class="text-container">
-							<span>Take the third party pledge!</span>
-						</div>
-					</div>
-				</div>
-			</div>
+			<!-- Banner img <h3> Banner demagogues Trump/Sanders</h3> --> 
+			<h2>Subscribe to the DebateHub newsletter.</h2>  
+			<%= partial("emailForm.html") %>
+			<!-- <h3>Take the third party pledge!</h3> -->
 		</div>
 		<% let lsections = ["news", "trends"] %>
 		<%= for (section) in lsections { %>
@@ -32,7 +22,7 @@
 	<div class="col-md-3">
 		<!-- TODO make discord disappear on mobile and tablet -->
 		<!-- TODO make discord dimensions like jumbotron height -->
-		<div class="embed-responsive embed-responsive-4by3">
+		<div class="embed-responsive embed-responsive-350by500">
 			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" allowtransparency="true"></iframe>
 		</div>
 
@@ -44,17 +34,7 @@
 		<% } %>
 	</div>
 </div>
-<div class="row">
-	<div class="col-md-12">
-		<section class="footer">
-			Legal
-			Privacy
-			Security
-			Terms of Service
-			Policies
-		</section>
-	</div>
-</div>
+
 <!-- TODO
 	<h3>Debate Topics</h3>
 -->
