@@ -2,22 +2,22 @@
 
 
 [[projects]]
+  branch = "master"
   name = "github.com/Sirupsen/logrus"
   packages = ["."]
-  revision = "202f25545ea4cf9b191ff7f846df5d87c9382c2b"
-  version = "v1.0.0"
+  revision = "5e5dc898656f695e2a086b8e12559febbfc01562"
 
 [[projects]]
+  branch = "master"
   name = "github.com/ajg/form"
   packages = ["."]
-  revision = "cc2954064ec9ea8d93917f0f87456e11d7b881ad"
-  version = "v1.5"
+  revision = "523a5da1a92f01b01f840b61689c0340a0243532"
 
 [[projects]]
+  branch = "master"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
-  version = "v1.1.0"
 
 [[projects]]
   branch = "master"
@@ -32,22 +32,22 @@
   revision = "259d2a102b871d17f30e3cd9881a642961a1e486"
 
 [[projects]]
+  branch = "master"
   name = "github.com/fatih/color"
   packages = ["."]
-  revision = "570b54cabe6b8eb0bc2dfce68d964677d63b5260"
-  version = "v1.5.0"
+  revision = "62e9147c64a1ed519147b62a56a14e83e2be02c1"
 
 [[projects]]
+  branch = "master"
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
-  revision = "629574ca2a5df945712d3079857300b5e4da0236"
-  version = "v1.4.2"
+  revision = "4da3e2cfbabc9f751898f250b49f2439785783a1"
 
 [[projects]]
+  branch = "master"
   name = "github.com/go-sql-driver/mysql"
   packages = ["."]
-  revision = "a0583e0143b1624142adab07e0e97fe106d99561"
-  version = "v1.3"
+  revision = "a825be04c652d01442384e9dcdf2cdc3f1eda67f"
 
 [[projects]]
   branch = "master"
@@ -92,40 +92,40 @@
   revision = "e325f446bebc2998605911c0a2650d9920361d4a"
 
 [[projects]]
+  branch = "master"
   name = "github.com/gorilla/context"
   packages = ["."]
-  revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
-  version = "v1.1"
+  revision = "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
 
 [[projects]]
+  branch = "master"
   name = "github.com/gorilla/mux"
   packages = ["."]
-  revision = "bcd8bc72b08df0f70df986b97f95590779502d31"
-  version = "v1.4.0"
+  revision = "18fca31550181693b3a834a15b74b564b3605876"
 
 [[projects]]
   branch = "master"
   name = "github.com/gorilla/schema"
   packages = ["."]
-  revision = "8b1100835db5bbdae88541510f70d114b91a7e4d"
+  revision = "1c72d033473165ade8a126ba64180d76a9212dcd"
 
 [[projects]]
+  branch = "master"
   name = "github.com/gorilla/securecookie"
   packages = ["."]
-  revision = "667fe4e3466a040b780561fe9b51a83a3753eefc"
-  version = "v1.1"
+  revision = "e59506cc896acb7f7bf732d4fdf5e25f7ccd8983"
 
 [[projects]]
+  branch = "master"
   name = "github.com/gorilla/sessions"
   packages = ["."]
-  revision = "ca9ada44574153444b00d3fd9c8559e4cc95f896"
-  version = "v1.1"
+  revision = "8b6b4cd75f07f7ee036eb37b8127bd40ab1efc49"
 
 [[projects]]
+  branch = "master"
   name = "github.com/gorilla/websocket"
   packages = ["."]
-  revision = "3ab3a8b8831546bd18fd182c20687ca853b2bb13"
-  version = "v1.1.0"
+  revision = "a91eba7f97777409bc2c443f5534d41dd20c5720"
 
 [[projects]]
   branch = "master"
@@ -149,7 +149,7 @@
   branch = "master"
   name = "github.com/markbates/goth"
   packages = [".","gothic","providers/discord","providers/github","providers/twitter"]
-  revision = "afc17deda8a2324fc0e535f17d384c3ed441f38a"
+  revision = "c04864b86001affde4fd368f960f698a27fb9d13"
 
 [[projects]]
   branch = "master"
@@ -176,10 +176,10 @@
   revision = "0a4f72f4653e89c211fb5cc785618d9b049470c3"
 
 [[projects]]
+  branch = "master"
   name = "github.com/markbates/refresh"
   packages = ["refresh","refresh/web"]
-  revision = "3b31d64dec02d89d735e1f60c05ed41a43c5207e"
-  version = "1.2.0"
+  revision = "90f2daf12da08f62255f309ece774fa94604a20f"
 
 [[projects]]
   branch = "master"
@@ -191,7 +191,7 @@
   branch = "master"
   name = "github.com/markbates/willie"
   packages = ["."]
-  revision = "d2cdc733fedaffa28ae6584ba16f16832c10f15e"
+  revision = "cf7c4a7c06ea6a65b79294bbfb4ae18b580f6ecc"
 
 [[projects]]
   branch = "master"
@@ -200,22 +200,22 @@
   revision = "a3969c63681391ec413427cae813d6d59d6031f1"
 
 [[projects]]
+  branch = "master"
   name = "github.com/mattn/go-colorable"
   packages = ["."]
-  revision = "941b50ebc6efddf4c41c8e4537a5f68a4e686b24"
-  version = "v0.0.8"
+  revision = "ded68f7a9561c023e790de24279db7ebf473ea80"
 
 [[projects]]
+  branch = "master"
   name = "github.com/mattn/go-isatty"
   packages = ["."]
   revision = "fc9e8d8ef48496124e79ae0df75490096eccf6fe"
-  version = "v0.0.2"
 
 [[projects]]
+  branch = "master"
   name = "github.com/mattn/go-sqlite3"
   packages = ["."]
-  revision = "ca5e3819723d8eeaf170ad510e7da1d6d2e94a08"
-  version = "v1.2.0"
+  revision = "83c59d8440943c680f94ebbe51118df4244414d6"
 
 [[projects]]
   branch = "master"
@@ -236,28 +236,28 @@
   revision = "3f67d9c274355678b2f9844b08d643e2f9213340"
 
 [[projects]]
+  branch = "master"
   name = "github.com/nicksnyder/go-i18n"
   packages = ["i18n","i18n/bundle","i18n/language","i18n/translation"]
   revision = "3e70a1a463008cea6726380c908b1a6a8bdf7b24"
-  version = "v1.8.1"
 
 [[projects]]
+  branch = "master"
   name = "github.com/pelletier/go-buffruneio"
   packages = ["."]
   revision = "c37440a7cf42ac63b919c752ca73a85067e05992"
-  version = "v0.2.0"
 
 [[projects]]
+  branch = "master"
   name = "github.com/pelletier/go-toml"
   packages = ["."]
-  revision = "5ccdfb18c776b740aecaf085c4d9a2779199c279"
-  version = "v1.0.0"
+  revision = "fe7536c3dee2596cdd23ee9976a17c22bdaae286"
 
 [[projects]]
+  branch = "master"
   name = "github.com/pkg/errors"
   packages = ["."]
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
+  revision = "c605e284fe17294bda444b34710735b29d1a9d90"
 
 [[projects]]
   name = "github.com/pmezard/go-difflib"
@@ -266,10 +266,10 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
   name = "github.com/russross/blackfriday"
   packages = ["."]
-  revision = "0b647d0506a698cca42caca173e55559b12a69f2"
-  version = "v1.4"
+  revision = "067529f716f4c3f5e37c8c95ddd59df1007290ae"
 
 [[projects]]
   branch = "master"
@@ -344,10 +344,10 @@
   revision = "bd320f5d308e1a3c4314c678d8227a0d72574ae7"
 
 [[projects]]
+  branch = "master"
   name = "github.com/stretchr/testify"
   packages = ["assert","require","suite"]
-  revision = "69483b4bd14f5845b5a1e55bca19e954e827f1d0"
-  version = "v1.1.4"
+  revision = "f6abca593680b2315d2075e0f5e2a9751e3f431a"
 
 [[projects]]
   branch = "master"
