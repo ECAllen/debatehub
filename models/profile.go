@@ -15,14 +15,14 @@ type Profile struct {
 	ID          uuid.UUID    `json:"id" db:"id"`
 	CreatedAt   time.Time    `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time    `json:"updated_at" db:"updated_at"`
-	FirstName   string       `json:"FirstName" db:"FirstName"`
-	LastName    string       `json:"LastName" db:"LastName"`
-	UserID      string       `json:"UserID" db:"UserID"`
-	Email       string       `json:"Email" db:"Email"`
-	NickName    nulls.String `json:"NickName" db:"NickName"`
-	Location    nulls.String `json:"Location" db:"Location"`
-	AvatarURL   nulls.String `json:"AvatarURL" db:"AvatarURL"`
-	Description nulls.String `json:"Description" db:"Description"`
+	Firstname   string       `json:"firstname" db:"firstname"`
+	Lastname    string       `json:"lastname" db:"lastname"`
+	Userid      string       `json:"userid" db:"userid"`
+	Email       string       `json:"email" db:"email"`
+	Nickname    nulls.String `json:"nickname" db:"nickname"`
+	Location    nulls.String `json:"location" db:"location"`
+	Avatarurl   nulls.String `json:"avatarurl" db:"avatarurl"`
+	Description nulls.String `json:"description" db:"description"`
 }
 
 // String is not required by pop and may be deleted
@@ -44,9 +44,9 @@ func (p Profiles) String() string {
 // This method is not required and may be deleted.
 func (p *Profile) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
-		&validators.StringIsPresent{Field: p.FirstName, Name: "FirstName"},
-		&validators.StringIsPresent{Field: p.LastName, Name: "LastName"},
-		&validators.StringIsPresent{Field: p.UserID, Name: "UserID"},
+		&validators.StringIsPresent{Field: p.Firstname, Name: "Firstname"},
+		&validators.StringIsPresent{Field: p.Lastname, Name: "Lastname"},
+		&validators.StringIsPresent{Field: p.Userid, Name: "Userid"},
 		&validators.StringIsPresent{Field: p.Email, Name: "Email"},
 	), nil
 }
