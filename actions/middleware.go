@@ -12,7 +12,7 @@ func HomeHandler(c buffalo.Context) error {
 	return c.Render(200, r.HTML("index.html"))
 }
 
-// CheckAuth is the middlewar to check if a user is logged on.
+// CheckAuth is the middleware to check if a user is logged on.
 func CheckAuth(next buffalo.Handler) buffalo.Handler {
 	return func(c buffalo.Context) error {
 		// Read the userID out of the session

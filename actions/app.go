@@ -67,9 +67,6 @@ func App() *buffalo.App {
 			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
 		})
 
-		// TODO verify emails URL paths needs auth
-		// app.Resource("/emails", EmailsResource{&buffalo.BaseResource{}})
-
 		// -----------------
 		//   Authorization
 		// -----------------
@@ -94,7 +91,16 @@ func App() *buffalo.App {
 				session.Save()
 				return c.Redirect(301, "/login")
 			})
-		app.Redirect(301, "/", "/login")
+
+		// app.Redirect(301, "/", "/login")
+
+		// ------------------
+		//   Email Content
+		// ------------------
+		// TODO verify emails URL paths needs auth
+		// subscription := app.Group("/emails")
+		// subscription.Use(CheckAuth)
+		app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 	}
 
 	return app
