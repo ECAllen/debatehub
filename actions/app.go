@@ -81,9 +81,8 @@ func App() *buffalo.App {
 		// ------------------
 		//   Secure Content
 		// ------------------
-		profiles := app.Group("/profiles")
+		profiles := app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 		profiles.Use(CheckAuth)
-		app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 		profiles.DELETE("/logout",
 			func(c buffalo.Context) error {
 				session := c.Session()
@@ -98,9 +97,13 @@ func App() *buffalo.App {
 		//   Email Content
 		// ------------------
 		// TODO verify emails URL paths needs auth
-		// subscription := app.Group("/emails")
-		// subscription.Use(CheckAuth)
-		app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
+
+		var er buffalo.Resource
+		er = &EmailsResource{&buffalo.BaseResource{}}
+		subscription := app.Resource("/emails", er)
+		subscription.Use(CheckAuth)
+		subscription.Middleware.Skip(CheckAuth, er.Create)
+
 	}
 
 	return app
