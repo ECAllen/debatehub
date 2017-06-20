@@ -34,6 +34,7 @@ func init() {
 
 func AuthCallback(c buffalo.Context) error {
 	user, err := gothic.CompleteUserAuth(c.Response(), c.Request())
+
 	if err != nil {
 		return c.Error(401, err)
 	}
@@ -46,14 +47,16 @@ func AuthCallback(c buffalo.Context) error {
 		return c.Error(401, err)
 	}
 
-	// TODO middleware ??
 	// check user has profile
 	// if does not exist then creates profile
 	// else insert profile
 
-	// The default value jus renders the data we get by GitHub
+	// The default value just renders the data we get by GitHub
 	// return c.Render(200, r.JSON(user))
 
 	// After the user is logged in we add a redirect
-	return c.Redirect(http.StatusMovedPermanently, "/secure")
+	checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
+	fmt.Println("Auth redirect path ==========>" + checkPath)
+
+	return c.Redirect(http.StatusMovedPermanently, checkPath)
 }

@@ -51,7 +51,6 @@ func App() *buffalo.App {
 			log.Fatal(err)
 		}
 
-		// TODO review all URL paths for authorization, use a grift
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 		app.Use(T.Middleware())
 
@@ -62,13 +61,17 @@ func App() *buffalo.App {
 			return c.Render(200, r.HTML("index.html"))
 		})
 
+		app.GET("/submitNews", func(c buffalo.Context) error {
+			return c.Render(200, r.HTML("submitNews.html"))
+		})
+
 		// TODO check this for injection
 		app.GET("/blog/{post}", func(c buffalo.Context) error {
 			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
 		})
 
 		// -----------------
-		//   Authorization
+		//   Authentication
 		// -----------------
 		auth := app.Group("/auth")
 		auth.GET("/{provider}", buffalo.WrapHandlerFunc(gothic.BeginAuthHandler))
@@ -81,8 +84,14 @@ func App() *buffalo.App {
 		// ------------------
 		//   Secure Content
 		// ------------------
+
+		// ------------------
+		//  Profiles
+		// ------------------
+
 		profiles := app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 		profiles.Use(CheckAuth)
+
 		profiles.DELETE("/logout",
 			func(c buffalo.Context) error {
 				session := c.Session()
@@ -91,12 +100,9 @@ func App() *buffalo.App {
 				return c.Redirect(301, "/login")
 			})
 
-		// app.Redirect(301, "/", "/login")
-
-		// ------------------
-		//   Email Content
-		// ------------------
-		// TODO verify emails URL paths needs auth
+		// ------------------------
+		//   Email Subscriptions
+		// ------------------------
 
 		var er buffalo.Resource
 		er = &EmailsResource{&buffalo.BaseResource{}}
@@ -104,6 +110,7 @@ func App() *buffalo.App {
 		subscription.Use(CheckAuth)
 		subscription.Middleware.Skip(CheckAuth, er.Create)
 
+		app.Resource("/articles", ArticlesResource{&buffalo.BaseResource{}})
 	}
 
 	return app
