@@ -35,6 +35,16 @@ use this phase as research and pain points
 
 most people overestimate how hard it is to get someone to subscribe but underestimate how easy it is to get someone to buy product
 
+### Funnel
+
+subscribe -> choose one of three pdfs -> coming soon Patreon
+
+three pdfs:
+	Long term trends and threats to freedom
+	2017 year preview
+	??? Future of discourse and trends in the electorate 
+
+
 ### Avatar 
 
 Avatar - The one perfect client 
@@ -67,4 +77,5 @@ What is it that he is looking to do in your website? watch trends, in depth deba
 Specifically why would he buy from you and not from the competition? debate flow and tooling, big picture stuff
 
 What are the repetitive questions that you constantly need to answer before he makes the final call?
+
 
