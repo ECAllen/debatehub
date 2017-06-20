@@ -1,0 +1,26 @@
+<h1>Articles#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= articlesPath() %>" class="btn btn-info">Back to all Articles</a></li>
+  <li><a href="<%= editArticlePath({ article_id: article.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= articlePath({ article_id: article.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Url</strong>: <%= article.Url %>
+</p>
+<p>
+  <strong>Description</strong>: <%= article.Description %>
+</p>
+<p>
+  <strong>Type</strong>: <%= article.Type %>
+</p>
+<p>
+  <strong>Thumbnail</strong>: <%= article.Thumbnail %>
+</p>
+<p>
+  <strong>Publish</strong>: <%= article.Publish %>
+</p>
+<p>
+  <strong>Reject</strong>: <%= article.Reject %>
+</p>

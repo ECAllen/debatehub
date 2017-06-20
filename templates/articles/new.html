@@ -1,0 +1,6 @@
+<h1>New Article</h1>
+
+<%= form_for(article, {action: articlesPath(), method: "POST"}) { %>
+  <%= partial("articles/form.html") %>
+  <a href="<%= articlesPath() %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

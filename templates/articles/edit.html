@@ -1,0 +1,6 @@
+<h1>Edit Article</h1>
+
+<%= form_for(article, {action: articlePath({ article_id: article.ID }), method: "PUT"}) { %>
+  <%= partial("articles/form.html") %>
+  <a href="<%= articlePath({ article_id: article.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>
