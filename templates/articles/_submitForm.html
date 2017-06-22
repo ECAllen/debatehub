@@ -1,4 +1,8 @@
 <%= f.InputTag("Url") %>
 <%= f.TextArea("Description", {rows: 11}) %>
-<%= f.SelectTag("Type") %>
+<div class="row">
+	<div class="col-md-2">
+		<%= f.SelectTag("Type",  {options: ["article", "podcast", "pdf"]}) %>
+	</div>
+</div>
 <button class="btn btn-success" role="submit">Save</button>

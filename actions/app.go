@@ -109,10 +109,14 @@ func App() *buffalo.App {
 		// ------------------------
 		//  Articles
 		// ------------------------
-		// TODO move to auth
 
 		app.GET("/articles/submit", ArticleSubmit)
-		app.Resource("/articles", ArticlesResource{&buffalo.BaseResource{}})
+		// app.Resource("/articles", ArticlesResource{&buffalo.BaseResource{}})
+		var ar buffalo.Resource
+		ar = &ArticlesResource{&buffalo.BaseResource{}}
+		articles := app.Resource("/articles", ar)
+		articles.Use(CheckAuth)
+		articles.Middleware.Skip(CheckAuth, ar.Create)
 
 	}
 
