@@ -61,10 +61,6 @@ func App() *buffalo.App {
 			return c.Render(200, r.HTML("index.html"))
 		})
 
-		app.GET("/submitNews", func(c buffalo.Context) error {
-			return c.Render(200, r.HTML("submitNews.html"))
-		})
-
 		// TODO check this for injection
 		app.GET("/blog/{post}", func(c buffalo.Context) error {
 			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
@@ -91,7 +87,7 @@ func App() *buffalo.App {
 
 		profiles := app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 		profiles.Use(CheckAuth)
-
+		// TODO move logout
 		profiles.DELETE("/logout",
 			func(c buffalo.Context) error {
 				session := c.Session()
@@ -110,7 +106,14 @@ func App() *buffalo.App {
 		subscription.Use(CheckAuth)
 		subscription.Middleware.Skip(CheckAuth, er.Create)
 
+		// ------------------------
+		//  Articles
+		// ------------------------
+		// TODO move to auth
+
+		app.GET("/articles/submit", ArticleSubmit)
 		app.Resource("/articles", ArticlesResource{&buffalo.BaseResource{}})
+
 	}
 
 	return app

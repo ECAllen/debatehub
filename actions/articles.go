@@ -64,7 +64,8 @@ func (v ArticlesResource) Show(c buffalo.Context) error {
 func (v ArticlesResource) New(c buffalo.Context) error {
 	// Make article available inside the html template
 	c.Set("article", &models.Article{})
-	return c.Render(200, r.HTML("articles/new.html"))
+	// return c.Render(200, r.HTML("articles/new.html"))
+	return c.Render(200, r.HTML("submitNews.html"))
 }
 
 // Create adds a article to the DB. This function is mapped to the
@@ -91,12 +92,14 @@ func (v ArticlesResource) Create(c buffalo.Context) error {
 		c.Set("errors", verrs)
 		// Render again the new.html template that the user can
 		// correct the input.
-		return c.Render(422, r.HTML("articles/new.html"))
+		// return c.Render(422, r.HTML("articles/new.html"))
+		return c.Render(422, r.HTML("submitNews.html"))
 	}
 	// If there are no errors set a success message
-	c.Flash().Add("success", "Article was created successfully")
+	c.Flash().Add("success", "Article was submitted successfully")
 	// and redirect to the articles index page
-	return c.Redirect(302, "/articles/%s", article.ID)
+	// return c.Redirect(302, "/articles/%s", article.ID)
+	return c.Redirect(302, "/")
 }
 
 // Edit renders a edit formular for a article. This function is
@@ -170,4 +173,15 @@ func (v ArticlesResource) Destroy(c buffalo.Context) error {
 	c.Flash().Add("success", "Article was destroyed successfully")
 	// Redirect to the articles index page
 	return c.Redirect(302, "/articles")
+}
+
+// ================><=================
+
+// New renders the formular for creating a new article.
+// This function is mapped to the path GET /articles/submit
+func ArticleSubmit(c buffalo.Context) error {
+	// Make article available inside the html template
+	c.Set("article", &models.Article{})
+	// return c.Render(200, r.HTML("articles/new.html"))
+	return c.Render(200, r.HTML("articles/submit.html"))
 }

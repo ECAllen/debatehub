@@ -12,15 +12,15 @@ import (
 )
 
 type Article struct {
-	ID          uuid.UUID     `json:"id" db:"id"`
-	CreatedAt   time.Time     `json:"created_at" db:"created_at"`
-	UpdatedAt   time.Time     `json:"updated_at" db:"updated_at"`
-	Url         string        `json:"url" db:"url"`
-	Description nulls.String  `json:"description" db:"description"`
-	Type        string        `json:"type" db:"type"`
-	Thumbnail   nulls.String  `json:"thumbnail" db:"thumbnail"`
-	Publish     nulls.Boolean `json:"publish" db:"publish"`
-	Reject      nulls.Boolean `json:"reject" db:"reject"`
+	ID          uuid.UUID    `json:"id" db:"id"`
+	CreatedAt   time.Time    `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time    `json:"updated_at" db:"updated_at"`
+	Url         string       `json:"url" db:"url"`
+	Description nulls.String `json:"description" db:"description"`
+	Type        string       `json:"type" db:"type"`
+	Thumbnail   nulls.String `json:"thumbnail" db:"thumbnail"`
+	Publish     nulls.Bool   `json:"publish" db:"publish"`
+	Reject      nulls.Bool   `json:"reject" db:"reject"`
 }
 
 // String is not required by pop and may be deleted
