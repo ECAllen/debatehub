@@ -4,6 +4,7 @@ import (
 	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
+	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -73,6 +74,10 @@ func (v ArticlesResource) New(c buffalo.Context) error {
 func (v ArticlesResource) Create(c buffalo.Context) error {
 	// Allocate an empty Article
 	article := &models.Article{}
+	f := nulls.NewBool(false)
+	article.Publish = f
+	article.Reject = f
+
 	// Bind article to the html form elements
 	err := c.Bind(article)
 	if err != nil {
@@ -102,6 +107,7 @@ func (v ArticlesResource) Create(c buffalo.Context) error {
 	return c.Redirect(302, "/")
 }
 
+// Updated from resource template
 // Edit renders a edit formular for a article. This function is
 // mapped to the path GET /articles/{article_id}/edit
 func (v ArticlesResource) Edit(c buffalo.Context) error {
@@ -175,7 +181,7 @@ func (v ArticlesResource) Destroy(c buffalo.Context) error {
 	return c.Redirect(302, "/articles")
 }
 
-// ================><=================
+// <================>Added<=================>
 
 // New renders the formular for creating a new article.
 // This function is mapped to the path GET /articles/submit
@@ -184,4 +190,24 @@ func ArticleSubmit(c buffalo.Context) error {
 	c.Set("article", &models.Article{})
 	// return c.Render(200, r.HTML("articles/new.html"))
 	return c.Render(200, r.HTML("articles/submit.html"))
+}
+
+// List gets all Articles. This function is mapped to the path
+// GET /articles
+func ArticlesAdmin(c buffalo.Context) error {
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+	articles := &models.Articles{}
+	// You can order your list here. Just change
+	// err := tx.All(articles)
+	// to:
+	// err := tx.Order("create_at desc").All(articles)
+	err := tx.Where("reject = false").Where("publish = false").All(articles)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// Make articles available inside the html template
+	c.Set("articles", articles)
+	return c.Render(200, r.HTML("articles/admin.html"))
 }

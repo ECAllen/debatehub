@@ -21,9 +21,6 @@ func CheckAuth(next buffalo.Handler) buffalo.Handler {
 			return c.Error(401, err)
 		}
 
-		checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
-		fmt.Println("CheckAuth redirect path ==========>" + checkPath)
-
 		// Read the userID out of the session
 		userID := session.Get("userID")
 		// If there is no userID redirect to the login page

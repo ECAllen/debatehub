@@ -76,6 +76,13 @@ func App() *buffalo.App {
 			func(c buffalo.Context) error {
 				return c.Render(200, r.HTML("login/index.html"))
 			})
+		app.DELETE("/logout",
+			func(c buffalo.Context) error {
+				session := c.Session()
+				session.Delete("userID")
+				session.Save()
+				return c.Redirect(301, "/")
+			})
 
 		// ------------------
 		//   Secure Content
@@ -87,14 +94,6 @@ func App() *buffalo.App {
 
 		profiles := app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 		profiles.Use(CheckAuth)
-		// TODO move logout
-		profiles.DELETE("/logout",
-			func(c buffalo.Context) error {
-				session := c.Session()
-				session.Delete("userID")
-				session.Save()
-				return c.Redirect(301, "/login")
-			})
 
 		// ------------------------
 		//   Email Subscriptions
@@ -111,6 +110,7 @@ func App() *buffalo.App {
 		// ------------------------
 
 		app.GET("/articles/submit", ArticleSubmit)
+		app.GET("/articles/admin", ArticlesAdmin)
 		// app.Resource("/articles", ArticlesResource{&buffalo.BaseResource{}})
 		var ar buffalo.Resource
 		ar = &ArticlesResource{&buffalo.BaseResource{}}

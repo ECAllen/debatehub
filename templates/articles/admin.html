@@ -1,29 +1,26 @@
-<h1>Articles</h1>
-
-<p>
-<a href="<%= newArticlePath() %>" class="btn btn-primary">Create New Article</a>
-</p>
+<h1>Articles Admin</h1>
 
 <table class="table table-striped">
 	<thead>
 		<th>Url</th>
+		<th>Description</th>
 		<th>Type</th>
-		<th>Publish</th>
 		<th>Reject</th>
+		<th>Publish</th>
 		<th>&nbsp;</th>
 	</thead>
 	<tbody>
 		<%= for (article) in articles { %>
 		<tr>
 			<td><%= article.Url %></td>
+			<td><%= article.Description %></td>
 			<td><%= article.Type %></td>
-			<td><%= article.Publish %></td>
 			<td><%= article.Reject %></td>
+			<td><%= article.Publish%></td>
 			<td>
 				<div class="pull-right">
-					<a href="<%= articlePath({ article_id: article.ID }) %>" class="btn btn-info">View</a>
 					<a href="<%= editArticlePath({ article_id: article.ID }) %>" class="btn btn-warning">Edit</a>
-					<a href="<%= articlePath({ article_id: article.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+					<a href="<%= articlePath({ article_id: article.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Delete</a>
 				</div>
 			</td>
 		</tr>

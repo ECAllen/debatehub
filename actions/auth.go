@@ -46,7 +46,6 @@ func AuthCallback(c buffalo.Context) error {
 	if err != nil {
 		return c.Error(401, err)
 	}
-
 	// check user has profile
 	// if does not exist then creates profile
 	// else insert profile
@@ -56,7 +55,5 @@ func AuthCallback(c buffalo.Context) error {
 
 	// After the user is logged in we add a redirect
 	checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
-	fmt.Println("Auth redirect path ==========>" + checkPath)
-
 	return c.Redirect(http.StatusMovedPermanently, checkPath)
 }
