@@ -5,6 +5,35 @@
 	</small>
 </h2>
 
+
+
+<%= for (article) in articles { %>
+<div class="media">
+	<div class="media-left media-middle">
+		<a href="<%= article.Url %>">
+			<img class="media-object" src="<%= article.Thumbnail %>" alt="thumbnail" style="width:60px">
+		</a>
+	</div>
+	<div class="media-body">
+		<h4 class="media-heading">Media heading</h4>
+		<%= article.Description %>
+	</div>
+</div>
+
+<% } %>
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="media">
 	<div class="media-left">
 		<a href="#">
@@ -16,6 +45,8 @@
 		...
 	</div>
 </div>
+
+
 <div class="newstory">
 	<a href="http://www.theamericanconservative.com/articles/the-danger-with-trumps-budget/"> The Danger with Trump’s Budget</a>
 </div>

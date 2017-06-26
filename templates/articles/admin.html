@@ -3,6 +3,7 @@
 <table class="table table-striped">
 	<thead>
 		<th>Url</th>
+		<th>Headline</th>
 		<th>Description</th>
 		<th>Type</th>
 		<th>Reject</th>
@@ -13,6 +14,7 @@
 		<%= for (article) in articles { %>
 		<tr>
 			<td><%= article.Url %></td>
+			<td><%= article.Headline %></td>
 			<td><%= article.Description %></td>
 			<td><%= article.Type %></td>
 			<td><%= article.Reject %></td>

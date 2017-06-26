@@ -17,6 +17,7 @@ type Article struct {
 	UpdatedAt   time.Time    `json:"updated_at" db:"updated_at"`
 	Url         string       `json:"url" db:"url"`
 	Description nulls.String `json:"description" db:"description"`
+	Headline    nulls.String `json:"headline" db:"headline"`
 	Type        string       `json:"type" db:"type"`
 	Thumbnail   nulls.String `json:"thumbnail" db:"thumbnail"`
 	Publish     nulls.Bool   `json:"publish" db:"publish"`
