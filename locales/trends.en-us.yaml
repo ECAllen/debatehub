@@ -1,0 +1,6 @@
+- id: "trends.created.success"
+  translation: "Trend was successfully created."
+- id: "trends.updated.success"
+  translation: "Trend was successfully updated."
+- id: "trends.destroyed.success"
+  translation: "Trend was successfully destroyed."

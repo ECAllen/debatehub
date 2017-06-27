@@ -1,0 +1,32 @@
+<h1>Trends</h1>
+
+<p>
+  <a href="<%= newTrendPath() %>" class="btn btn-primary">Create New Trend</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Summary</th>
+    <th>Description</th>
+    <th>Publlished</th>
+    <th>Rejected</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (trend) in trends { %>
+      <tr>
+      <td><%= trend.Summary %></td>
+        <td><%= trend.Description %></td>
+        <td><%= trend.Publlished %></td>
+        <td><%= trend.Rejected %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= trendPath({ trend_id: trend.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editTrendPath({ trend_id: trend.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= trendPath({ trend_id: trend.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

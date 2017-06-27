@@ -1,0 +1,6 @@
+<h1>Edit Trend</h1>
+
+<%= form_for(trend, {action: trendPath({ trend_id: trend.ID }), method: "PUT"}) { %>
+  <%= partial("trends/form.html") %>
+  <a href="<%= trendPath({ trend_id: trend.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

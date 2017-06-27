@@ -1,0 +1,23 @@
+<h1>Trends#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= trendsPath() %>" class="btn btn-info">Back to all Trends</a></li>
+  <li><a href="<%= editTrendPath({ trend_id: trend.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= trendPath({ trend_id: trend.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Summary</strong>: <%= trend.Summary %>
+</p>
+<p>
+  <strong>Description</strong>: <%= trend.Description %>
+</p>
+<p>
+  <strong>Thumbnail</strong>: <%= trend.Thumbnail %>
+</p>
+<p>
+  <strong>Publlished</strong>: <%= trend.Publlished %>
+</p>
+<p>
+  <strong>Rejected</strong>: <%= trend.Rejected %>
+</p>
