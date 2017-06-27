@@ -123,13 +123,14 @@ func App() *buffalo.App {
 		// ------------------------
 
 		app.GET("/articles/submit", ArticleSubmit)
+		app.GET("/articles/admin", ArticlesAdmin)
 		var ar buffalo.Resource
 		ar = &ArticlesResource{&buffalo.BaseResource{}}
 		articles := app.Resource("/articles", ar)
 		articles.Use(CheckAuth)
-		app.GET("/articles/admin", ArticlesAdmin)
 		articles.Middleware.Skip(CheckAuth, ar.Create)
 
+		app.Resource("/trends", TrendsResource{&buffalo.BaseResource{}})
 	}
 
 	return app

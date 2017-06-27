@@ -2,6 +2,24 @@
 Notes: Think git coding workflows
 HOME: http://debatehub.org
 
+########## Trends ########## 
+
+#### Data Fields
+summary:text
+description:text:NULL
+thumbnail:
+published:true/false:BOOLEAN:NULL
+rejected:true/false:BOOLEAN:NULL
+
+buffalo g resource trends summary description thumbnail:nulls.Text publlished:nulls.Bool rejected:nulls.Bool
+
+#### Flow
+submit form -> submitted queue -> rejected false AND published false -> queue admin page -> rejected false AND published true -> front page
+
+#### Roles
+Anon submit
+NewsAdmin publish|reject
+
 ########## News ########## 
 
 #### Data Fields

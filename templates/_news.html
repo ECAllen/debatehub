@@ -1,11 +1,9 @@
 
-<h2>News/Data
+<h2>News|Data
 	<small>
 		<a class="btn btn-default btn-xs" href="/articles/submit">submit</a>
 	</small>
 </h2>
-
-
 
 <%= for (article) in articles { %>
 <div class="media">
@@ -15,37 +13,12 @@
 		</a>
 	</div>
 	<div class="media-body">
-		<h4 class="media-heading">Media heading</h4>
+		<h4 class="media-heading"><%= article.Headline %></h4>
 		<%= article.Description %>
 	</div>
 </div>
 
 <% } %>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="media">
-	<div class="media-left">
-		<a href="#">
-			<img class="media-object" src="" alt="...">
-		</a>
-	</div>
-	<div class="media-body">
-		<h4 class="media-heading">Media heading</h4>
-		...
-	</div>
-</div>
-
 
 <div class="newstory">
 	<a href="http://www.theamericanconservative.com/articles/the-danger-with-trumps-budget/"> The Danger with Trump’s Budget</a>
