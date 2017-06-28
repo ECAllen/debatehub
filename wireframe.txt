@@ -11,7 +11,7 @@ thumbnail:
 published:true/false:BOOLEAN:NULL
 rejected:true/false:BOOLEAN:NULL
 
-buffalo g resource trends summary description thumbnail:nulls.Text publlished:nulls.Bool rejected:nulls.Bool
+buffalo g resource trends summary description thumbnail:nulls.Text publish:nulls.Bool reject:nulls.Bool
 
 #### Flow
 submit form -> submitted queue -> rejected false AND published false -> queue admin page -> rejected false AND published true -> front page
@@ -30,7 +30,7 @@ thumbnail:
 published:true/false:BOOLEAN:NULL
 rejected:true/false:BOOLEAN:NULL
 
-buffalo g resource articles url description:nulls.Text type thumbnail:nulls.Text publlished:nulls.Boolean rejected:nulls.Boolean
+buffalo g resource articles url description:nulls.Text type thumbnail:nulls.Text publish:nulls.Bool reject:nulls.Bool
 
 #### Flow
 submit form -> submitted queue -> rejected false AND published false -> queue admin page -> rejected false AND published true -> front page

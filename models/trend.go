@@ -18,8 +18,8 @@ type Trend struct {
 	Summary     string       `json:"summary" db:"summary"`
 	Description string       `json:"description" db:"description"`
 	Thumbnail   nulls.String `json:"thumbnail" db:"thumbnail"`
-	Publlished  nulls.Bool   `json:"publlished" db:"publlished"`
-	Rejected    nulls.Bool   `json:"rejected" db:"rejected"`
+	Publish     nulls.Bool   `json:"publish" db:"publish"`
+	Reject      nulls.Bool   `json:"reject" db:"reject"`
 }
 
 // String is not required by pop and may be deleted

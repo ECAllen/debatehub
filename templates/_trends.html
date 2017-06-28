@@ -5,6 +5,21 @@
 	</small>
 </h3>
 
+<%= for (trend) in trends { %>
+<div class="media">
+	<div class="media-left media-middle">
+		<!-- TODO figure out what the trend page will be i-->
+		<a href="">
+			<img class="media-object" src="<%= trend.Thumbnail %>" alt="thumbnail" style="width:60px">
+		</a>
+	</div>
+	<div class="media-body">
+		<h4 class="media-heading"><%= trend.Summary %></h4>
+		<%= trend.Description %>
+	</div>
+</div>
+<% } %>
+
 <div class="trends">Afghanastan is where empires go to die</div>
 <div class="trends">Whistling our way past the graveyard</div>
 <div class="trends">US political bifurcation</div>

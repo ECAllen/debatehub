@@ -171,3 +171,34 @@ func (v TrendsResource) Destroy(c buffalo.Context) error {
 	// Redirect to the trends index page
 	return c.Redirect(302, "/trends")
 }
+
+// <================>Added<=================>
+
+// New renders the formular for creating a new trend.
+// This function is mapped to the path GET /trends/submit
+func TrendsSubmit(c buffalo.Context) error {
+	// Make trend available inside the html template
+	c.Set("trend", &models.Trend{})
+	// return c.Render(200, r.HTML("trends/new.html"))
+	return c.Render(200, r.HTML("trends/submit.html"))
+}
+
+// List gets all Trends. This function is mapped to the path
+// GET /trends
+func TrendsAdmin(c buffalo.Context) error {
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+	trends := &models.Trends{}
+	// You can order your list here. Just change
+	// err := tx.All(trends)
+	// to:
+	// err := tx.Order("create_at desc").All(trends)
+	err := tx.Where("reject = false").Where("publish = false").All(trends)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// Make trends available inside the html template
+	c.Set("trends", trends)
+	return c.Render(200, r.HTML("trends/admin.html"))
+}

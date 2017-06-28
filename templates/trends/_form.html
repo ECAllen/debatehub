@@ -1,6 +1,6 @@
 <%= f.InputTag("Summary") %>
 <%= f.InputTag("Description") %>
 <%= f.TextArea("Thumbnail", {rows: 10}) %>
-<%= f.InputTag("Publlished") %>
-<%= f.InputTag("Rejected") %>
+<%= f.SelectTag("Publish",  {options: ["false", "true"]}) %>
+<%= f.SelectTag("Reject",  {options: ["false", "true"]}) %>
 <button class="btn btn-success" role="submit">Save</button>

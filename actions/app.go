@@ -63,14 +63,23 @@ func App() *buffalo.App {
 			// Get the DB connection from the context
 			tx := c.Value("tx").(*pop.Connection)
 			articles := &models.Articles{}
-			// You can order your list here. Just change
+			trends := &models.Trends{}
+
+			// query for all published articles
 			err := tx.Where("reject = false").Where("publish = true").All(articles)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+
+			// query for all published trends
+			err = tx.Where("reject = false").Where("publish = true").All(trends)
 			if err != nil {
 				return errors.WithStack(err)
 			}
 
 			// Make articles available inside the html template
 			c.Set("articles", articles)
+			c.Set("trends", trends)
 			return c.Render(200, r.HTML("index.html"))
 		})
 
@@ -130,7 +139,17 @@ func App() *buffalo.App {
 		articles.Use(CheckAuth)
 		articles.Middleware.Skip(CheckAuth, ar.Create)
 
-		app.Resource("/trends", TrendsResource{&buffalo.BaseResource{}})
+		// ------------------------
+		//  Trends
+		// ------------------------
+
+		app.GET("/trends/submit", TrendsSubmit)
+		app.GET("/trends/admin", TrendsAdmin)
+		var tr buffalo.Resource
+		tr = &TrendsResource{&buffalo.BaseResource{}}
+		trends := app.Resource("/trends", tr)
+		trends.Use(CheckAuth)
+		trends.Middleware.Skip(CheckAuth, tr.Create)
 	}
 
 	return app
