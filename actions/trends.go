@@ -91,12 +91,12 @@ func (v TrendsResource) Create(c buffalo.Context) error {
 		c.Set("errors", verrs)
 		// Render again the new.html template that the user can
 		// correct the input.
-		return c.Render(422, r.HTML("trends/new.html"))
+		return c.Render(422, r.HTML("trends/submit.html"))
 	}
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Trend was created successfully")
 	// and redirect to the trends index page
-	return c.Redirect(302, "/trends/%s", trend.ID)
+	return c.Redirect(302, "/")
 }
 
 // Edit renders a edit formular for a trend. This function is
@@ -142,7 +142,7 @@ func (v TrendsResource) Update(c buffalo.Context) error {
 		c.Set("errors", verrs)
 		// Render again the edit.html template that the user can
 		// correct the input.
-		return c.Render(422, r.HTML("trends/edit.html"))
+		return c.Render(422, r.HTML("trends/submit.html"))
 	}
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Trend was updated successfully")

@@ -7,6 +7,21 @@ import (
 	"github.com/gobuffalo/buffalo"
 )
 
+func CheckLoggedIn(next buffalo.Handler) buffalo.Handler {
+	return func(c buffalo.Context) error {
+		// Read the userID out of the session
+		userID := c.Session().Get("userID")
+		// If there is no userID redirect to the login page
+		if userID == nil {
+			c.Set("loggedin", false)
+		} else {
+			c.Set("loggedin", true)
+		}
+		err := next(c)
+		return err
+	}
+}
+
 // CheckAuth is the middleware to check if a user is logged on.
 func CheckAuth(next buffalo.Handler) buffalo.Handler {
 	return func(c buffalo.Context) error {
