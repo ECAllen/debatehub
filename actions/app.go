@@ -59,6 +59,7 @@ func App() *buffalo.App {
 		//---------------------
 		//	Routes
 		//---------------------
+		app.Use(CheckLoggedIn)
 		app.GET("/", func(c buffalo.Context) error {
 			// Get the DB connection from the context
 			tx := c.Value("tx").(*pop.Connection)
@@ -80,6 +81,7 @@ func App() *buffalo.App {
 			// Make articles available inside the html template
 			c.Set("articles", articles)
 			c.Set("trends", trends)
+
 			return c.Render(200, r.HTML("index.html"))
 		})
 

@@ -30,9 +30,9 @@
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<%= if (loggedin) { %>
-				<a href="/logout" class="btn" data-method="DELETE">Logout</a>
+				<a href="/logout" class="btn btn-primary navbar-btn">Logout</a>
 				<% } else { %>
-				<li><button type="button" class="btn btn-success navbar-btn">Sign in</button></li>
+				<a href="/login" class="btn btn-success navbar-btn">Login</a>
 				<% } %>
 				<!-- TODO add css for this space -->
 				<li>"   "</li>
