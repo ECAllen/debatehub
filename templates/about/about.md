@@ -1,5 +1,4 @@
-﻿<%= partial("menu.html") %>
-
+﻿
 # About
 
 ## The problem
