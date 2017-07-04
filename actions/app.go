@@ -85,9 +85,17 @@ func App() *buffalo.App {
 			return c.Render(200, r.HTML("index.html"))
 		})
 
+		app.GET("/blog", func(c buffalo.Context) error {
+			return c.Render(200, r.HTML("/blog/index.md"))
+		})
+
 		// TODO check this for injection
 		app.GET("/blog/{post}", func(c buffalo.Context) error {
 			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
+		})
+
+		app.GET("/mission", func(c buffalo.Context) error {
+			return c.Render(200, r.HTML("/mission/index.md"))
 		})
 
 		// -----------------
