@@ -1,7 +1,9 @@
 package actions
 
 import (
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo/middleware"
@@ -61,6 +63,10 @@ func App() *buffalo.App {
 		//---------------------
 		app.Use(CheckLoggedIn)
 		app.GET("/", func(c buffalo.Context) error {
+
+			year := fmt.Sprintf("%d", time.Now().Year())
+			c.Set("year", year)
+
 			// Get the DB connection from the context
 			tx := c.Value("tx").(*pop.Connection)
 			articles := &models.Articles{}
