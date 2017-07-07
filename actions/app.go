@@ -1,9 +1,7 @@
 package actions
 
 import (
-	"fmt"
 	"log"
-	"time"
 
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo/middleware"
@@ -57,15 +55,13 @@ func App() *buffalo.App {
 
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 		app.Use(T.Middleware())
+		app.Use(SetVars)
 
 		//---------------------
 		//	Routes
 		//---------------------
 		app.Use(CheckLoggedIn)
 		app.GET("/", func(c buffalo.Context) error {
-
-			year := fmt.Sprintf("%d", time.Now().Year())
-			c.Set("year", year)
 
 			// Get the DB connection from the context
 			tx := c.Value("tx").(*pop.Connection)
@@ -102,6 +98,10 @@ func App() *buffalo.App {
 
 		app.GET("/mission", func(c buffalo.Context) error {
 			return c.Render(200, r.HTML("/mission/index.md"))
+		})
+
+		app.GET("/privacy", func(c buffalo.Context) error {
+			return c.Render(200, r.HTML("/privacy/index.md"))
 		})
 
 		// -----------------

@@ -1,27 +1,38 @@
 
-<form class="form-signin">
-	<h2 class="form-signin-heading">Please sign in</h2>
 
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-6">
+		<h2 class="form-signin-heading">Please sign in</h2>
 
-	<a href="/auth/twitter" class="btn btn-block btn-social btn-twitter">
-		<span class="fa fa-twitter"></span> Sign in with Twitter
-	</a>
+		<a href="/auth/twitter" class="btn btn-block btn-social btn-twitter">
+			<span class="fa fa-twitter"></span> Sign in with Twitter
+		</a>
 
-	<a href="/auth/github" class="btn btn-block btn-social btn-github">
-		<span class="fa fa-github"></span> Sign in with Github 
-	</a>
-
-
-<!-- 
-	<label for="inputEmail" class="sr-only">Email address</label>
-	<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-	<label for="inputPassword" class="sr-only">Password</label>
-	<input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-	<div class="checkbox">
-		<label>
-			<input type="checkbox" value="remember-me"> Remember me
-		</label>
+		<a href="/auth/github" class="btn btn-block btn-social btn-github">
+			<span class="fa fa-github"></span> Sign in with Github 
+		</a>
 	</div>
-	<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
--->
-</form>
+	<div class="col-md-2"></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-6">
+		<h2>FAQ</h2>
+		<ul>
+			<li>Q. Why do you only use social media for authentication services?</li>
+			<li>A. Website security is hard! It is something best left to specialist. Don't believe me? Watch this video of a Comp Sci professor cracking passwords in real time:
+
+
+				<div class="embed-responsive embed-responsive-16by9">
+					<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/7U-RbOKanYs"></iframe>
+				</div>
+
+
+				A lot of sites try implement a authentication themselves and then leave their users vulnerable. Even if you use third party code to implement authentication you can easily create vulnerabilities by failing to setup the backend incorrecty. The social media companies have the deep pockets to secure and defend their authentication systems. Even with all those resources they still suffer data breaches. If they have issues then there really is no hope for a small website to defend themselves against hackers.
+			</li>
+		</ul>
+	</div>
+	<div class="col-md-2"></div>
+</div>
