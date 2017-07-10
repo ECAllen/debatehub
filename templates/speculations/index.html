@@ -1,0 +1,32 @@
+<h1>Speculations</h1>
+
+<p>
+  <a href="<%= newSpeculationPath() %>" class="btn btn-primary">Create New Speculation</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Summary</th>
+    <th>Description</th>
+    <th>Publish</th>
+    <th>Reject</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (speculation) in speculations { %>
+      <tr>
+      <td><%= speculation.Summary %></td>
+        <td><%= speculation.Description %></td>
+        <td><%= speculation.Publish %></td>
+        <td><%= speculation.Reject %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= speculationPath({ speculation_id: speculation.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editSpeculationPath({ speculation_id: speculation.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= speculationPath({ speculation_id: speculation.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

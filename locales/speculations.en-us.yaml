@@ -1,0 +1,6 @@
+- id: "speculations.created.success"
+  translation: "Speculation was successfully created."
+- id: "speculations.updated.success"
+  translation: "Speculation was successfully updated."
+- id: "speculations.destroyed.success"
+  translation: "Speculation was successfully destroyed."

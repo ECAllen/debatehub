@@ -1,0 +1,20 @@
+<h1>Speculations#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= speculationsPath() %>" class="btn btn-info">Back to all Speculations</a></li>
+  <li><a href="<%= editSpeculationPath({ speculation_id: speculation.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= speculationPath({ speculation_id: speculation.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Summary</strong>: <%= speculation.Summary %>
+</p>
+<p>
+  <strong>Description</strong>: <%= speculation.Description %>
+</p>
+<p>
+  <strong>Publish</strong>: <%= speculation.Publish %>
+</p>
+<p>
+  <strong>Reject</strong>: <%= speculation.Reject %>
+</p>

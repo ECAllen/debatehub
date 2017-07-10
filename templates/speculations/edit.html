@@ -1,0 +1,6 @@
+<h1>Edit Speculation</h1>
+
+<%= form_for(speculation, {action: speculationPath({ speculation_id: speculation.ID }), method: "PUT"}) { %>
+  <%= partial("speculations/form.html") %>
+  <a href="<%= speculationPath({ speculation_id: speculation.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>
