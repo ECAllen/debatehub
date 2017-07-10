@@ -166,6 +166,20 @@ func App() *buffalo.App {
 		trends := app.Resource("/trends", tr)
 		trends.Use(CheckAuth)
 		trends.Middleware.Skip(CheckAuth, tr.Create)
+		app.Resource("/trends", TrendsResource{&buffalo.BaseResource{}})
+
+		// ------------------------
+		//  Speculations
+		// ------------------------
+
+		app.GET("/speculations/submit", SpeculationsSubmit)
+		app.GET("/speculations/admin", SpeculationsAdmin)
+		var sp buffalo.Resource
+		sp = &SpeculationsResource{&buffalo.BaseResource{}}
+		speculations := app.Resource("/speculations", sp)
+		speculations.Use(CheckAuth)
+		speculations.Middleware.Skip(CheckAuth, sp.Create)
+		app.Resource("/speculations", SpeculationsResource{&buffalo.BaseResource{}})
 	}
 
 	return app

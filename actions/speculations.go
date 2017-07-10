@@ -171,3 +171,34 @@ func (v SpeculationsResource) Destroy(c buffalo.Context) error {
 	// Redirect to the speculations index page
 	return c.Redirect(302, "/speculations")
 }
+
+// <================>Added<=================>
+
+// New renders the formular for creating a new speculation.
+// This function is mapped to the path GET /speculations/submit
+func SpeculationSubmit(c buffalo.Context) error {
+	// Make speculation available inside the html template
+	c.Set("speculation", &models.Speculation{})
+	// return c.Render(200, r.HTML("speculations/new.html"))
+	return c.Render(200, r.HTML("speculations/submit.html"))
+}
+
+// List gets all Speculations. This function is mapped to the path
+// GET /speculations
+func SpeculationsAdmin(c buffalo.Context) error {
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+	speculations := &models.Speculations{}
+	// You can order your list here. Just change
+	// err := tx.All(speculations)
+	// to:
+	// err := tx.Order("create_at desc").All(speculations)
+	err := tx.Where("reject = false").Where("publish = false").All(speculations)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// Make speculations available inside the html template
+	c.Set("speculations", speculations)
+	return c.Render(200, r.HTML("speculations/admin.html"))
+}
