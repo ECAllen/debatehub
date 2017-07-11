@@ -176,9 +176,9 @@ func (v SpeculationsResource) Destroy(c buffalo.Context) error {
 
 // New renders the formular for creating a new speculation.
 // This function is mapped to the path GET /speculations/submit
-func SpeculationSubmit(c buffalo.Context) error {
+func SpeculationsSubmit(c buffalo.Context) error {
 	// Make speculation available inside the html template
-	c.Set("speculation", &models.Speculation{})
+	c.Set("speculations", &models.Speculation{})
 	// return c.Render(200, r.HTML("speculations/new.html"))
 	return c.Render(200, r.HTML("speculations/submit.html"))
 }
