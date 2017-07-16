@@ -25,7 +25,7 @@
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<%= if (loggedin) { %>
-				<a href="/logout" class="btn btn-primary navbar-btn">Logout</a>
+				<a href="/logout" data-method="DELETE" class="btn btn-primary navbar-btn">Logout</a>
 				<% } else { %>
 				<a href="/login" class="btn btn-success navbar-btn">Login</a>
 				<% } %>

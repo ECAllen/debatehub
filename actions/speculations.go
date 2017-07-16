@@ -178,7 +178,7 @@ func (v SpeculationsResource) Destroy(c buffalo.Context) error {
 // This function is mapped to the path GET /speculations/submit
 func SpeculationsSubmit(c buffalo.Context) error {
 	// Make speculation available inside the html template
-	c.Set("speculations", &models.Speculation{})
+	c.Set("speculation", &models.Speculation{})
 	// return c.Render(200, r.HTML("speculations/new.html"))
 	return c.Render(200, r.HTML("speculations/submit.html"))
 }
