@@ -129,7 +129,7 @@ func App() *buffalo.App {
 		// ------------------
 		//  Profiles
 		// ------------------
-
+		// TODO
 		profiles := app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 		profiles.Use(CheckAuth)
 
@@ -147,37 +147,61 @@ func App() *buffalo.App {
 		//  Articles
 		// ------------------------
 
-		app.GET("/articles/submit", ArticleSubmit)
-		app.GET("/articles/admin", ArticlesAdmin)
 		var ar buffalo.Resource
 		ar = &ArticlesResource{&buffalo.BaseResource{}}
-		articles := app.Resource("/articles", ar)
+		// no authentication needed
+		app.POST("/articles", ar.Create)
+		app.GET("/articles/submit", ArticleSubmit)
+		// authentication
+		articles := app.Group("/articles")
 		articles.Use(CheckAuth)
-		articles.Middleware.Skip(CheckAuth, ar.Create)
+		articles.GET("/", ar.List)
+		articles.GET("/admin", ArticlesAdmin)
+		articles.GET("/new", ar.New)
+		articles.GET("/{article_id}", ar.Show)
+		articles.GET("/{article_id}/edit", ar.Edit)
+		articles.PUT("/{article_id}", ar.Update)
+		articles.DELETE("/{article_id}", ar.Destroy)
 
 		// ------------------------
 		//  Trends
 		// ------------------------
 
-		app.GET("/trends/submit", TrendsSubmit)
 		var tr buffalo.Resource
 		tr = &TrendsResource{&buffalo.BaseResource{}}
-		trends := app.Resource("/trends", tr)
+		// no authentication needed
+		app.GET("/trends/submit", TrendsSubmit)
+		app.POST("/trends", tr.Create)
+		// authentication
+		trends := app.Group("/trends")
 		trends.Use(CheckAuth)
-		trends.Middleware.Skip(CheckAuth, tr.Create)
-		app.GET("/trends/admin", TrendsAdmin)
+		trends.GET("/", tr.List)
+		trends.GET("/admin", TrendsAdmin)
+		trends.GET("/new", tr.New)
+		trends.GET("/{trend_id}", tr.Show)
+		trends.GET("/{trend_id}/edit", tr.Edit)
+		trends.PUT("/{trend_id}", tr.Update)
+		trends.DELETE("/{trend_id}", tr.Destroy)
 
 		// ------------------------
 		//  Speculations
 		// ------------------------
 
-		app.GET("/speculations/submit", SpeculationsSubmit)
-		app.GET("/speculations/admin", SpeculationsAdmin)
 		var sp buffalo.Resource
 		sp = &SpeculationsResource{&buffalo.BaseResource{}}
-		speculations := app.Resource("/speculations", sp)
+		// no authentication needed
+		app.GET("/speculations/submit", SpeculationsSubmit)
+		app.POST("/speculations", sp.Create)
+		// authentication
+		speculations := app.Group("/speculations")
 		speculations.Use(CheckAuth)
-		speculations.Middleware.Skip(CheckAuth, sp.Create)
+		speculations.GET("/", sp.List)
+		speculations.GET("/admin", SpeculationsAdmin)
+		speculations.GET("/new", sp.New)
+		speculations.GET("/{speculation_id}", sp.Show)
+		speculations.GET("/{speculation_id}/edit", sp.Edit)
+		speculations.PUT("/{speculation_id}", sp.Update)
+		speculations.DELETE("/{speculation_id}", sp.Destroy)
 	}
 
 	return app
