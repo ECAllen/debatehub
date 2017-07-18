@@ -16,3 +16,4 @@ migrations/
 models/.buffalo.dev.yml
 dev.sh
 nohup.out
+assets/images/articles/
