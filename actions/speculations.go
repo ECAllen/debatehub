@@ -4,6 +4,7 @@ import (
 	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
+	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -72,6 +73,10 @@ func (v SpeculationsResource) New(c buffalo.Context) error {
 func (v SpeculationsResource) Create(c buffalo.Context) error {
 	// Allocate an empty Speculation
 	speculation := &models.Speculation{}
+	f := nulls.NewBool(false)
+	speculation.Publish = f
+	speculation.Reject = f
+
 	// Bind speculation to the html form elements
 	err := c.Bind(speculation)
 	if err != nil {

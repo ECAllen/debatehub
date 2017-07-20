@@ -4,6 +4,7 @@ import (
 	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
+	"github.com/markbates/pop/nulls"
 	"github.com/pkg/errors"
 )
 
@@ -72,6 +73,10 @@ func (v TrendsResource) New(c buffalo.Context) error {
 func (v TrendsResource) Create(c buffalo.Context) error {
 	// Allocate an empty Trend
 	trend := &models.Trend{}
+	f := nulls.NewBool(false)
+	trend.Publish = f
+	trend.Reject = f
+
 	// Bind trend to the html form elements
 	err := c.Bind(trend)
 	if err != nil {
