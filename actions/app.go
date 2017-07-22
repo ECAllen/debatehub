@@ -14,6 +14,8 @@ import (
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
+
+	"github.com/casbin/casbin"
 )
 
 // ENV is used to help switch settings based on where the
@@ -23,6 +25,7 @@ var app *buffalo.App
 
 // T i18n translator see locales/
 var T *i18n.Translator
+
 
 // App is where all routes and middleware for buffalo
 // should be defined. This is the nerve center of your
@@ -57,6 +60,18 @@ func App() *buffalo.App {
 		app.Use(T.Middleware())
 		app.Use(SetVars)
 
+		// Casbin RBAC enforcer
+		e := casbin.NewEnforcer("rbac/model.conf", "rbac/policy.csv")
+
+		// sub := "alice" // the user that wants to access a resource.
+		// obj := "data1" // the resource that is going to be accessed.
+		// act := "read" // the operation that the user performs on the resource.
+
+		if e.Enforce(sub, obj, act) == true {
+			// permit alice to read data1
+		} else {
+			// deny the request, show an error
+		}
 		//---------------------
 		//	Routes
 		//---------------------
@@ -111,16 +126,16 @@ func App() *buffalo.App {
 		auth.GET("/{provider}", buffalo.WrapHandlerFunc(gothic.BeginAuthHandler))
 		auth.GET("/{provider}/callback", AuthCallback)
 		app.GET("/login",
-			func(c buffalo.Context) error {
-				return c.Render(200, r.HTML("login/index.html"))
-			})
+		func(c buffalo.Context) error {
+			return c.Render(200, r.HTML("login/index.html"))
+		})
 		app.DELETE("/logout",
-			func(c buffalo.Context) error {
-				session := c.Session()
-				session.Delete("userID")
-				session.Save()
-				return c.Redirect(301, "/")
-			})
+		func(c buffalo.Context) error {
+			session := c.Session()
+			session.Delete("userID")
+			session.Save()
+			return c.Redirect(301, "/")
+		})
 
 		// ------------------
 		//   Secure Content
