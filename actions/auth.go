@@ -38,6 +38,9 @@ func AuthCallback(c buffalo.Context) error {
 	if err != nil {
 		return c.Error(401, err)
 	}
+
+	fmt.Printf("%+v\n", user)
+
 	// Do something with the user, maybe register them/sign them in
 	// Adding the userID to the session to remember the logged in user
 	session := c.Session()
@@ -46,9 +49,11 @@ func AuthCallback(c buffalo.Context) error {
 	if err != nil {
 		return c.Error(401, err)
 	}
+
+	// TODO use provider,id,name as unique identifier
 	// check user has profile
-	// if does not exist then creates profile
-	// else insert profile
+	// if does not exist then create profile page
+	// else keep on trucking
 
 	// The default value just renders the data we get by GitHub
 	// return c.Render(200, r.JSON(user))
