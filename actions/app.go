@@ -59,10 +59,6 @@ func App() *buffalo.App {
 		app.Use(T.Middleware())
 		app.Use(SetVars)
 
-		// Casbin RBAC enforcer
-		e := casbin.NewEnforcer("rbac/model.conf", "rbac/policy.csv")
-		e.AddRoleForUser("alice", "test")
-
 		//---------------------
 		//	Routes
 		//---------------------
@@ -127,6 +123,13 @@ func App() *buffalo.App {
 				session.Save()
 				return c.Redirect(301, "/")
 			})
+
+		//---------------------
+		//	Authorization
+		//---------------------
+		e := casbin.NewEnforcer("rbac/model.conf", "rbac/policy.csv")
+		e.AddRoleForUser("alice", "test")
+		e.SavePolicy()
 
 		// ------------------
 		//   Secure Content
