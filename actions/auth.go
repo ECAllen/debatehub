@@ -5,12 +5,14 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/discord"
 	"github.com/markbates/goth/providers/github"
 	"github.com/markbates/goth/providers/twitter"
+	"github.com/markbates/pop"
 )
 
 func init() {
@@ -41,6 +43,18 @@ func AuthCallback(c buffalo.Context) error {
 
 	fmt.Printf("%+v\n", user)
 
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+	id := fmt.Sprintf("%s.%s.%s", user.Provider, user.UserID, user.Name)
+
+	// Allocate an empty Profile
+	profile := &models.Profile{}
+	err = tx.Find(profile, id)
+	if err != nil {
+		fmt.Println("Profile not found")
+		// return c.Redirect(http.StatusFound, checkPath)
+	}
+
 	// Do something with the user, maybe register them/sign them in
 	// Adding the userID to the session to remember the logged in user
 	session := c.Session()
@@ -60,5 +74,5 @@ func AuthCallback(c buffalo.Context) error {
 
 	// After the user is logged in we add a redirect
 	checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
-	return c.Redirect(http.StatusMovedPermanently, checkPath)
+	return c.Redirect(http.StatusFound, checkPath)
 }
