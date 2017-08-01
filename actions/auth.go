@@ -51,7 +51,10 @@ func AuthCallback(c buffalo.Context) error {
 	profile := &models.Profile{}
 	err = tx.Find(profile, id)
 	if err != nil {
-		fmt.Println("Profile not found")
+		fmt.Println("=====> Profile NOT found!!!")
+		return c.Redirect(http.StatusFound, "/profiles/new")
+	} else {
+		fmt.Println("=====> Profile found!!!")
 		// return c.Redirect(http.StatusFound, checkPath)
 	}
 
