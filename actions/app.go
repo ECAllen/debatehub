@@ -139,6 +139,7 @@ func App() *buffalo.App {
 		//  Profiles
 		// ------------------
 		// TODO
+		app.GET("/profiles/submit", ProfilesSubmit)
 		profiles := app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
 		profiles.Use(CheckAuth)
 

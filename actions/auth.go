@@ -41,41 +41,40 @@ func AuthCallback(c buffalo.Context) error {
 		return c.Error(401, err)
 	}
 
-	fmt.Printf("%+v\n", user)
+	// TODO remove later
+	// fmt.Printf("%+v\n", user)
+	// The default value just renders the data we get by GitHub
+	// return c.Render(200, r.JSON(user))
 
-	// Get the DB connection from the context
-	tx := c.Value("tx").(*pop.Connection)
-	id := fmt.Sprintf("%s.%s.%s", user.Provider, user.UserID, user.Name)
-
-	// Allocate an empty Profile
-	profile := &models.Profile{}
-	err = tx.Find(profile, id)
-	if err != nil {
-		fmt.Println("=====> Profile NOT found!!!")
-		return c.Redirect(http.StatusFound, "/profiles/new")
-	} else {
-		fmt.Println("=====> Profile found!!!")
-		// return c.Redirect(http.StatusFound, checkPath)
-	}
-
-	// Do something with the user, maybe register them/sign them in
 	// Adding the userID to the session to remember the logged in user
+	id := fmt.Sprintf("%s.%s.%s", user.Provider, user.UserID, user.Name)
 	session := c.Session()
+	session.Set("userProfileId", id)
+	session.Set("userProvider", user.Provider)
 	session.Set("userID", user.UserID)
+	session.Set("userName", user.Name)
+	session.Set("userNickName", user.NickName)
+	session.Set("userFirstName", user.FirstName)
+	session.Set("userLastName", user.LastName)
+	session.Set("userAvatarURL", user.AvatarURL)
 	err = session.Save()
 	if err != nil {
 		return c.Error(401, err)
 	}
 
-	// TODO use provider,id,name as unique identifier
-	// check user has profile
-	// if does not exist then create profile page
-	// else keep on trucking
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
 
-	// The default value just renders the data we get by GitHub
-	// return c.Render(200, r.JSON(user))
+	// Allocate an empty Profile
+	profile := &models.Profile{}
 
-	// After the user is logged in we add a redirect
-	checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
-	return c.Redirect(http.StatusFound, checkPath)
+	// Check if profile exists
+	err = tx.Find(profile, id)
+	if err != nil {
+		return c.Redirect(http.StatusFound, "/profiles/submit")
+	} else {
+		// After the user is logged in we redirect
+		checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
+		return c.Redirect(http.StatusFound, checkPath)
+	}
 }
