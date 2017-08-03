@@ -178,26 +178,28 @@ func (v ProfilesResource) Destroy(c buffalo.Context) error {
 // This function is mapped to the path GET /profiles/submit
 func ProfilesSubmit(c buffalo.Context) error {
 	// Make profile available inside the html template
-	c.Set("profiles", &models.Profiles{})
+	c.Set("profile", &models.Profile{})
+	up := c.Session().Get("userProvider")
+	c.Set("userProvider", up)
 	return c.Render(200, r.HTML("profiles/submit.html"))
 }
 
 // List gets all Profiles. This function is mapped to the path
 // GET /profiles
-func ProfilesAdmin(c buffalo.Context) error {
-	// Get the DB connection from the context
-	tx := c.Value("tx").(*pop.Connection)
-	profiles := &models.Profiles{}
-	// You can order your list here. Just change
-	// err := tx.All(profiles)
-	// to:
-	// err := tx.Order("create_at desc").All(profiles)
-	err := tx.Where("reject = false").Where("publish = false").All(profiles)
-	if err != nil {
-		return err
-	}
-
-	// Make profiles available inside the html template
-	c.Set("profiles", profiles)
-	return c.Render(200, r.HTML("profiles/admin.html"))
-}
+//func ProfilesAdmin(c buffalo.Context) error {
+//	// Get the DB connection from the context
+//	tx := c.Value("tx").(*pop.Connection)
+//	profiles := &models.Profiles{}
+//	// You can order your list here. Just change
+//	// err := tx.All(profiles)
+//	// to:
+//	// err := tx.Order("create_at desc").All(profiles)
+//	err := tx.Where("reject = false").Where("publish = false").All(profiles)
+//	if err != nil {
+//		return err
+//	}
+//
+//	// Make profiles available inside the html template
+//	c.Set("profiles", profiles)
+//	return c.Render(200, r.HTML("profiles/admin.html"))
+//}

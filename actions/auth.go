@@ -49,14 +49,18 @@ func AuthCallback(c buffalo.Context) error {
 	// Adding the userID to the session to remember the logged in user
 	id := fmt.Sprintf("%s.%s.%s", user.Provider, user.UserID, user.Name)
 	session := c.Session()
-	session.Set("userProfileId", id)
-	session.Set("userProvider", user.Provider)
 	session.Set("userID", user.UserID)
+
+	// session.Set("userProfileId", id)
+	c.Set("userProfileId", id)
+
+	session.Set("userProvider", user.Provider)
 	session.Set("userName", user.Name)
 	session.Set("userNickName", user.NickName)
 	session.Set("userFirstName", user.FirstName)
 	session.Set("userLastName", user.LastName)
 	session.Set("userAvatarURL", user.AvatarURL)
+
 	err = session.Save()
 	if err != nil {
 		return c.Error(401, err)
@@ -73,7 +77,7 @@ func AuthCallback(c buffalo.Context) error {
 	if err != nil {
 		return c.Redirect(http.StatusFound, "/profiles/submit")
 	} else {
-		// After the user is logged in we redirect
+		// After the user is logged and profile is created then redirect
 		checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
 		return c.Redirect(http.StatusFound, checkPath)
 	}
