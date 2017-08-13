@@ -1,7 +1,7 @@
-<%= f.InputTag("Firstname") %>
-<%= f.InputTag("Lastname") %>
-<%= f.InputTag("Email") %>
-<p>profileid <%= userProvider %></p>
-<%= f.InputTag("Avatarurl") %>
+<%= f.InputTag("FirstName", {placeholder: FirstName}) %>
+<%= f.InputTag("LastName", {placeholder: LastName}) %>
+<%= f.InputTag("Email", {placeholder: Email}) %>
+<%= f.InputTag("NickName", {placeholder: NickName}) %>
+<%= f.InputTag("AvatarURL", {placeholder: AvatarURL}) %>
 <%= f.TextArea("Description", {rows: 10}) %>
 <button class="btn btn-success" role="submit">Save</button>

@@ -6,18 +6,18 @@
 
 <table class="table table-striped">
   <thead>
-  <th>Firstname</th>
-    <th>Lastname</th>
-    <th>Userid</th>
+  <th>FirstName</th>
+    <th>LastName</th>
+    <th>UserID</th>
     <th>Email</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
     <%= for (profile) in profiles { %>
       <tr>
-      <td><%= profile.Firstname %></td>
-        <td><%= profile.Lastname %></td>
-        <td><%= profile.Userid %></td>
+      <td><%= profile.FirstName %></td>
+        <td><%= profile.LastName %></td>
+        <td><%= profile.UserID %></td>
         <td><%= profile.Email %></td>
         <td>
           <div class="pull-right">

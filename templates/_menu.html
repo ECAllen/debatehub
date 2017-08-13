@@ -16,16 +16,18 @@
 			<ul class="nav navbar-nav">
 				<li><a href="/mission">Mission</a></li>
 				<li><a href="/blog">Blog</a></li>
+				<!--
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Debates<span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a href="#">Coming Soon</a></li>
 					</ul>
 				</li>
+				-->
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<%= if (loggedin) { %>
-				<a href="/logout" data-method="DELETE" class="btn btn-primary navbar-btn">Logout</a>
+				<a href="/" data-method="DELETE" class="btn btn-primary navbar-btn">Logout</a>
 				<% } else { %>
 				<a href="/login" class="btn btn-success navbar-btn">Login</a>
 				<% } %>

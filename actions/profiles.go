@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
@@ -71,6 +72,7 @@ func (v ProfilesResource) New(c buffalo.Context) error {
 // Create adds a profile to the DB. This function is mapped to the
 // path POST /profiles
 func (v ProfilesResource) Create(c buffalo.Context) error {
+	return c.Render(200, r.JSON(c))
 	// Allocate an empty Profile
 	profile := &models.Profile{}
 	// Bind profile to the html form elements
@@ -78,6 +80,12 @@ func (v ProfilesResource) Create(c buffalo.Context) error {
 	if err != nil {
 		return err
 	}
+
+	pUserID := c.Session().Get("UserID")
+	fmt.Println("=====> ", pUserID)
+	fmt.Println("=====> ", c.Session().Get("FirstName"))
+	// profile.UserID = pUserID
+
 	// Get the DB connection from the context
 	tx := c.Value("tx").(*pop.Connection)
 	// Validate the data from the html form
@@ -92,8 +100,9 @@ func (v ProfilesResource) Create(c buffalo.Context) error {
 		c.Set("errors", verrs)
 		// Render again the new.html template that the user can
 		// correct the input.
-		return c.Render(422, r.HTML("profiles/new.html"))
+		return c.Render(422, r.HTML("profiles/submit.html"))
 	}
+
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Profile was created successfully")
 	// and redirect to the profiles index page
@@ -179,8 +188,10 @@ func (v ProfilesResource) Destroy(c buffalo.Context) error {
 func ProfilesSubmit(c buffalo.Context) error {
 	// Make profile available inside the html template
 	c.Set("profile", &models.Profile{})
-	up := c.Session().Get("userProvider")
-	c.Set("userProvider", up)
+	c.Set("FirstName", c.Session().Get("FirstName"))
+	c.Set("LastName", c.Session().Get("LastName"))
+	c.Set("Email", c.Session().Get("Email"))
+	c.Set("AvatarURL", c.Session().Get("AvatarURL"))
 	return c.Render(200, r.HTML("profiles/submit.html"))
 }
 

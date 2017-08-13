@@ -15,13 +15,14 @@ type Profile struct {
 	ID          uuid.UUID    `json:"id" db:"id"`
 	CreatedAt   time.Time    `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time    `json:"updated_at" db:"updated_at"`
-	Firstname   string       `json:"firstname" db:"firstname"`
-	Lastname    string       `json:"lastname" db:"lastname"`
-	Userid      string       `json:"userid" db:"userid"`
+	FirstName   string       `json:"firstname" db:"firstname"`
+	LastName    string       `json:"lastname" db:"lastname"`
+	Provider    string       `json:"provider" db:"provider"`
+	UserID      string       `json:"userid" db:"userid"`
 	Email       string       `json:"email" db:"email"`
-	Nickname    nulls.String `json:"nickname" db:"nickname"`
+	NickName    string       `json:"nickname" db:"nickname"`
 	Location    nulls.String `json:"location" db:"location"`
-	Avatarurl   nulls.String `json:"avatarurl" db:"avatarurl"`
+	AvatarURL   nulls.String `json:"avatarurl" db:"avatarurl"`
 	Description nulls.String `json:"description" db:"description"`
 }
 
@@ -44,10 +45,10 @@ func (p Profiles) String() string {
 // This method is not required and may be deleted.
 func (p *Profile) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
-		&validators.StringIsPresent{Field: p.Firstname, Name: "Firstname"},
-		&validators.StringIsPresent{Field: p.Lastname, Name: "Lastname"},
-		&validators.StringIsPresent{Field: p.Userid, Name: "Userid"},
+		&validators.StringIsPresent{Field: p.FirstName, Name: "FirstName"},
+		&validators.StringIsPresent{Field: p.LastName, Name: "LastName"},
 		&validators.StringIsPresent{Field: p.Email, Name: "Email"},
+		&validators.StringIsPresent{Field: p.NickName, Name: "NickName"},
 	), nil
 }
 

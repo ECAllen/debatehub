@@ -58,11 +58,11 @@ func App() *buffalo.App {
 		app.ServeFiles("/assets", packr.NewBox("../public/assets"))
 		app.Use(T.Middleware())
 		app.Use(SetVars)
+		app.Use(SetCurrentUser)
 
 		//---------------------
 		//	Routes
 		//---------------------
-		app.Use(CheckLoggedIn)
 		app.GET("/", func(c buffalo.Context) error {
 
 			// Get the DB connection from the context
@@ -110,19 +110,14 @@ func App() *buffalo.App {
 		//   Authentication
 		// -----------------
 		auth := app.Group("/auth")
-		auth.GET("/{provider}", buffalo.WrapHandlerFunc(gothic.BeginAuthHandler))
+		authHandler := buffalo.WrapHandlerFunc(gothic.BeginAuthHandler)
+		auth.GET("/{provider}", authHandler)
 		auth.GET("/{provider}/callback", AuthCallback)
 		app.GET("/login",
 			func(c buffalo.Context) error {
 				return c.Render(200, r.HTML("login/index.html"))
 			})
-		app.DELETE("/logout",
-			func(c buffalo.Context) error {
-				session := c.Session()
-				session.Delete("userID")
-				session.Save()
-				return c.Redirect(301, "/")
-			})
+		app.DELETE("/", AuthDestroy)
 
 		//---------------------
 		//	Authorization

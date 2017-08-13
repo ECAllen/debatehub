@@ -1,31 +1,29 @@
 <h1>Profiles#Show</h1>
 
 <ul class="list-unstyled list-inline">
-  <li><a href="<%= profilesPath() %>" class="btn btn-info">Back to all Profiles</a></li>
   <li><a href="<%= editProfilePath({ profile_id: profile.ID })%>" class="btn btn-warning">Edit</a></li>
-  <li><a href="<%= profilePath({ profile_id: profile.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
 </ul>
 
 <p>
-  <strong>Firstname</strong>: <%= profile.Firstname %>
+  <strong>FirstName</strong>: <%= profile.FirstName %>
 </p>
 <p>
-  <strong>Lastname</strong>: <%= profile.Lastname %>
+  <strong>LastName</strong>: <%= profile.LastName %>
 </p>
 <p>
-  <strong>Userid</strong>: <%= profile.Userid %>
+  <strong>UserID</strong>: <%= profile.UserID %>
 </p>
 <p>
   <strong>Email</strong>: <%= profile.Email %>
 </p>
 <p>
-  <strong>Nickname</strong>: <%= profile.Nickname %>
+  <strong>NickName</strong>: <%= profile.NickName %>
 </p>
 <p>
   <strong>Location</strong>: <%= profile.Location %>
 </p>
 <p>
-  <strong>Avatarurl</strong>: <%= profile.Avatarurl %>
+  <strong>AvatarURL</strong>: <%= profile.AvatarURL %>
 </p>
 <p>
   <strong>Description</strong>: <%= profile.Description %>
