@@ -51,15 +51,15 @@ func AuthCallback(c buffalo.Context) error {
 	// The default value just renders the data we get by GitHub
 	// return c.Render(200, r.JSON(user))
 
-	q := tx.Where("provider = ? and userid = ?", user.Provider, user.UserID)
-	exists, err := q.Exists("profiles")
+	// Allocate an empty Profile
+	profile := &models.Profile{}
 
+	q := tx.Where("provider = ? and userid = ?", user.Provider, user.UserID)
+	// exists, err := q.Exists("profiles")
+	exists, err := q.Exists(profile)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-
-	// Allocate an empty Profile
-	profile := &models.Profile{}
 
 	if exists {
 		err := q.First(profile)
@@ -83,7 +83,7 @@ func AuthCallback(c buffalo.Context) error {
 
 	// Adding the user info to the session
 	session := c.Session()
-	session.Set("UserID", user.UserID)
+	session.Set("UserID", profile.ID)
 	err = session.Save()
 	if err != nil {
 		return errors.WithStack(err)
@@ -102,14 +102,14 @@ func AuthCallback(c buffalo.Context) error {
 func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 	return func(c buffalo.Context) error {
 		if uid := c.Session().Get("UserID"); uid != nil {
-			p := &models.Profile{}
+			profile := &models.Profile{}
 			tx := c.Value("tx").(*pop.Connection)
-			err := tx.Find(p, uid)
+			err := tx.Find(profile, uid)
 			if err != nil {
 				errors.WithStack(err)
 			}
-			c.Set("CurrentUser", p)
-			c.Set("UserID", p.ID)
+			c.Set("CurrentUser", profile)
+			c.Set("UserID", profile.ID)
 			c.Set("loggedin", true)
 		} else {
 			c.Set("loggedin", false)
