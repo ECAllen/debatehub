@@ -74,11 +74,10 @@ func AuthCallback(c buffalo.Context) error {
 		profile.LastName = user.LastName
 		profile.Email = user.Email
 		profile.AvatarURL = nulls.NewString(user.AvatarURL)
-	}
-
-	err = tx.Save(profile)
-	if err != nil {
-		return errors.WithStack(err)
+		err = tx.Save(profile)
+		if err != nil {
+			return errors.WithStack(err)
+		}
 	}
 
 	// Adding the user info to the session
@@ -90,8 +89,8 @@ func AuthCallback(c buffalo.Context) error {
 	}
 
 	if exists {
-		checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
-		return c.Redirect(http.StatusFound, checkPath)
+		// checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
+		return c.Redirect(http.StatusFound, "/")
 	} else {
 		c.Flash().Add("success", "Please create your profile.")
 		return c.Redirect(http.StatusFound, "/profiles/submit")
