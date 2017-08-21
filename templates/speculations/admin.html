@@ -1,0 +1,27 @@
+<h1>Speculations Admin</h1>
+
+<table class="table table-striped">
+	<thead>
+		<th>Summary</th>
+		<th>Description</th>
+		<th>Reject</th>
+		<th>Publish</th>
+		<th>&nbsp;</th>
+	</thead>
+	<tbody>
+		<%= for (speculation) in speculations { %>
+		<tr>
+			<td><%= speculation.Summary%></td>
+			<td><%= speculation.Description %></td>
+			<td><%= speculation.Reject %></td>
+			<td><%= speculation.Publish%></td>
+			<td>
+				<div class="pull-right">
+					<a href="<%= editSpeculationPath({ speculation_id: speculation.ID }) %>" class="btn btn-warning">Edit</a>
+					<a href="<%= speculationPath({ speculation_id: speculation.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Delete</a>
+				</div>
+			</td>
+		</tr>
+		<% } %>
+	</tbody>
+</table>
