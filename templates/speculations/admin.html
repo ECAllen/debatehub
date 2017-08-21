@@ -1,0 +1,31 @@
+<h1>Articles Admin</h1>
+
+<table class="table table-striped">
+	<thead>
+		<th>Url</th>
+		<th>Headline</th>
+		<th>Description</th>
+		<th>Type</th>
+		<th>Reject</th>
+		<th>Publish</th>
+		<th>&nbsp;</th>
+	</thead>
+	<tbody>
+		<%= for (article) in articles { %>
+		<tr>
+			<td><%= article.Url %></td>
+			<td><%= article.Headline %></td>
+			<td><%= article.Description %></td>
+			<td><%= article.Type %></td>
+			<td><%= article.Reject %></td>
+			<td><%= article.Publish%></td>
+			<td>
+				<div class="pull-right">
+					<a href="<%= editArticlePath({ article_id: article.ID }) %>" class="btn btn-warning">Edit</a>
+					<a href="<%= articlePath({ article_id: article.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Delete</a>
+				</div>
+			</td>
+		</tr>
+		<% } %>
+	</tbody>
+</table>
