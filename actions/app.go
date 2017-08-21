@@ -67,24 +67,30 @@ func App() *buffalo.App {
 
 			// Get the DB connection from the context
 			tx := c.Value("tx").(*pop.Connection)
-			articles := &models.Articles{}
-			trends := &models.Trends{}
 
 			// query for all published articles
+			articles := &models.Articles{}
 			err := tx.Where("reject = false").Where("publish = true").All(articles)
 			if err != nil {
 				return errors.WithStack(err)
 			}
+			c.Set("articles", articles)
 
 			// query for all published trends
+			trends := &models.Trends{}
 			err = tx.Where("reject = false").Where("publish = true").All(trends)
 			if err != nil {
 				return errors.WithStack(err)
 			}
-
-			// Make articles available inside the html template
-			c.Set("articles", articles)
 			c.Set("trends", trends)
+
+			// query for all published speculations
+			speculations := &models.Speculations{}
+			err = tx.Where("reject = false").Where("publish = true").All(speculations)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+			c.Set("speculations", speculations)
 
 			return c.Render(200, r.HTML("index.html"))
 		})
