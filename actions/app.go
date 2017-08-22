@@ -20,7 +20,8 @@ import (
 
 // ENV is used to help switch settings based on where the
 // application is being run. Default is "development".
-var ENV = envy.Get("GO_ENV", "development")
+var ENV = envy.Get("GO_ENV", "production")
+var HOST = envy.Get("GO_HOST", "http://debatehub.org")
 var app *buffalo.App
 
 // T i18n translator see locales/
@@ -34,7 +35,7 @@ func App() *buffalo.App {
 		app = buffalo.Automatic(buffalo.Options{
 			Env:         ENV,
 			SessionName: "_debatehub_session",
-			Host:        "http://debatehub.org",
+			Host:        HOST,
 		})
 
 		if ENV == "development" {

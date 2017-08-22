@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/markbates/pop"
@@ -24,6 +25,25 @@ type Profile struct {
 	Location    nulls.String `json:"location" db:"location"`
 	AvatarURL   nulls.String `json:"avatarurl" db:"avatarurl"`
 	Description nulls.String `json:"description" db:"description"`
+}
+
+type NickIsUnique struct {
+	Name  string
+	Field string
+	Tx    *pop.Connection
+}
+
+func (v *NickIsUnique) IsValid(errors *validate.Errors) {
+	q := v.Tx.Where("NickName = ?", v.Field)
+	exists, err := q.Exists("profiles")
+
+	if err != nil {
+		errors.Add(validators.GenerateKey(v.Name), fmt.Sprintf("%s database error. Admins will fix it shortly.", v.Name))
+	}
+
+	if exists {
+		errors.Add(validators.GenerateKey(v.Name), fmt.Sprintf("%s is taken.", v.Name))
+	}
 }
 
 // String is not required by pop and may be deleted
@@ -49,6 +69,7 @@ func (p *Profile) Validate(tx *pop.Connection) (*validate.Errors, error) {
 		&validators.StringIsPresent{Field: p.LastName, Name: "LastName"},
 		&validators.StringIsPresent{Field: p.Email, Name: "Email"},
 		&validators.StringIsPresent{Field: p.NickName, Name: "NickName"},
+		&NickIsUnique{Field: p.NickName, Name: "NickName", Tx: tx},
 	), nil
 }
 
