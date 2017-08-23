@@ -69,7 +69,7 @@ func App() *buffalo.App {
 
 			// query for all published articles
 			articles := &models.Articles{}
-			err := tx.Where("reject = false").Where("publish = true").All(articles)
+			err := tx.Where("reject = false").Where("publish = true").Order("updated_at desc").All(articles)
 			if err != nil {
 				return errors.WithStack(err)
 			}
