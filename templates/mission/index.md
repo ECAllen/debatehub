@@ -1,4 +1,4 @@
-
+## References
 
 [Clay Shirky A Group Is Its Own Worst Enemy](http://www.shirky.com/writings/herecomeseverybody/group_enemy.html)
 
