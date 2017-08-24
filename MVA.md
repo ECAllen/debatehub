@@ -1,5 +1,4 @@
 # MVA
-
 ## Strategy 
 ### Ladder up 
 
