@@ -14,12 +14,10 @@ import (
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
-
-	"github.com/casbin/casbin"
 )
 
 // ENV is used to help switch settings based on where the
-// application is being run. Default is "development".
+// application is being run. Default is "production".
 var ENV = envy.Get("GO_ENV", "production")
 var HOST = envy.Get("GO_HOST", "http://debatehub.org")
 var app *buffalo.App
@@ -44,7 +42,6 @@ func App() *buffalo.App {
 		// Protect against CSRF attacks. https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
 		// Remove to disable this.
 		app.Use(middleware.CSRF)
-
 		app.Use(middleware.PopTransaction(models.DB))
 
 		// Setup and use translations:
@@ -127,9 +124,6 @@ func App() *buffalo.App {
 		//---------------------
 		//	Authorization
 		//---------------------
-		e := casbin.NewEnforcer("rbac/model.conf", "rbac/policy.csv")
-		e.AddRoleForUser("alice", "test")
-		e.SavePolicy()
 
 		// ------------------
 		//   Secure Content
@@ -138,20 +132,24 @@ func App() *buffalo.App {
 		// ------------------
 		//  Profiles
 		// ------------------
-		// TODO
 		app.GET("/profiles/submit", ProfilesSubmit)
-		profiles := app.Resource("/profiles", ProfilesResource{&buffalo.BaseResource{}})
+		pr := &ProfilesResource{&buffalo.BaseResource{}}
+		profiles := app.Resource("/profiles", pr)
 		profiles.Use(CheckAuth)
+		profiles.Use(CheckAdmin)
+		profiles.Middleware.Skip(CheckAdmin, pr.Create, pr.Show, pr.Update, pr.Edit)
 
 		// ------------------------
 		//   Email Subscriptions
 		// ------------------------
 
-		var er buffalo.Resource
-		er = &EmailsResource{&buffalo.BaseResource{}}
+		er := &EmailsResource{&buffalo.BaseResource{}}
 		subscription := app.Resource("/emails", er)
 		subscription.Use(CheckAuth)
 		subscription.Middleware.Skip(CheckAuth, er.Create)
+		subscription.Middleware.Skip(CheckAdmin, er.Create)
+		// TODO fix this
+		subscription.Middleware.Skip(middleware.CSRF, er.Create)
 
 		// ------------------------
 		//  Articles
@@ -165,6 +163,7 @@ func App() *buffalo.App {
 		// authentication
 		articles := app.Group("/articles")
 		articles.Use(CheckAuth)
+		articles.Use(CheckAdmin)
 		articles.GET("/", ar.List)
 		articles.GET("/admin", ArticlesAdmin)
 		articles.GET("/new", ar.New)
@@ -185,6 +184,7 @@ func App() *buffalo.App {
 		// authentication
 		trends := app.Group("/trends")
 		trends.Use(CheckAuth)
+		trends.Use(CheckAdmin)
 		trends.GET("/", tr.List)
 		trends.GET("/admin", TrendsAdmin)
 		trends.GET("/new", tr.New)
@@ -205,6 +205,7 @@ func App() *buffalo.App {
 		// authentication
 		speculations := app.Group("/speculations")
 		speculations.Use(CheckAuth)
+		speculations.Use(CheckAdmin)
 		speculations.GET("/", sp.List)
 		speculations.GET("/admin", SpeculationsAdmin)
 		speculations.GET("/new", sp.New)
