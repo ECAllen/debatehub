@@ -1,4 +1,5 @@
 ## The problem is not the mainstream media... it is us
+(updated 08/25/17)
 
 The mainstream media (referred to as the MSM in this article) is often vilified for issues that have nothing to do with them but rather are a reflection of the American public. The media outlets are fundamentally businesses which have to make a profit. We often do not look at them like this but rather treat them as a information utility instead of the businesses that they are. This leads to fundamental misunderstanding of what we should expect from the MSM.
 
