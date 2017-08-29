@@ -108,6 +108,14 @@ func App() *buffalo.App {
 			return c.Render(200, r.HTML("/privacy/index.md"))
 		})
 
+		app.GET("/google6ae5140fef2eab20.html", func(c buffalo.Context) error {
+			return c.Render(200, r.Plain("/google6ae5140fef2eab20.html"))
+		})
+
+		app.GET("/robots.txt", func(c buffalo.Context) error {
+			return c.Render(200, r.Plain("/robots.txt"))
+		})
+
 		// -----------------
 		//   Authentication
 		// -----------------
