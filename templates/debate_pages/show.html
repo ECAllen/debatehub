@@ -1,0 +1,15 @@
+<h1><%= debate.Title %></h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= debatePagesPath() %>" class="btn btn-info">Back to all Debates</a></li>
+  <li><a href="<%= editDebatePagePath({ debate_page_id: debate.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= debatePagePath({ debate_page_id: debate.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+<p><%= debate.Topic %></p>
+<%= for (point) in points { %>
+<p><%= point.Topic %></p>
+<% } %>
+<p>Add debate points and counterpoints. Each response should be one cohesive thought. If possible it should be backed up by data and links etc...</p>
+<%= form_for(point, {action: debatePageAddpointPath({ debate_page_id: debate.ID }), method: "POST"}) { %>
+  <%= partial("debate_pages/pointForm.html") %>
+<% } %>

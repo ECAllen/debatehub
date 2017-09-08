@@ -1,0 +1,27 @@
+<h1>Debates</h1>
+<p>
+  <a href="<%= newDebatesPath() %>" class="btn btn-primary">Create New Debate</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (debate) in debates { %>
+      <tr>
+      <td>
+          <div class="pull-right">
+            <a href="<%= debatePath({ debate_id: debate.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editDebatePath({ debate_id: debate.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= debatePath({ debate_id: debate.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

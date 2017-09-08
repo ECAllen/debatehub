@@ -1,0 +1,6 @@
+- id: "points.created.success"
+  translation: "Point was successfully created."
+- id: "points.updated.success"
+  translation: "Point was successfully updated."
+- id: "points.destroyed.success"
+  translation: "Point was successfully destroyed."

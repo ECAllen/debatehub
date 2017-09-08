@@ -55,7 +55,6 @@ func AuthCallback(c buffalo.Context) error {
 	profile := &models.Profile{}
 
 	q := tx.Where("provider = ? and userid = ?", user.Provider, user.UserID)
-	// exists, err := q.Exists("profiles")
 	exists, err := q.Exists(profile)
 	if err != nil {
 		return errors.WithStack(err)

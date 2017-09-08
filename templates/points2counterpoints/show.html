@@ -1,0 +1,14 @@
+<h1>Points2counterpoint#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= points2counterpointsPath() %>" class="btn btn-info">Back to all Points2counterpoints</a></li>
+  <li><a href="<%= editPoints2counterpointPath({ points2counterpoint_id: points2counterpoint.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= points2counterpointPath({ points2counterpoint_id: points2counterpoint.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Point</strong>: <%= points2counterpoint.Point %>
+</p>
+<p>
+  <strong>Counterpoint</strong>: <%= points2counterpoint.Counterpoint %>
+</p>

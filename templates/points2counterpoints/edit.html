@@ -1,0 +1,6 @@
+<h1>Edit Points2counterpoint</h1>
+
+<%= form_for(points2counterpoint, {action: points2counterpointPath({ points2counterpoint_id: points2counterpoint.ID }), method: "PUT"}) { %>
+  <%= partial("points2counterpoints/form.html") %>
+  <a href="<%= points2counterpointsPath({ points2counterpoint_id: points2counterpoint.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>
