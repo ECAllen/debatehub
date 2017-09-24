@@ -1,15 +1,45 @@
-<h1><%= debate.Title %></h1>
 
 <ul class="list-unstyled list-inline">
-  <li><a href="<%= debatePagesPath() %>" class="btn btn-info">Back to all Debates</a></li>
-  <li><a href="<%= editDebatePagePath({ debate_page_id: debate.ID })%>" class="btn btn-warning">Edit</a></li>
-  <li><a href="<%= debatePagePath({ debate_page_id: debate.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+	<li><a href="<%= debatePagesPath() %>" class="btn btn-info">Back to all Debates</a></li>
+	<li><a href="<%= editDebatePagePath({ debate_page_id: debate.ID })%>" class="btn btn-warning">Edit</a></li>
+	<li><a href="<%= debatePagePath({ debate_page_id: debate.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
 </ul>
-<p><%= debate.Topic %></p>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title"><%= debate.Title %></h3>
+	</div>
+	<div class="panel-body">
+		<p><%= debate.Topic %></p>
+<%= form_for(debate, {action: debatePageAddpointPath({ debate_page_id: debate.ID }), method: "POST"}) { %>
+	<button type="button" class="btn" id="add-input"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Reply</button>
+<% } %>
+	</div>
+</div>
+
+
+<ul class="media-list">
 <%= for (point) in points { %>
-<p><%= point.Topic %></p>
-<% } %>
-<p>Add debate points and counterpoints. Each response should be one cohesive thought. If possible it should be backed up by data and links etc...</p>
-<%= form_for(point, {action: debatePageAddpointPath({ debate_page_id: debate.ID }), method: "POST"}) { %>
+<div class="panel panel-default">
+  <li class="media">
+    <div class="media-left">
+      <a href="#">
+        <img class="media-object" src="" alt="">
+      </a>
+    </div>
+    <div class="media-body">
+	    <p class="media-heading"><%= point.Rank %></p> 
+      	<!-- insert here for sub -->
+	<p><%= point.Topic %></p>
+<%= form_for(debate, {action: debatePageAddcounterpointPath({ debate_page_id: debate.ID, point_id: point.ID }), method: "POST"}) { %>
   <%= partial("debate_pages/pointForm.html") %>
+  <a href="<%= debatePageAddcounterpointPath() %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
 <% } %>
+	</div>
+    </div>
+  </li>
+    </div>
+<% } %>
+</ul>
+
+
+

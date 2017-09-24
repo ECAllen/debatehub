@@ -248,6 +248,7 @@ func App() *buffalo.App {
 		debate_pages.GET("/{debate_page_id}", db.Show)
 		debate_pages.GET("/{debate_page_id}/edit", db.Edit)
 		debate_pages.POST("/{debate_page_id}/addpoint", AddPoint)
+		debate_pages.POST("/{debate_page_id}/addcounterpoint", AddCounterPoint)
 		debate_pages.PUT("/{debate_page_id}", db.Update)
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
 	}

@@ -2,93 +2,19 @@
 Notes: Think git coding workflows
 HOME: http://debatehub.org
 
-########## Trends ########## 
-
-#### Data Fields
-summary:text
-description:text:NULL
-thumbnail:
-published:true/false:BOOLEAN:NULL
-rejected:true/false:BOOLEAN:NULL
-
 buffalo g resource trends summary description thumbnail:nulls.Text publish:nulls.Bool reject:nulls.Bool
-
-#### Flow
-submit form -> submitted queue -> rejected false AND published false -> queue admin page -> rejected false AND published true -> front page
-
-#### Roles
-Anon submit
-NewsAdmin publish|reject
-
-########## News ########## 
-
-#### Data Fields
-url:
-description:text:NULL
-type:article/podcast/tweet
-thumbnail:
-published:true/false:BOOLEAN:NULL
-rejected:true/false:BOOLEAN:NULL
 
 buffalo g resource articles url description:nulls.Text type thumbnail:nulls.Text publish:nulls.Bool reject:nulls.Bool
 
-#### Flow
-submit form -> submitted queue -> rejected false AND published false -> queue admin page -> rejected false AND published true -> front page
 
-#### Roles
-Anon submit
-NewsAdmin publish|reject
+buffalo g resource debates topic:Text
 
+buffalo g resource points topic:Text rank:int
 
-########## Debates ########## 
+buffalo g resource debates2points debate:uuid point:uuid 
 
-#### Data
+buffalo g resource points2counterpoints point:uuid counterpoint:uuid 
 
-##### Debate
-
-Topic:Text
-
-Debate Coordinator:Text/User
-
-Argument pointer(s):foreign key
-
-
-##### Realtionships
-
-
-#### Flow
-
-Create Debate   -> Existing Debate
-
-Existing Debate -> add to arguments     |-> Existing Debate
-		-> mark fallacy		|	
-		-> add to counterpoint	|	
-		-> cite sources		|
-
-		-> debate admin
-
-
-##### Entry Points
-
-Create Debate url:HOME/debates|d/
-
-Existing Debate	url:HOME/debates|d/<topic_name> TODO: topic_name coded or REST?
-
-
-##### Exit Points
-
-Existing Debate
-
-
-##### Roles
-
-Debate Coordinator(admin/transferable)
-
-Participant(add args only)
-
-non-partisan(ro)
-
-
-
+buffalo g resource counterpoints topic:Text rank:int
 
 

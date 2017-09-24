@@ -1,18 +1,125 @@
 package actions
 
 import (
+	"fmt"
 	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
-
-	"fmt"
 	"github.com/satori/go.uuid"
 )
 
 // DebatePagesResource is the resource for the debate model
 type DebatePagesResource struct {
 	buffalo.Resource
+}
+
+// Points tree for debates
+type Ptree struct {
+	models.Point
+	children []Ptree
+}
+
+func Point(id uuid.UUID, tx *pop.Connection) (models.Point, error) {
+
+	// point used to hold the point
+	point := &models.Point{}
+
+	// Create query.
+	q := tx.Where("ID = ?", id)
+
+	// verify that the point exists in
+	// the Point table
+	exists, err := q.Exists(point)
+	if err != nil {
+		return *point, err
+	}
+
+	// Collect point into
+	// points slice.
+	if exists {
+		err = q.First(point)
+		if err != nil {
+			return *point, err
+		}
+	}
+	return *point, err
+}
+
+func buildTree(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
+
+	// Get point.
+	p, err := Point(id, tx)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// Put point into ptree.
+	ptree.Point = p
+
+	// check if this point has any counterpoints
+	p2c := &models.Points2counterpoint{}
+	q := tx.Where("point = ?", id)
+	exists, err := q.Exists(p2c)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if exists {
+		// go through each counter point
+		// create a ptree node
+		// buildtree on node
+		p2cs := []models.Points2counterpoint{}
+		err = q.All(&p2cs)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		for _, c := range p2cs {
+			var pt Ptree
+			err = buildTree(c.Counterpoint, tx, &pt)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+			ptree.children = append(ptree.children, pt)
+		}
+
+	}
+	return errors.WithStack(err)
+}
+
+func buildTreeRoot(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
+
+	// Check if this debate has any points.
+	debatePoint := &models.Debates2point{}
+	q := tx.Where("debate = ?", id)
+	exists, err := q.Exists(debatePoint)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if exists {
+		// The debatePoints used to iterate through
+		// to collect all the debate point uuid's.
+		debatePoints := []models.Debates2point{}
+
+		// Collect all the point id's associated
+		// with the debate.
+		err = q.All(&debatePoints)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		for _, dp := range debatePoints {
+			var pt Ptree
+			err = buildTree(dp.Point, tx, &pt)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+			ptree.children = append(ptree.children, pt)
+		}
+	}
+	return errors.WithStack(err)
 }
 
 // List gets all Debates. This function is mapped to the path
@@ -41,66 +148,60 @@ func (v DebatePagesResource) List(c buffalo.Context) error {
 // Show gets the data for one Debate. This function is mapped to
 // the path GET /debate_pages/{debate_page_id}
 func (v DebatePagesResource) Show(c buffalo.Context) error {
-	// Get the DB connection from the context
-	debate_id := c.Param("debate_page_id")
+	// ==================================
+	// Setup
+	// ==================================
 
+	// Get params
+	debate_id := c.Param("debate_page_id")
 	tx := c.Value("tx").(*pop.Connection)
 
-	// create the models
+	// create the models.
 	debate := &models.Debate{}
-	point := &models.Point{}
 	debates2point := &models.Debates2point{}
+
+	// ==================================
+	// Query for the debate.
+	// ==================================
 
 	err := tx.Find(debate, debate_id)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
-	// check for existence counter points for debate
+	c.Set("debate", debate)
+
+	// ==================================
+	// Counter points
+	// ==================================
+
+	// Check for the existence of counter
+	// points for the debate in the debates2point
+	// table.
 	q := tx.Where("debate = ?", debate_id)
 	exists, err := q.Exists(debates2point)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
+	var ptree Ptree
+	ptree.Topic = debate.Topic
+	ptree.ID = debate.ID
+
+	// If there are points.
 	if exists {
-		// collect counter points
-		debatePoints := []models.Debates2point{}
-		points := []models.Point{}
-
-		// collect all the point id's for the debate
-		err = q.All(&debatePoints)
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		// iterate through the debate points
-		for _, dp := range debatePoints {
-			fmt.Println(dp.Point)
-
-			// verify that the point exists in
-			// the Point table
-			qp := tx.Where("ID = ?", dp.Point)
-			exists, err = qp.Exists(point)
-			if err != nil {
-				return errors.WithStack(err)
-			}
-
-			if exists {
-				err = qp.All(&points)
-				if err != nil {
-					return errors.WithStack(err)
-
-				}
-				for _, pt := range points {
-					fmt.Println(pt.Topic)
-				}
-			}
-		}
+		// Pass the points slice to the context.
+		points := &models.Points{}
 		c.Set("points", points)
+		// fmt.Printf("\n%#v\n\n", ptree)
+		err = buildTreeRoot(debate.ID, tx, &ptree)
+		if err != nil {
+			return err
+		}
 	}
 
-	c.Set("point", point)
-	c.Set("debate", debate)
+	// At this point have the ptree built and need to
+	// generate the html and pass it down to the renderer.
 
 	return c.Render(200, r.HTML("debate_pages/show.html"))
 }
@@ -130,6 +231,7 @@ func (v DebatePagesResource) Create(c buffalo.Context) error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
+
 	if verrs.HasAny() {
 		// Make debate available inside the html template
 		c.Set("debate", debate)
@@ -236,6 +338,7 @@ func AddPoint(c buffalo.Context) error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
+	// fmt.Println("point ================" + fmt.Sprintf("%s", point))
 	if verrs.HasAny() {
 		// Make point available inside the html template
 		c.Set("point", point)
@@ -246,16 +349,18 @@ func AddPoint(c buffalo.Context) error {
 		// Adding the user info to the session
 		fmt.Println(verrs)
 		c.Flash().Add("warning", fmt.Sprintf("%s", verrs))
-		return c.Redirect(302, "/debate_pages/%s", debate_id)
+		return c.Redirect(422, "/debate_pages/%s", debate_id)
 	}
 
-	// put point and debate into debate2points table
+	// put point and debate into points2counterpoints table
+	// add debate id
 	debate2point := &models.Debates2point{}
 	debate2point.Debate, err = uuid.FromString(debate_id)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
+	// add point id
 	debate2point.Point = point.ID
 	verrs, err = tx.ValidateAndCreate(debate2point)
 	if err != nil {
@@ -264,4 +369,68 @@ func AddPoint(c buffalo.Context) error {
 
 	// and redirect to the points index page
 	return c.Redirect(302, "/debate_pages/%s", debate_id)
+}
+
+func AddCounterPoint(c buffalo.Context) error {
+	// ==================================
+	// Pull out params
+
+	// The debate page id is needed in case we need to redirect
+	// debate page if errors.
+	debate_page_id := c.Param("debate_page_id")
+	// Point_id is the existing point which this "counter point"
+	// is attached.
+	point_id := c.Param("point_id")
+
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+
+	// ==================================
+	// Create the counter point.
+
+	counterpoint := &models.Point{}
+	counterpoint.Rank = 1
+	// Bind point to the html form elements
+	err := c.Bind(counterpoint)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// Validate the data from the html form.
+	verrs, err := tx.ValidateAndCreate(counterpoint)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	fmt.Println("============== counter" + fmt.Sprintf("%s", counterpoint))
+	if verrs.HasAny() {
+		// Make point available inside the html template.
+		c.Set("counterpoint", counterpoint)
+		// Make the errors available inside the html template.
+		c.Set("errors", verrs)
+		// Render again the new.html template that the user can
+		// correct the input.
+		c.Flash().Add("warning", fmt.Sprintf("%s", verrs))
+		// Redirect to the original debate page where the
+		// counter point was created.
+		return c.Redirect(422, "/debate_pages/%s", debate_page_id)
+	}
+
+	// ==================================
+	// Put point and counter point into points2counterpoints table.
+	point2counterpoint := &models.Points2counterpoint{}
+
+	point2counterpoint.Point, err = uuid.FromString(point_id)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// add point id
+	point2counterpoint.Counterpoint = counterpoint.ID
+	verrs, err = tx.ValidateAndCreate(point2counterpoint)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// and redirect to the points index page
+	return c.Redirect(302, "/debate_pages/%s", debate_page_id)
 }
