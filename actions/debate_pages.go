@@ -1,12 +1,15 @@
 package actions
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
 	"github.com/satori/go.uuid"
+	"html/template"
+	"strings"
 )
 
 // DebatePagesResource is the resource for the debate model
@@ -17,7 +20,72 @@ type DebatePagesResource struct {
 // Points tree for debates
 type Ptree struct {
 	models.Point
-	children []Ptree
+	Children []Ptree
+}
+
+var pointHTML = `
+   <li class="media"> 
+     <div class="media-left">
+       <a href="#">
+         <img class="media-object" src="" alt="">
+       </a>
+     </div>
+     <div class="media-body">
+         <h4 class="media-heading">Heading</h4>
+         <p>{{.Topic}}</p>`
+
+var pointEndHTML = `
+     </div> 
+    </li>`
+
+var counterPointHTML = `
+<div class="media">
+     <div class="media-left">
+       <a href="#">
+         <img class="media-object" src="" alt="">
+       </a>
+     </div>
+     <div class="media-body">
+         <h4 class="media-heading">Heading</h4>
+         <p>{{.Topic}}</p>`
+
+var counterPointEndHTML = `
+     </div>
+</div>`
+
+var pointTmpl, _ = template.New("Point").Parse(pointHTML)
+var counterPointTmpl, _ = template.New("CounterPoint").Parse(counterPointHTML)
+
+func buildHTML(ptree *Ptree, counterPoint bool) string {
+	// Slice to hold the templates and tags.
+	var html []string
+	for _, child := range ptree.Children {
+		// Buffer to hold template until
+		// it is converted to string.
+		var tpl bytes.Buffer
+		// Bind vars in template for beginning.
+		if counterPoint {
+			counterPointTmpl.Execute(&tpl, child)
+		} else {
+			pointTmpl.Execute(&tpl, child)
+		}
+		// Append rendered template as string to slice.
+		html = append(html, tpl.String())
+		// If the Point has children then recusrsivly
+		// call buildHTML on them. Set couterpoint to true
+		if len(child.Children) > 0 {
+			html = append(html, buildHTML(&child, true))
+		}
+		// Append end tags to html.
+		if counterPoint {
+			html = append(html, counterPointEndHTML)
+		} else {
+			html = append(html, pointEndHTML)
+		}
+
+	}
+	// Join the slice into one big
+	return strings.Join(html, "\n")
 }
 
 func Point(id uuid.UUID, tx *pop.Connection) (models.Point, error) {
@@ -81,7 +149,7 @@ func buildTree(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 			if err != nil {
 				return errors.WithStack(err)
 			}
-			ptree.children = append(ptree.children, pt)
+			ptree.Children = append(ptree.Children, pt)
 		}
 
 	}
@@ -116,7 +184,7 @@ func buildTreeRoot(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 			if err != nil {
 				return errors.WithStack(err)
 			}
-			ptree.children = append(ptree.children, pt)
+			ptree.Children = append(ptree.Children, pt)
 		}
 	}
 	return errors.WithStack(err)
@@ -169,8 +237,6 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	c.Set("debate", debate)
-
 	// ==================================
 	// Counter points
 	// ==================================
@@ -190,18 +256,22 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 
 	// If there are points.
 	if exists {
+
+		// TODO remove this
 		// Pass the points slice to the context.
 		points := &models.Points{}
 		c.Set("points", points)
-		// fmt.Printf("\n%#v\n\n", ptree)
+
+		// Build the tree of comments.
 		err = buildTreeRoot(debate.ID, tx, &ptree)
 		if err != nil {
 			return err
 		}
 	}
 
-	// At this point have the ptree built and need to
-	// generate the html and pass it down to the renderer.
+	htm := buildHTML(&ptree, false)
+	c.Set("debate", debate)
+	c.Set("debate_html", htm)
 
 	return c.Render(200, r.HTML("debate_pages/show.html"))
 }
