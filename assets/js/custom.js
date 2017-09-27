@@ -84,6 +84,8 @@ $(document).ready(function() {
 		}
 	});
 
+	var token = $("input, [name=authenticity_token]").attr("value");
+	$(".test").append("token: " + token);
 	init();
 
 });

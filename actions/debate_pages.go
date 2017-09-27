@@ -20,6 +20,7 @@ type DebatePagesResource struct {
 // Points tree for debates
 type Ptree struct {
 	models.Point
+	DebateID uuid.UUID
 	Children []Ptree
 }
 
@@ -31,7 +32,7 @@ var pointHTML = `
        </a>
      </div>
      <div class="media-body">
-         <h4 class="media-heading">Heading</h4>
+         <h4 class="media-heading"></h4>
          <p>{{.Topic}}</p>`
 
 var pointEndHTML = `
@@ -46,15 +47,28 @@ var counterPointHTML = `
        </a>
      </div>
      <div class="media-body">
-         <h4 class="media-heading">Heading</h4>
+         <h4 class="media-heading"></h4>
          <p>{{.Topic}}</p>`
 
 var counterPointEndHTML = `
      </div>
 </div>`
 
+var formHTML = `
+<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.ID}}" id="debate-form" method="POST" style="display:none">
+	<input class="counterpoint_form" name="authenticity_token" value="" type="hidden">
+   		<div class="form-group">
+			<label>Topic</label>
+			<textarea class=" form-control" id="debate-Topic" name="Topic" rows="3"></textarea>
+		</div>
+		<button class="btn btn-success" role="submit">Add</button>
+ </form>`
+
 var pointTmpl, _ = template.New("Point").Parse(pointHTML)
+
 var counterPointTmpl, _ = template.New("CounterPoint").Parse(counterPointHTML)
+
+var formTmpl, _ = template.New("Form").Parse(formHTML)
 
 func buildHTML(ptree *Ptree, counterPoint bool) string {
 	// Slice to hold the templates and tags.
@@ -63,19 +77,27 @@ func buildHTML(ptree *Ptree, counterPoint bool) string {
 		// Buffer to hold template until
 		// it is converted to string.
 		var tpl bytes.Buffer
+
 		// Bind vars in template for beginning.
 		if counterPoint {
 			counterPointTmpl.Execute(&tpl, child)
 		} else {
 			pointTmpl.Execute(&tpl, child)
 		}
+
 		// Append rendered template as string to slice.
+		// html = append(html, tpl.String())
+
+		// Build form and append
+		formTmpl.Execute(&tpl, child)
 		html = append(html, tpl.String())
+
 		// If the Point has children then recusrsivly
 		// call buildHTML on them. Set couterpoint to true
 		if len(child.Children) > 0 {
 			html = append(html, buildHTML(&child, true))
 		}
+
 		// Append end tags to html.
 		if counterPoint {
 			html = append(html, counterPointEndHTML)
@@ -84,7 +106,7 @@ func buildHTML(ptree *Ptree, counterPoint bool) string {
 		}
 
 	}
-	// Join the slice into one big
+	// Join the slice into one big string
 	return strings.Join(html, "\n")
 }
 
@@ -114,7 +136,7 @@ func Point(id uuid.UUID, tx *pop.Connection) (models.Point, error) {
 	return *point, err
 }
 
-func buildTree(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
+func buildTree(id uuid.UUID, debateID uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 
 	// Get point.
 	p, err := Point(id, tx)
@@ -124,6 +146,7 @@ func buildTree(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 
 	// Put point into ptree.
 	ptree.Point = p
+	ptree.DebateID = debateID
 
 	// check if this point has any counterpoints
 	p2c := &models.Points2counterpoint{}
@@ -145,7 +168,7 @@ func buildTree(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 
 		for _, c := range p2cs {
 			var pt Ptree
-			err = buildTree(c.Counterpoint, tx, &pt)
+			err = buildTree(c.Counterpoint, debateID, tx, &pt)
 			if err != nil {
 				return errors.WithStack(err)
 			}
@@ -180,7 +203,7 @@ func buildTreeRoot(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 
 		for _, dp := range debatePoints {
 			var pt Ptree
-			err = buildTree(dp.Point, tx, &pt)
+			err = buildTree(dp.Point, id, tx, &pt)
 			if err != nil {
 				return errors.WithStack(err)
 			}
@@ -253,6 +276,7 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	var ptree Ptree
 	ptree.Topic = debate.Topic
 	ptree.ID = debate.ID
+	ptree.DebateID = debate.ID
 
 	// If there are points.
 	if exists {
@@ -269,6 +293,7 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 		}
 	}
 
+	// TODO test with no points
 	htm := buildHTML(&ptree, false)
 	c.Set("debate", debate)
 	c.Set("debate_html", htm)
