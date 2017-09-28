@@ -33,7 +33,8 @@ var pointHTML = `
      </div>
      <div class="media-body">
          <h4 class="media-heading"></h4>
-         <p>{{.Topic}}</p>`
+         <p>{{.Topic}}</p>
+	 <button class="btn btn-default btn-xs point-button" value="{{.ID}}">reply</button>`
 
 var pointEndHTML = `
      </div> 
@@ -48,14 +49,15 @@ var counterPointHTML = `
      </div>
      <div class="media-body">
          <h4 class="media-heading"></h4>
-         <p>{{.Topic}}</p>`
+         <p>{{.Topic}}</p>
+	 <button class="btn btn-default btn-xs point-button" value="{{.ID}}">reply</button>`
 
 var counterPointEndHTML = `
      </div>
 </div>`
 
 var formHTML = `
-<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.ID}}" id="debate-form" method="POST" style="display:none">
+<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.ID}}" id="{{.ID}}" method="POST" style="display:none">
 	<input class="counterpoint_form" name="authenticity_token" value="" type="hidden">
    		<div class="form-group">
 			<label>Topic</label>

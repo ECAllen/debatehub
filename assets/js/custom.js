@@ -66,13 +66,14 @@ $(document).ready(function() {
 		})
 	}
 
+	// TODO replace this with code below
 	var newIn = '<div id="add-point">' +
-	'<div class="form-group">' + 
-	'<label>Point </label><small> Add debate points and counterpoints. Each response should be one cohesive thought. If possible it should be backed up by data and links etc...</small>' +
-	'<textarea class=" form-control" id="point-Topic" name="Topic" rows="3"></textarea>' + 
-	'</div>' +
-	'<button class="btn btn-success" role="submit">Add</button>' + 
-	'</div>';
+		'<div class="form-group">' + 
+		'<label>Point </label><small> Add debate points and counterpoints. Each response should be one cohesive thought. If possible it should be backed up by data and links etc...</small>' +
+		'<textarea class=" form-control" id="point-Topic" name="Topic" rows="3"></textarea>' + 
+		'</div>' +
+		'<button class="btn btn-success" role="submit">Add</button>' + 
+		'</div>';
 	$("#add-input").click(function(e){
 		if (newIn) {
 			$('#add-input').after(newIn);
@@ -84,8 +85,44 @@ $(document).ready(function() {
 		}
 	});
 
+	// TODO possibly remove.
 	var token = $("input, [name=authenticity_token]").attr("value");
-	$(".test").append("token: " + token);
+
+	// Map to hold the clicked count of each
+	// button indexed by id.
+	var clickedMap = new Map();
+	$(".point-button").click(function(){
+		var id = "";
+		// Grab the id from the buttons value attribute.
+		// The corresponding form has the id as "id" attr.
+		id = $(this).attr('value');
+		// Default to 0 if never has been clicked.
+		var clicked = 0;
+
+		// Check whether the click is in the click map.
+		if (clickedMap.has(id)){
+			// If button had been previously clicked
+			// then increment it'd click count.
+			clicked = clickedMap.get(id);
+			clicked = clicked + 1;
+			clickedMap.set(id, clicked);
+		}else{
+			// If has not been clicked then assign click
+			// count to the id.
+			clickedMap.set(id, clicked);
+		}
+		// If modulo click is 1 then hide form for 
+		// this id otherwise show it.
+		if (clicked % 2) {
+			$('#' + id).css('display', 'none');
+		}else{
+			$('#' + id).css('display', '');
+		}
+		
+		// For testing.
+		// $("#test").append("id: " + id + "; clicked: " + clicked % 2 + "; ");
+	});
+
 	init();
 
 });
