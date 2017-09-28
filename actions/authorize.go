@@ -1,8 +1,9 @@
 package actions
 
 import (
-	"github.com/gobuffalo/buffalo"
 	"net/http"
+
+	"github.com/gobuffalo/buffalo"
 )
 
 func CheckAdmin(next buffalo.Handler) buffalo.Handler {

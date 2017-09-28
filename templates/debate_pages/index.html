@@ -1,0 +1,28 @@
+<h1>Debates</h1>
+<p>
+<a href="<%= newDebatePagesPath() %>" class="btn btn-primary">Create New Debate</a>
+</p>
+
+<table class="table table-striped">
+	<thead>
+		<th>&nbsp;</th>
+	</thead>
+	<tbody>
+		<%= for (debate) in debates { %>
+		<tr>
+			<td>
+				<p><%= debate.Topic %></p>
+			</td>
+			<td>
+				<div class="pull-right">
+					<a href="<%= debatePagePath({ debate_page_id: debate.ID }) %>" class="btn btn-info">View</a>
+				</div>
+			</td>
+		</tr>
+		<% } %>
+	</tbody>
+</table>
+
+<div class="text-center">
+	<%= paginator(pagination) %>
+</div>

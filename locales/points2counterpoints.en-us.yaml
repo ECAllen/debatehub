@@ -1,0 +1,6 @@
+- id: "points2counterpoints.created.success"
+  translation: "Points2counterpoint was successfully created."
+- id: "points2counterpoints.updated.success"
+  translation: "Points2counterpoint was successfully updated."
+- id: "points2counterpoints.destroyed.success"
+  translation: "Points2counterpoint was successfully destroyed."

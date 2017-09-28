@@ -1,0 +1,6 @@
+<h1>New Points2counterpoint</h1>
+
+<%= form_for(points2counterpoint, {action: points2counterpointsPath(), method: "POST"}) { %>
+  <%= partial("points2counterpoints/form.html") %>
+  <a href="<%= points2counterpointsPath() %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

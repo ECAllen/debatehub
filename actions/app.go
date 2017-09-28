@@ -108,10 +108,6 @@ func App() *buffalo.App {
 			return c.Render(200, r.HTML("/privacy/index.md"))
 		})
 
-		app.GET("/google6ae5140fef2eab20.html", func(c buffalo.Context) error {
-			return c.Render(200, r.Plain("/google6ae5140fef2eab20.html"))
-		})
-
 		app.GET("/robots.txt", func(c buffalo.Context) error {
 			return c.Render(200, r.Plain("/robots.txt"))
 		})
@@ -221,6 +217,40 @@ func App() *buffalo.App {
 		speculations.GET("/{speculation_id}/edit", sp.Edit)
 		speculations.PUT("/{speculation_id}", sp.Update)
 		speculations.DELETE("/{speculation_id}", sp.Destroy)
+
+		// ------------------------
+		//  Debates
+		// ------------------------
+
+		app.Resource("/points", PointsResource{&buffalo.BaseResource{}})
+		// points := app.Group("/points")
+		// points.Use(CheckAuth, CheckAdmin)
+
+		// app.Resource("/debates", DebatesResource{&buffalo.BaseResource{}})
+		// debates := app.Group("/debates")
+		// debates.Use(CheckAuth, CheckAdmin)
+
+		// app.Resource("/debates2points", Debates2pointsResource{&buffalo.BaseResource{}})
+		// debates2points := app.Group("/debates2points")
+		// debates2points.Use(CheckAuth, CheckAdmin)
+
+		// app.Resource("/points2counterpoints", Points2counterpointsResource{&buffalo.BaseResource{}})
+		// points2counterpoints := app.Group("/points2counterpoints")
+		// points2counterpoints.Use(CheckAuth, CheckAdmin)
+		// debate_pages.POST("/{debate_page_id}/addpoint", db.AddPoint)
+
+		var db buffalo.Resource
+		db = &DebatePagesResource{&buffalo.BaseResource{}}
+		debate_pages := app.Group("/debate_pages")
+		debate_pages.GET("/", db.List)
+		debate_pages.POST("/", db.Create)
+		debate_pages.GET("/new", db.New)
+		debate_pages.GET("/{debate_page_id}", db.Show)
+		debate_pages.GET("/{debate_page_id}/edit", db.Edit)
+		debate_pages.POST("/{debate_page_id}/addpoint", AddPoint)
+		debate_pages.POST("/{debate_page_id}/addcounterpoint", AddCounterPoint)
+		debate_pages.PUT("/{debate_page_id}", db.Update)
+		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
 	}
 
 	return app

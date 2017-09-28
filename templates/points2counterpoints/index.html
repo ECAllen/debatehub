@@ -1,0 +1,31 @@
+<h1>Points2counterpoints</h1>
+<p>
+  <a href="<%= newPoints2counterpointsPath() %>" class="btn btn-primary">Create New Points2counterpoint</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Point</th>
+    <th>Counterpoint</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (points2counterpoint) in points2counterpoints { %>
+      <tr>
+      <td><%= points2counterpoint.Point %></td>
+        <td><%= points2counterpoint.Counterpoint %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= points2counterpointPath({ points2counterpoint_id: points2counterpoint.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editPoints2counterpointPath({ points2counterpoint_id: points2counterpoint.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= points2counterpointPath({ points2counterpoint_id: points2counterpoint.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

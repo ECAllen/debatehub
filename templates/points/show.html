@@ -1,0 +1,14 @@
+<h1>Point#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= pointsPath() %>" class="btn btn-info">Back to all Points</a></li>
+  <li><a href="<%= editPointPath({ point_id: point.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= pointPath({ point_id: point.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Topic</strong>: <%= point.Topic %>
+</p>
+<p>
+  <strong>Rank</strong>: <%= point.Rank %>
+</p>
