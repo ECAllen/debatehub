@@ -6,23 +6,33 @@
 </ul>
 
 <div class="row">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3 class="panel-title"><%= debate.Title %></h3>
+	<div class="col-md-9">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><%= debate.Title %></h3>
+			</div>
+			<div class="panel-body">
+				<p><%= debate.Topic %></p>
+				<%= form_for(debate, {action: debatePageAddpointPath({ debate_page_id: debate.ID }), method: "POST"}) { %>
+				<button type="button" class="btn" id="add-input"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Reply</button>
+				<% } %>
+			</div>
 		</div>
-		<div class="panel-body">
-			<p><%= debate.Topic %></p>
-			<%= form_for(debate, {action: debatePageAddpointPath({ debate_page_id: debate.ID }), method: "POST"}) { %>
-			<button type="button" class="btn" id="add-input"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Reply</button>
-			<% } %>
+
+		<div id="test"></div>
+
+		<ul class="media-list">
+			<%= buildDebate() %>
+		</ul>
+	</div>
+
+	<div class="col-md-3">
+		<!-- TODO make discord disappear on mobile and tablet -->
+		<!-- TODO make discord dimensions like jumbotron height -->
+		<div class="embed-responsive embed-responsive-350by500">
+			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" allowtransparency="true"></iframe>
 		</div>
 	</div>
+
 </div>
-
-<div id="test"></div>
-
-<ul class="media-list">
-	<%= buildDebate() %>
-</ul>
-
 

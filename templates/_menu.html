@@ -20,6 +20,9 @@
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<%= if (loggedin) { %>
+				<ul class="nav navbar-nav">
+					<li><a href="/profiles/user">Profile</a></li>
+				</ul>
 				<a href="/" data-method="DELETE" class="btn btn-primary navbar-btn">Logout</a>
 				<% } else { %>
 				<a href="/login" class="btn btn-success navbar-btn">Login</a>

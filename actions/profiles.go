@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
@@ -206,6 +207,12 @@ func ProfilesSubmit(c buffalo.Context) error {
 	c.Set("Email", profile.Email)
 	c.Set("AvatarURL", profile.AvatarURL)
 	return c.Render(200, r.HTML("profiles/submit.html"))
+}
+
+func ProfileUserShow(c buffalo.Context) error {
+	userId := c.Session().Get("UserID")
+	path := fmt.Sprintf("/profiles/%s", userId)
+	return c.Redirect(302, path)
 }
 
 // List gets all Profiles. This function is mapped to the path
