@@ -123,6 +123,10 @@ func App() *buffalo.App {
 			func(c buffalo.Context) error {
 				return c.Render(200, r.HTML("login/index.html"))
 			})
+		app.POST("/login",
+			func(c buffalo.Context) error {
+				return c.Render(200, r.HTML("login/index.html"))
+			})
 		app.DELETE("/", AuthDestroy)
 
 		//---------------------
@@ -251,6 +255,8 @@ func App() *buffalo.App {
 		var db buffalo.Resource
 		db = &DebatePagesResource{&buffalo.BaseResource{}}
 		debate_pages := app.Group("/debate_pages")
+		debate_pages.Use(CheckAuth)
+		debate_pages.Middleware.Skip(CheckAuth, db.List, db.Show)
 		debate_pages.GET("/", db.List)
 		debate_pages.POST("/", db.Create)
 		debate_pages.GET("/new", db.New)
@@ -258,8 +264,8 @@ func App() *buffalo.App {
 		debate_pages.GET("/{debate_page_id}/edit", db.Edit)
 		debate_pages.POST("/{debate_page_id}/addpoint", AddPoint)
 		debate_pages.POST("/{debate_page_id}/addcounterpoint", AddCounterPoint)
-		// debate_pages.PUT("/{debate_page_id}", db.Update)
-		// debate_pages.DELETE("/{debate_page_id}", db.Destroy)
+		debate_pages.PUT("/{debate_page_id}", db.Update)
+		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
 	}
 
 	return app
