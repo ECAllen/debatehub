@@ -7,70 +7,73 @@ body { padding-top: 70px; }
 }
 
 .embed-responsive-350by500 {
-  padding-bottom: 142.85%;
+	padding-bottom: 142.85%;
 }
 
 .bs-docs-header {
-    color: #cdbfe3;
-    text-shadow: 0 1px 0 rgba(0,0,0,.1);
-    background-color: #6f5499;
+	color: #cdbfe3;
+	text-shadow: 0 1px 0 rgba(0,0,0,.1);
+	background-color: #6f5499;
 }
 
 .topbar {
-    background-color: #0275d8;
-    color: #fff;
-    display: block;
-    font-weight: 700;
-    padding: 15px 20px;
-    text-align: center;
+	background-color: #0275d8;
+	color: #fff;
+	display: block;
+	font-weight: 700;
+	padding: 15px 20px;
+	text-align: center;
 }
 
 .text-container {
-  height:200px;
-  width:400px;
-  text-align: center;
+	height:200px;
+	width:400px;
+	text-align: center;
 }
 
 .text-container span {
-  display: block;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+	display: block;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 
 .form-signin {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
+	max-width: 330px;
+	padding: 15px;
+	margin: 0 auto;
 }
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 .form-signin .checkbox {
-  font-weight: normal;
+	font-weight: normal;
 }
 .form-signin .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
+	position: relative;
+	height: auto;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 10px;
+	font-size: 16px;
 }
 .form-signin .form-control:focus {
-  z-index: 2;
+	z-index: 2;
 }
 .form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+	margin-bottom: -1px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
 }
 .form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+	margin-bottom: 10px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
 }
 
+.profile {
+	border-radius: 10%;
+}

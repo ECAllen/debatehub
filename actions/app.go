@@ -1,11 +1,11 @@
 package actions
 
 import (
-	"log"
-
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo/middleware"
 	"github.com/gobuffalo/buffalo/middleware/i18n"
+	"log"
+	"math/rand"
 
 	"github.com/ECAllen/debatehub/models"
 
@@ -60,6 +60,16 @@ func App() *buffalo.App {
 		//	Routes
 		//---------------------
 		app.GET("/", func(c buffalo.Context) error {
+
+			tagLines := []string{"Affirmative action for mental ghettos.",
+				"Trumpets and SJW's need not apply.",
+				"Demagogues hate this website.",
+				"Elevating the new conciousness one debate at a time.",
+				"An opinionated platform.",
+				"Popping filter bubbles since 2017"}
+
+			// Set the sites motto to a random tag line.
+			c.Set("motto", tagLines[rand.Intn(len(tagLines))])
 
 			// Get the DB connection from the context
 			tx := c.Value("tx").(*pop.Connection)
@@ -123,6 +133,10 @@ func App() *buffalo.App {
 			func(c buffalo.Context) error {
 				return c.Render(200, r.HTML("login/index.html"))
 			})
+		app.POST("/login",
+			func(c buffalo.Context) error {
+				return c.Render(200, r.HTML("login/index.html"))
+			})
 		app.DELETE("/", AuthDestroy)
 
 		//---------------------
@@ -137,10 +151,10 @@ func App() *buffalo.App {
 		//  Profiles
 		// ------------------
 		app.GET("/profiles/submit", ProfilesSubmit)
+		app.GET("/profiles/user", ProfileUserShow)
 		pr := &ProfilesResource{&buffalo.BaseResource{}}
 		profiles := app.Resource("/profiles", pr)
-		profiles.Use(CheckAuth)
-		profiles.Use(CheckAdmin)
+		profiles.Use(CheckAuth, CheckAdmin)
 		profiles.Middleware.Skip(CheckAdmin, pr.Create, pr.Show, pr.Update, pr.Edit)
 
 		// ------------------------
@@ -222,13 +236,22 @@ func App() *buffalo.App {
 		//  Debates
 		// ------------------------
 
-		app.Resource("/points", PointsResource{&buffalo.BaseResource{}})
+		// app.Resource("/points", PointsResource{&buffalo.BaseResource{}})
 		// points := app.Group("/points")
 		// points.Use(CheckAuth, CheckAdmin)
 
-		// app.Resource("/debates", DebatesResource{&buffalo.BaseResource{}})
-		// debates := app.Group("/debates")
-		// debates.Use(CheckAuth, CheckAdmin)
+		/*
+			debates := app.Group("/debates")
+			debates.Use(CheckAuth)
+			debates.Use(CheckAdmin)
+			app.Resource("/debates", DebatesResource{&buffalo.BaseResource{}})
+		*/
+
+		var dbt buffalo.Resource
+		dbt = &DebatesResource{&buffalo.BaseResource{}}
+		debates := app.Group("/debates")
+		debates.Use(CheckAuth, CheckAdmin)
+		debates.GET("/", dbt.List)
 
 		// app.Resource("/debates2points", Debates2pointsResource{&buffalo.BaseResource{}})
 		// debates2points := app.Group("/debates2points")
@@ -242,6 +265,8 @@ func App() *buffalo.App {
 		var db buffalo.Resource
 		db = &DebatePagesResource{&buffalo.BaseResource{}}
 		debate_pages := app.Group("/debate_pages")
+		debate_pages.Use(CheckAuth)
+		debate_pages.Middleware.Skip(CheckAuth, db.List, db.Show)
 		debate_pages.GET("/", db.List)
 		debate_pages.POST("/", db.Create)
 		debate_pages.GET("/new", db.New)
@@ -251,6 +276,7 @@ func App() *buffalo.App {
 		debate_pages.POST("/{debate_page_id}/addcounterpoint", AddCounterPoint)
 		debate_pages.PUT("/{debate_page_id}", db.Update)
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
+		app.Resource("/profiles2debates", Profiles2debatesResource{&buffalo.BaseResource{}})
 	}
 
 	return app

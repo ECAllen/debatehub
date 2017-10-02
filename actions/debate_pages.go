@@ -3,13 +3,14 @@ package actions
 import (
 	"bytes"
 	"fmt"
+	"html/template"
+	"strings"
+
 	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
 	"github.com/satori/go.uuid"
-	"html/template"
-	"strings"
 )
 
 // DebatePagesResource is the resource for the debate model
@@ -20,8 +21,10 @@ type DebatePagesResource struct {
 // Points tree for debates
 type Ptree struct {
 	models.Point
-	DebateID uuid.UUID
-	Children []Ptree
+	DebateID    uuid.UUID
+	ProfileID   uuid.UUID
+	ProfileNick string
+	Children    []Ptree
 }
 
 var pointHTML = `
@@ -32,7 +35,7 @@ var pointHTML = `
        </a>
      </div>
      <div class="media-body">
-         <h4 class="media-heading"></h4>
+         <h4 class="media-heading">{{.ProfileNick}}</h4>
          <p>{{.Topic}}</p>
 	 <button class="btn btn-default btn-xs point-button" value="{{.ID}}">reply</button>`
 
@@ -48,7 +51,7 @@ var counterPointHTML = `
        </a>
      </div>
      <div class="media-body">
-         <h4 class="media-heading"></h4>
+         <h4 class="media-heading">{{.ProfileNick}}<</h4>
          <p>{{.Topic}}</p>
 	 <button class="btn btn-default btn-xs point-button" value="{{.ID}}">reply</button>`
 
@@ -249,15 +252,37 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	debate_id := c.Param("debate_page_id")
 	tx := c.Value("tx").(*pop.Connection)
 
-	// create the models.
-	debate := &models.Debate{}
-	debates2point := &models.Debates2point{}
-
 	// ==================================
 	// Query for the debate.
 	// ==================================
 
+	debate := &models.Debate{}
 	err := tx.Find(debate, debate_id)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// ==================================
+	// Query for the profile ID for debate ID
+	// ==================================
+
+	// tx := models.DB
+	// query = tx.Where("id = 1").Where("name = 'Mark'")
+	// users := []models.User{}
+	// err := query.All(&users)
+
+	profile2debate := []models.Profiles2debate{}
+	q := tx.Where("debate = ?", debate_id)
+	err = q.All(&profile2debate)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	// ==================================
+	// Query for the profile
+	// ==================================
+
+	profile := &models.Profile{}
+	err = tx.Find(profile, profile2debate[0].Profile)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -269,25 +294,23 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	// Check for the existence of counter
 	// points for the debate in the debates2point
 	// table.
-	q := tx.Where("debate = ?", debate_id)
+	debates2point := &models.Debates2point{}
+	q = tx.Where("debate = ?", debate_id)
 	exists, err := q.Exists(debates2point)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
+	// Create the root node of Ptree
 	var ptree Ptree
 	ptree.Topic = debate.Topic
 	ptree.ID = debate.ID
 	ptree.DebateID = debate.ID
+	ptree.ProfileID = profile.ID
+	ptree.ProfileNick = profile.NickName
 
 	// If there are points.
 	if exists {
-
-		// TODO remove this
-		// Pass the points slice to the context.
-		points := &models.Points{}
-		c.Set("points", points)
-
 		// Build the tree of comments.
 		err = buildTreeRoot(debate.ID, tx, &ptree)
 		if err != nil {
@@ -295,7 +318,6 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 		}
 	}
 
-	// TODO test with no points
 	htm := buildHTML(&ptree, false)
 	c.Set("debate", debate)
 	c.Set("debate_html", htm)
@@ -316,13 +338,26 @@ func (v DebatePagesResource) New(c buffalo.Context) error {
 func (v DebatePagesResource) Create(c buffalo.Context) error {
 	// Allocate an empty Debate
 	debate := &models.Debate{}
+	profile2debate := &models.Profiles2debate{}
+
 	// Bind debate to the html form elements
 	err := c.Bind(debate)
 	if err != nil {
 		return errors.WithStack(err)
 	}
+
+	// Assume userID set otherwise should not have gotten
+	// here raise error and abort
+	if userID := c.Session().Get("UserID"); userID == nil {
+		err = errors.New("should not have gotten here, check authentication")
+		return errors.WithStack(err)
+	} else {
+		profile2debate.Profile = userID.(uuid.UUID)
+	}
+
 	// Get the DB connection from the context
 	tx := c.Value("tx").(*pop.Connection)
+
 	// Validate the data from the html form
 	verrs, err := tx.ValidateAndCreate(debate)
 	if err != nil {
@@ -338,6 +373,15 @@ func (v DebatePagesResource) Create(c buffalo.Context) error {
 		// correct the input.
 		return c.Render(422, r.HTML("debate_pages/new.html"))
 	}
+
+	profile2debate.Debate = debate.ID
+
+	// Validate the data from the html form
+	verrs, err = tx.ValidateAndCreate(profile2debate)
+	if err != nil || verrs.HasAny() {
+		return errors.WithStack(err)
+	}
+
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Debate was created successfully")
 	// and redirect to the debate_pages index page
@@ -498,7 +542,7 @@ func AddCounterPoint(c buffalo.Context) error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	fmt.Println("============== counter" + fmt.Sprintf("%s", counterpoint))
+
 	if verrs.HasAny() {
 		// Make point available inside the html template.
 		c.Set("counterpoint", counterpoint)

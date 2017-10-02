@@ -17,4 +17,6 @@ buffalo g resource points2counterpoints point:uuid counterpoint:uuid
 
 buffalo g resource counterpoints topic:Text rank:int
 
+buffalo g resource profiles2debates profile:uuid debate:uuid 
 
+buffalo g resource profiles2points profile:uuid point:uuid 

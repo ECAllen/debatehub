@@ -1,0 +1,14 @@
+<h1>Profiles2debate#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= profiles2debatesPath() %>" class="btn btn-info">Back to all Profiles2debates</a></li>
+  <li><a href="<%= editProfiles2debatePath({ profiles2debate_id: profiles2debate.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= profiles2debatePath({ profiles2debate_id: profiles2debate.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Profile</strong>: <%= profiles2debate.Profile %>
+</p>
+<p>
+  <strong>Debate</strong>: <%= profiles2debate.Debate %>
+</p>

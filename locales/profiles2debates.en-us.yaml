@@ -1,0 +1,6 @@
+- id: "profiles2debates.created.success"
+  translation: "Profiles2debate was successfully created."
+- id: "profiles2debates.updated.success"
+  translation: "Profiles2debate was successfully updated."
+- id: "profiles2debates.destroyed.success"
+  translation: "Profiles2debate was successfully destroyed."
