@@ -1,0 +1,31 @@
+<h1>Profiles2debates</h1>
+<p>
+  <a href="<%= newProfiles2debatesPath() %>" class="btn btn-primary">Create New Profiles2debate</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Profile</th>
+    <th>Debate</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (profiles2debate) in profiles2debates { %>
+      <tr>
+      <td><%= profiles2debate.Profile %></td>
+        <td><%= profiles2debate.Debate %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= profiles2debatePath({ profiles2debate_id: profiles2debate.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editProfiles2debatePath({ profiles2debate_id: profiles2debate.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= profiles2debatePath({ profiles2debate_id: profiles2debate.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

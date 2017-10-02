@@ -1,11 +1,11 @@
 package actions
 
 import (
-	"log"
-
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo/middleware"
 	"github.com/gobuffalo/buffalo/middleware/i18n"
+	"log"
+	"math/rand"
 
 	"github.com/ECAllen/debatehub/models"
 
@@ -60,6 +60,16 @@ func App() *buffalo.App {
 		//	Routes
 		//---------------------
 		app.GET("/", func(c buffalo.Context) error {
+
+			tagLines := []string{"Affirmative action for mental ghettos.",
+				"Trumpets and SJW's need not apply.",
+				"Demagogues hate this website.",
+				"Elevating the new conciousness one debate at a time.",
+				"An opinionated platform.",
+				"Popping filter bubbles since 2017"}
+
+			// Set the sites motto to a random tag line.
+			c.Set("motto", tagLines[rand.Intn(len(tagLines))])
 
 			// Get the DB connection from the context
 			tx := c.Value("tx").(*pop.Connection)
@@ -266,6 +276,7 @@ func App() *buffalo.App {
 		debate_pages.POST("/{debate_page_id}/addcounterpoint", AddCounterPoint)
 		debate_pages.PUT("/{debate_page_id}", db.Update)
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
+		app.Resource("/profiles2debates", Profiles2debatesResource{&buffalo.BaseResource{}})
 	}
 
 	return app

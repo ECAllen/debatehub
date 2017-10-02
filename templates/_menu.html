@@ -21,7 +21,9 @@
 			<ul class="nav navbar-nav navbar-right">
 				<%= if (loggedin) { %>
 				<ul class="nav navbar-nav">
-					<li><a href="/profiles/user">Profile</a></li>
+					<li>
+						<p class="navbar-text"><a href="/profiles/user" class="navbar-link"><%= Nick %></a></p>
+					</li>
 				</ul>
 				<a href="/" data-method="DELETE" class="btn btn-primary navbar-btn">Logout</a>
 				<% } else { %>

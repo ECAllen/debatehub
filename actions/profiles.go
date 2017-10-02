@@ -2,6 +2,7 @@ package actions
 
 import (
 	"fmt"
+
 	"github.com/ECAllen/debatehub/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"

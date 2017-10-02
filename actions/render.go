@@ -1,11 +1,12 @@
 package actions
 
 import (
+	"html/template"
+
 	"github.com/gobuffalo/buffalo/render"
 	"github.com/gobuffalo/packr"
 	"github.com/gobuffalo/plush"
 	"github.com/gobuffalo/tags"
-	"html/template"
 )
 
 var r *render.Engine

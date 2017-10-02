@@ -46,9 +46,6 @@ func AuthCallback(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx := c.Value("tx").(*pop.Connection)
 
-	// TODO remove later
-	// fmt.Printf("%+v\n", user)
-	// The default value just renders the data we get by GitHub
 	// return c.Render(200, r.JSON(user))
 
 	// Allocate an empty Profile
@@ -87,6 +84,12 @@ func AuthCallback(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
+	// TODO
+	// if avatarURL is not null
+	// try to download the avatar
+	// into assets/images/profiles/profile_id.whatever
+	// else set image to glyphicon-user
+
 	if exists {
 		// checkPath := fmt.Sprintf("%s", session.Get("checkAuthPath"))
 		return c.Redirect(http.StatusFound, "/")
@@ -109,6 +112,7 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 			c.Set("CurrentUser", profile)
 			c.Set("UserID", profile.ID)
 			c.Set("Nick", profile.NickName)
+			c.Set("AvatarURL", profile.AvatarURL)
 			c.Set("loggedin", true)
 		} else {
 			c.Set("loggedin", false)

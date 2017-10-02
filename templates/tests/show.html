@@ -1,0 +1,11 @@
+<h1>Test#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= testsPath() %>" class="btn btn-info">Back to all Tests</a></li>
+  <li><a href="<%= editTestPath({ test_id: test.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= testPath({ test_id: test.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Testid</strong>: <%= test.Testid %>
+</p>
