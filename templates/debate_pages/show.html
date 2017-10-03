@@ -7,20 +7,6 @@
 
 <div class="row">
 	<div class="col-md-9">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title"><%= debate.Title %></h3>
-			</div>
-			<div class="panel-body">
-				<p><%= debate.Topic %></p>
-				<%= form_for(debate, {action: debatePageAddpointPath({ debate_page_id: debate.ID }), method: "POST"}) { %>
-				<button type="button" class="btn" id="add-input"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Reply</button>
-				<% } %>
-			</div>
-		</div>
-
-		<div id="test"></div>
-
 		<ul class="media-list">
 			<%= buildDebate() %>
 		</ul>
@@ -34,5 +20,6 @@
 		</div>
 	</div>
 
+		<div id="test"></div>
 </div>
 
