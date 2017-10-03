@@ -24,9 +24,11 @@ type Ptree struct {
 	DebateID    uuid.UUID
 	ProfileID   uuid.UUID
 	ProfileNick string
+	Token       string
 	Children    []Ptree
 }
 
+// TODO OK this shit is ugly... move to render.go later and refactor
 var pointHTML = `
    <li class="media"> 
      <div class="media-left">
@@ -51,7 +53,7 @@ var counterPointHTML = `
        </a>
      </div>
      <div class="media-body">
-         <h4 class="media-heading">{{.ProfileNick}}<</h4>
+         <h4 class="media-heading">{{.ProfileNick}}</h4>
          <p>{{.Topic}}</p>
 	 <button class="btn btn-default btn-xs point-button" value="{{.ID}}">reply</button>`
 
@@ -61,7 +63,7 @@ var counterPointEndHTML = `
 
 var formHTML = `
 <form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.ID}}" id="{{.ID}}" method="POST" style="display:none">
-	<input class="counterpoint_form" name="authenticity_token" value="" type="hidden">
+	<input class="counterpoint_form" name="authenticity_token" value="{{.Token}}" type="hidden">
    		<div class="form-group">
 			<label>Topic</label>
 			<textarea class=" form-control" id="debate-Topic" name="Topic" rows="3"></textarea>
@@ -69,48 +71,63 @@ var formHTML = `
 		<button class="btn btn-success" role="submit">Add</button>
  </form>`
 
+var debateFormHTML = `
+<form action="/debate_pages/{{.DebateID}}/addpoint" id="{{.ID}}" method="POST" style="display:none">
+	<input class="debate_form" name="authenticity_token" value="{{.Token}}" type="hidden">
+   		<div class="form-group">
+			<label>Topic</label>
+			<textarea class=" form-control" id="point-Topic" name="Topic" rows="3"></textarea>
+		</div>
+		<button class="btn btn-success" role="submit">Add</button>
+</form>`
+
 var pointTmpl, _ = template.New("Point").Parse(pointHTML)
 
 var counterPointTmpl, _ = template.New("CounterPoint").Parse(counterPointHTML)
 
 var formTmpl, _ = template.New("Form").Parse(formHTML)
 
+var debateFormTmpl, _ = template.New("Form").Parse(debateFormHTML)
+
 func buildHTML(ptree *Ptree, counterPoint bool) string {
 	// Slice to hold the templates and tags.
 	var html []string
-	for _, child := range ptree.Children {
-		// Buffer to hold template until
-		// it is converted to string.
-		var tpl bytes.Buffer
 
-		// Bind vars in template for beginning.
-		if counterPoint {
-			counterPointTmpl.Execute(&tpl, child)
-		} else {
-			pointTmpl.Execute(&tpl, child)
-		}
+	// Buffer to hold template until
+	// it is converted to string.
+	var tpl bytes.Buffer
 
-		// Append rendered template as string to slice.
-		// html = append(html, tpl.String())
+	// Bind vars in template for beginning.
+	if counterPoint {
+		counterPointTmpl.Execute(&tpl, ptree)
+	} else {
+		pointTmpl.Execute(&tpl, ptree)
+	}
 
-		// Build form and append
-		formTmpl.Execute(&tpl, child)
-		html = append(html, tpl.String())
+	// Build form and append
+	if counterPoint {
+		formTmpl.Execute(&tpl, ptree)
+	} else {
+		debateFormTmpl.Execute(&tpl, ptree)
+	}
 
-		// If the Point has children then recusrsivly
-		// call buildHTML on them. Set couterpoint to true
-		if len(child.Children) > 0 {
+	html = append(html, tpl.String())
+
+	// If the Point has children then recusrsivly
+	// call buildHTML on them. Set couterpoint to true
+	if len(ptree.Children) > 0 {
+		for _, child := range ptree.Children {
 			html = append(html, buildHTML(&child, true))
 		}
-
-		// Append end tags to html.
-		if counterPoint {
-			html = append(html, counterPointEndHTML)
-		} else {
-			html = append(html, pointEndHTML)
-		}
-
 	}
+
+	// Append end tags to html.
+	if counterPoint {
+		html = append(html, counterPointEndHTML)
+	} else {
+		html = append(html, pointEndHTML)
+	}
+
 	// Join the slice into one big string
 	return strings.Join(html, "\n")
 }
@@ -173,6 +190,7 @@ func buildTree(id uuid.UUID, debateID uuid.UUID, tx *pop.Connection, ptree *Ptre
 
 		for _, c := range p2cs {
 			var pt Ptree
+			pt.Token = ptree.Token
 			err = buildTree(c.Counterpoint, debateID, tx, &pt)
 			if err != nil {
 				return errors.WithStack(err)
@@ -208,6 +226,7 @@ func buildTreeRoot(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 
 		for _, dp := range debatePoints {
 			var pt Ptree
+			pt.Token = ptree.Token
 			err = buildTree(dp.Point, id, tx, &pt)
 			if err != nil {
 				return errors.WithStack(err)
@@ -251,6 +270,7 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	// Get params
 	debate_id := c.Param("debate_page_id")
 	tx := c.Value("tx").(*pop.Connection)
+	auth_token := c.Value("authenticity_token").(string)
 
 	// ==================================
 	// Query for the debate.
@@ -265,11 +285,6 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	// ==================================
 	// Query for the profile ID for debate ID
 	// ==================================
-
-	// tx := models.DB
-	// query = tx.Where("id = 1").Where("name = 'Mark'")
-	// users := []models.User{}
-	// err := query.All(&users)
 
 	profile2debate := []models.Profiles2debate{}
 	q := tx.Where("debate = ?", debate_id)
@@ -288,6 +303,18 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	}
 
 	// ==================================
+	// Create the root node of Ptree
+	// ==================================
+
+	var ptree Ptree
+	ptree.Topic = debate.Topic
+	ptree.ID = debate.ID
+	ptree.DebateID = debate.ID
+	ptree.ProfileID = profile.ID
+	ptree.ProfileNick = profile.NickName
+	ptree.Token = auth_token
+
+	// ==================================
 	// Counter points
 	// ==================================
 
@@ -301,15 +328,8 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	// Create the root node of Ptree
-	var ptree Ptree
-	ptree.Topic = debate.Topic
-	ptree.ID = debate.ID
-	ptree.DebateID = debate.ID
-	ptree.ProfileID = profile.ID
-	ptree.ProfileNick = profile.NickName
-
-	// If there are points.
+	// If there are counter points then build
+	// points tree.
 	if exists {
 		// Build the tree of comments.
 		err = buildTreeRoot(debate.ID, tx, &ptree)
@@ -319,6 +339,7 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	}
 
 	htm := buildHTML(&ptree, false)
+
 	c.Set("debate", debate)
 	c.Set("debate_html", htm)
 
