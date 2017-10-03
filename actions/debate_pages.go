@@ -21,11 +21,10 @@ type DebatePagesResource struct {
 // Points tree for debates
 type Ptree struct {
 	models.Point
-	DebateID    uuid.UUID
-	ProfileID   uuid.UUID
-	ProfileNick string
-	Token       string
-	Children    []Ptree
+	models.Profile
+	DebateID uuid.UUID
+	Token    string
+	Children []Ptree
 }
 
 // TODO OK this shit is ugly... move to render.go later and refactor
@@ -37,9 +36,9 @@ var pointHTML = `
        </a>
      </div>
      <div class="media-body">
-         <h4 class="media-heading">{{.ProfileNick}}</h4>
+         <h4 class="media-heading">{{.Profile.NickName}}</h4>
          <p>{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.ID}}">reply</button>`
+	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">reply</button>`
 
 var pointEndHTML = `
      </div> 
@@ -53,16 +52,16 @@ var counterPointHTML = `
        </a>
      </div>
      <div class="media-body">
-         <h4 class="media-heading">{{.ProfileNick}}</h4>
+         <h4 class="media-heading">{{.Profile.NickName}}</h4>
          <p>{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.ID}}">reply</button>`
+	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">reply</button>`
 
 var counterPointEndHTML = `
      </div>
 </div>`
 
 var formHTML = `
-<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.ID}}" id="{{.ID}}" method="POST" style="display:none">
+<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.Point.ID}}" id="{{.Point.ID}}" method="POST" style="display:none">
 	<input class="counterpoint_form" name="authenticity_token" value="{{.Token}}" type="hidden">
    		<div class="form-group">
 			<label>Topic</label>
@@ -72,7 +71,7 @@ var formHTML = `
  </form>`
 
 var debateFormHTML = `
-<form action="/debate_pages/{{.DebateID}}/addpoint" id="{{.ID}}" method="POST" style="display:none">
+<form action="/debate_pages/{{.DebateID}}/addpoint" id="{{.DebateID}}" method="POST" style="display:none">
 	<input class="debate_form" name="authenticity_token" value="{{.Token}}" type="hidden">
    		<div class="form-group">
 			<label>Topic</label>
@@ -158,36 +157,66 @@ func Point(id uuid.UUID, tx *pop.Connection) (models.Point, error) {
 	return *point, err
 }
 
+/*
+func Profile(id uuid.UUID, tx *pop.Connection) (models.Profile, error) {
+
+}
+*/
+
 func buildTree(id uuid.UUID, debateID uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 
 	// Get point.
-	p, err := Point(id, tx)
+	point, err := Point(id, tx)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
-	// Put point into ptree.
-	ptree.Point = p
+	// Check if there is a profile associated
+	// with this point ID.
+	profile2point := &models.Profiles2point{}
+	q := tx.Where("point = ?", point.ID)
+	exists, err := q.Exists(profile2point)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// If there is a profile then get it
+	profile := models.Profile{}
+
+	if exists {
+		err = q.First(profile2point)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		err = tx.Find(&profile, profile2point.Profile)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	}
+
+	ptree.Point = point
+	ptree.Profile = profile
 	ptree.DebateID = debateID
 
 	// check if this point has any counterpoints
 	p2c := &models.Points2counterpoint{}
-	q := tx.Where("point = ?", id)
-	exists, err := q.Exists(p2c)
+	q = tx.Where("point = ?", id)
+	exists, err = q.Exists(p2c)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
 	if exists {
-		// go through each counter point
-		// create a ptree node
-		// buildtree on node
 		p2cs := []models.Points2counterpoint{}
 		err = q.All(&p2cs)
 		if err != nil {
 			return errors.WithStack(err)
 		}
 
+		// Iterate through each counter point
+		// create a ptree node recusrsivley call
+		// buildtree on node.
 		for _, c := range p2cs {
 			var pt Ptree
 			pt.Token = ptree.Token
@@ -297,6 +326,7 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	// ==================================
 
 	profile := &models.Profile{}
+	// TODO redo [0]
 	err = tx.Find(profile, profile2debate[0].Profile)
 	if err != nil {
 		return errors.WithStack(err)
@@ -308,10 +338,9 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 
 	var ptree Ptree
 	ptree.Topic = debate.Topic
-	ptree.ID = debate.ID
+	ptree.Point.ID = debate.ID
 	ptree.DebateID = debate.ID
-	ptree.ProfileID = profile.ID
-	ptree.ProfileNick = profile.NickName
+	ptree.Profile = *profile
 	ptree.Token = auth_token
 
 	// ==================================
@@ -340,7 +369,6 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 
 	htm := buildHTML(&ptree, false)
 
-	c.Set("debate", debate)
 	c.Set("debate_html", htm)
 
 	return c.Render(200, r.HTML("debate_pages/show.html"))
@@ -483,10 +511,13 @@ func (v DebatePagesResource) Destroy(c buffalo.Context) error {
 }
 
 func AddPoint(c buffalo.Context) error {
+
 	debate_id := c.Param("debate_page_id")
+
 	// Allocate an empty Point
 	point := &models.Point{}
 	point.Rank = 1
+
 	// Bind point to the html form elements
 	err := c.Bind(point)
 	if err != nil {
@@ -495,12 +526,13 @@ func AddPoint(c buffalo.Context) error {
 
 	// Get the DB connection from the context
 	tx := c.Value("tx").(*pop.Connection)
+
 	// Validate the data from the html form
 	verrs, err := tx.ValidateAndCreate(point)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	// fmt.Println("point ================" + fmt.Sprintf("%s", point))
+
 	if verrs.HasAny() {
 		// Make point available inside the html template
 		c.Set("point", point)
@@ -526,6 +558,26 @@ func AddPoint(c buffalo.Context) error {
 	debate2point.Point = point.ID
 	verrs, err = tx.ValidateAndCreate(debate2point)
 	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// Associate profile with debate
+	profile2point := &models.Profiles2point{}
+
+	// Assume userID set otherwise should not have gotten
+	// here raise error and abort
+	if userID := c.Session().Get("UserID"); userID == nil {
+		err = errors.New("should not have gotten here, check authentication")
+		return errors.WithStack(err)
+	} else {
+		profile2point.Profile = userID.(uuid.UUID)
+	}
+
+	profile2point.Point = point.ID
+
+	// Validate the data from the html form
+	verrs, err = tx.ValidateAndCreate(profile2point)
+	if err != nil || verrs.HasAny() {
 		return errors.WithStack(err)
 	}
 

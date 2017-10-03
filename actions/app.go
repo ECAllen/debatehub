@@ -1,11 +1,12 @@
 package actions
 
 import (
+	"log"
+	"math/rand"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo/middleware"
 	"github.com/gobuffalo/buffalo/middleware/i18n"
-	"log"
-	"math/rand"
 
 	"github.com/ECAllen/debatehub/models"
 
@@ -277,6 +278,7 @@ func App() *buffalo.App {
 		debate_pages.PUT("/{debate_page_id}", db.Update)
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
 		app.Resource("/profiles2debates", Profiles2debatesResource{&buffalo.BaseResource{}})
+		app.Resource("/profiles2points", Profiles2pointsResource{&buffalo.BaseResource{}})
 	}
 
 	return app
