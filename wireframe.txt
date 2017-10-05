@@ -24,10 +24,10 @@ buffalo g resource profiles2points profile:uuid point:uuid
 // TODO
 
 
-buffalo g resource threads topic:Text rank:int
+buffalo g resource thread topic:Text rank:int
 
-buffalo g resource debates2threads debate:uuid point:uuid 
+buffalo g resource debates2threads debate:uuid thread:uuid 
 
-buffalo g resource threads2counterthreads point:uuid counterpoint:uuid 
+buffalo g resource threads2counterthreads thread:uuid counterthread:uuid 
 
-buffalo g resource profiles2threads profile:uuid point:uuid 
+buffalo g resource profiles2threads profile:uuid thread:uuid 
