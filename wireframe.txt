@@ -20,3 +20,14 @@ buffalo g resource counterpoints topic:Text rank:int
 buffalo g resource profiles2debates profile:uuid debate:uuid 
 
 buffalo g resource profiles2points profile:uuid point:uuid 
+
+// TODO
+
+
+buffalo g resource threads topic:Text rank:int
+
+buffalo g resource debates2threads debate:uuid point:uuid 
+
+buffalo g resource threads2counterthreads point:uuid counterpoint:uuid 
+
+buffalo g resource profiles2threads profile:uuid point:uuid 
