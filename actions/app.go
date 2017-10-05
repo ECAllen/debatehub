@@ -123,6 +123,12 @@ func App() *buffalo.App {
 			return c.Render(200, r.Plain("/robots.txt"))
 		})
 
+		// Returns an error stack just to print out useful info.
+		app.GET("/context", func(c buffalo.Context) error {
+			err := errors.New("Context")
+			return errors.WithStack(err)
+		})
+
 		// -----------------
 		//   Authentication
 		// -----------------
