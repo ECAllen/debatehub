@@ -169,7 +169,7 @@ var counterPointHTML = `
 var counterPointEndHTML = `
 </div> <!-- close point row -->`
 
-var formHTML = `
+var pointFormHTML = `
 <form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.Point.ID}}" id="{{.Point.ID}}" method="POST" style="display:none">
 	<input class="counterpoint_form" name="authenticity_token" value="{{.Token}}" type="hidden">
    		<div class="form-group">
@@ -195,7 +195,7 @@ var pointTmpl, _ = template.New("Point").Parse(pointHTML)
 
 var counterPointTmpl, _ = template.New("CounterPoint").Parse(counterPointHTML)
 
-var formTmpl, _ = template.New("Form").Parse(formHTML)
+var formTmpl, _ = template.New("Form").Parse(pointFormHTML)
 
 var debateFormTmpl, _ = template.New("Form").Parse(debateFormHTML)
 

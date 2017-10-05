@@ -263,6 +263,13 @@ func App() *buffalo.App {
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
 		app.Resource("/profiles2debates", Profiles2debatesResource{&buffalo.BaseResource{}})
 		app.Resource("/profiles2points", Profiles2pointsResource{&buffalo.BaseResource{}})
+		app.Resource("/threads", ThreadsResource{&buffalo.BaseResource{}})
+		app.Resource("/debates2threads", Debates2threadsResource{&buffalo.BaseResource{}})
+		app.Resource("/debates2threads", Debates2threadsResource{&buffalo.BaseResource{}})
+		app.Resource("/threads", ThreadsResource{&buffalo.BaseResource{}})
+		app.Resource("/debate2threads", Debate2threadsResource{&buffalo.BaseResource{}})
+		app.Resource("/thread2counterthreads", Thread2counterthreadsResource{&buffalo.BaseResource{}})
+		app.Resource("/profile2threads", Profile2threadsResource{&buffalo.BaseResource{}})
 	}
 
 	return app

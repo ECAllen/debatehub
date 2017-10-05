@@ -2,18 +2,19 @@ package actions
 
 import (
 	"bytes"
+	"html/template"
+	"strings"
+
 	"github.com/gobuffalo/buffalo/render"
 	"github.com/gobuffalo/packr"
 	"github.com/gobuffalo/plush"
 	"github.com/gobuffalo/tags"
-	"html/template"
-	"strings"
 )
 
 var r *render.Engine
 
-/*
-var pointHTML = `
+var forumPointHTML = `
+<ul class="media-list">
    <li class="media">
      <div class="media-left">
        <a href="#">
@@ -23,13 +24,14 @@ var pointHTML = `
      <div class="media-body">
          <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p class="lead">{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">supporting point</button>`
+	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">reply</button>`
 
-var pointEndHTML = `
-     </div>
-    </li>`
+var forumPointEndHTML = `
+     </div> <!-- close media-body -->
+    </li> <!-- close media -->
+   </ul> <!-- close media list -->`
 
-var counterPointHTML = `
+var forumCounterPointHTML = `
 <div class="media">
      <div class="media-left">
        <a href="#">
@@ -39,33 +41,27 @@ var counterPointHTML = `
      <div class="media-body">
          <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p class="lead">{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">counterpoint</button>`
+	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">reply</button>`
 
-var counterPointEndHTML = `
-     </div>
-</div>`
+var forumCounterPointEndHTML = `
+     </div> <!-- close media body -->
+</div><!-- close media  --> `
 
-var formHTML = `
+var forumFormHTML = `
 <form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.Point.ID}}" id="{{.Point.ID}}" method="POST" style="display:none">
 	<input class="counterpoint_form" name="authenticity_token" value="{{.Token}}" type="hidden">
    		<div class="form-group">
-			<label>Topic</label>
+			<label>Reply</label>
 			<textarea class=" form-control" id="debate-Topic" name="Topic" rows="3"></textarea>
 		</div>
 		<button class="btn btn-success" role="submit">Add</button>
  </form>`
 
-*/
+var forumPointTmpl, _ = template.New("Point").Parse(forumPointHTML)
 
-var debateFormHTML = `
-<form action="/debate_pages/{{.DebateID}}/addpoint" id="{{.DebateID}}" method="POST" style="display:none">
-	<input class="debate_form" name="authenticity_token" value="{{.Token}}" type="hidden">
-   		<div class="form-group">
-			<label>Topic</label>
-			<textarea class=" form-control" id="point-Topic" name="Topic" rows="3"></textarea>
-		</div>
-		<button class="btn btn-success" role="submit">Add</button>
-</form>`
+var forumCounterPointTmpl, _ = template.New("CounterPoint").Parse(forumCounterPointHTML)
+
+var forumFormTmpl, _ = template.New("Form").Parse(forumFormHTML)
 
 func buildForum(ptree *Ptree, counterPoint bool) string {
 	// Slice to hold the templates and tags.
@@ -75,19 +71,13 @@ func buildForum(ptree *Ptree, counterPoint bool) string {
 	// it is converted to string.
 	var tpl bytes.Buffer
 
-	// Bind vars in template for beginning.
 	if counterPoint {
-		counterPointTmpl.Execute(&tpl, ptree)
+		forumCounterPointTmpl.Execute(&tpl, ptree)
 	} else {
-		debateTmpl.Execute(&tpl, ptree)
+		forumPointTmpl.Execute(&tpl, ptree)
 	}
 
-	// Build form and append
-	if counterPoint {
-		formTmpl.Execute(&tpl, ptree)
-	} else {
-		debateFormTmpl.Execute(&tpl, ptree)
-	}
+	forumFormTmpl.Execute(&tpl, ptree)
 
 	html = append(html, tpl.String())
 
@@ -101,9 +91,9 @@ func buildForum(ptree *Ptree, counterPoint bool) string {
 
 	// Append end tags to html.
 	if counterPoint {
-		html = append(html, counterPointEndHTML)
+		html = append(html, forumCounterPointEndHTML)
 	} else {
-		html = append(html, pointEndHTML)
+		html = append(html, forumPointEndHTML)
 	}
 
 	// Join the slice into one big string
@@ -125,10 +115,11 @@ func init() {
 				return template.HTML(p), nil
 			},
 			"Forum": func(opts tags.Options, help plush.HelperContext) (template.HTML, error) {
-				// threads = Ptree struct
+				t := tags.New("div", opts)
 				threads := help.Value("threads").(Ptree)
 				s := buildForum(&threads, false)
-				return template.HTML(s), nil
+				t.Append(s)
+				return t.HTML(), nil
 			},
 		},
 	})
