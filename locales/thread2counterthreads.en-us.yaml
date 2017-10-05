@@ -1,0 +1,6 @@
+- id: "thread2counterthreads.created.success"
+  translation: "Thread2counterthread was successfully created."
+- id: "thread2counterthreads.updated.success"
+  translation: "Thread2counterthread was successfully updated."
+- id: "thread2counterthreads.destroyed.success"
+  translation: "Thread2counterthread was successfully destroyed."

@@ -1,0 +1,14 @@
+<h1>Profile2thread#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= profile2threadsPath() %>" class="btn btn-info">Back to all Profile2threads</a></li>
+  <li><a href="<%= editProfile2threadPath({ profile2thread_id: profile2thread.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= profile2threadPath({ profile2thread_id: profile2thread.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Profile</strong>: <%= profile2thread.Profile %>
+</p>
+<p>
+  <strong>Thread</strong>: <%= profile2thread.Thread %>
+</p>

@@ -1,0 +1,6 @@
+<h1>New Debate2thread</h1>
+
+<%= form_for(debate2thread, {action: debate2threadsPath(), method: "POST"}) { %>
+  <%= partial("debate2threads/form.html") %>
+  <a href="<%= debate2threadsPath() %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

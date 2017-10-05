@@ -1,0 +1,31 @@
+<h1>Profile2threads</h1>
+<p>
+  <a href="<%= newProfile2threadsPath() %>" class="btn btn-primary">Create New Profile2thread</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Profile</th>
+    <th>Thread</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (profile2thread) in profile2threads { %>
+      <tr>
+      <td><%= profile2thread.Profile %></td>
+        <td><%= profile2thread.Thread %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= profile2threadPath({ profile2thread_id: profile2thread.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editProfile2threadPath({ profile2thread_id: profile2thread.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= profile2threadPath({ profile2thread_id: profile2thread.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

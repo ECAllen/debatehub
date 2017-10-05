@@ -1,0 +1,6 @@
+- id: "debates2threads.created.success"
+  translation: "Debates2thread was successfully created."
+- id: "debates2threads.updated.success"
+  translation: "Debates2thread was successfully updated."
+- id: "debates2threads.destroyed.success"
+  translation: "Debates2thread was successfully destroyed."
