@@ -1,0 +1,6 @@
+<h1>Edit Profiles2point</h1>
+
+<%= form_for(profiles2point, {action: profiles2pointPath({ profiles2point_id: profiles2point.ID }), method: "PUT"}) { %>
+  <%= partial("profiles2points/form.html") %>
+  <a href="<%= profiles2pointsPath({ profiles2point_id: profiles2point.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

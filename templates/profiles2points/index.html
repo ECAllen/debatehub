@@ -1,0 +1,31 @@
+<h1>Profiles2points</h1>
+<p>
+  <a href="<%= newProfiles2pointsPath() %>" class="btn btn-primary">Create New Profiles2point</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Profile</th>
+    <th>Point</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (profiles2point) in profiles2points { %>
+      <tr>
+      <td><%= profiles2point.Profile %></td>
+        <td><%= profiles2point.Point %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= profiles2pointPath({ profiles2point_id: profiles2point.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editProfiles2pointPath({ profiles2point_id: profiles2point.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= profiles2pointPath({ profiles2point_id: profiles2point.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>
