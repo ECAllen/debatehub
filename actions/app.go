@@ -237,31 +237,9 @@ func App() *buffalo.App {
 		//  Debates
 		// ------------------------
 
-		// app.Resource("/points", PointsResource{&buffalo.BaseResource{}})
-		// points := app.Group("/points")
-		// points.Use(CheckAuth, CheckAdmin)
-
-		/*
-			debates := app.Group("/debates")
-			debates.Use(CheckAuth)
-			debates.Use(CheckAdmin)
-			app.Resource("/debates", DebatesResource{&buffalo.BaseResource{}})
-		*/
-
-		var dbt buffalo.Resource
-		dbt = &DebatesResource{&buffalo.BaseResource{}}
-		debates := app.Group("/debates")
+		dbt := &DebatesResource{&buffalo.BaseResource{}}
+		debates := app.Resource("/debates", dbt)
 		debates.Use(CheckAuth, CheckAdmin)
-		debates.GET("/", dbt.List)
-
-		// app.Resource("/debates2points", Debates2pointsResource{&buffalo.BaseResource{}})
-		// debates2points := app.Group("/debates2points")
-		// debates2points.Use(CheckAuth, CheckAdmin)
-
-		// app.Resource("/points2counterpoints", Points2counterpointsResource{&buffalo.BaseResource{}})
-		// points2counterpoints := app.Group("/points2counterpoints")
-		// points2counterpoints.Use(CheckAuth, CheckAdmin)
-		// debate_pages.POST("/{debate_page_id}/addpoint", db.AddPoint)
 
 		var db buffalo.Resource
 		db = &DebatePagesResource{&buffalo.BaseResource{}}
