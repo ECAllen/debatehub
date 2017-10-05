@@ -1,0 +1,6 @@
+- id: "profiles2points.created.success"
+  translation: "Profiles2point was successfully created."
+- id: "profiles2points.updated.success"
+  translation: "Profiles2point was successfully updated."
+- id: "profiles2points.destroyed.success"
+  translation: "Profiles2point was successfully destroyed."

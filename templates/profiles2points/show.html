@@ -1,0 +1,14 @@
+<h1>Profiles2point#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= profiles2pointsPath() %>" class="btn btn-info">Back to all Profiles2points</a></li>
+  <li><a href="<%= editProfiles2pointPath({ profiles2point_id: profiles2point.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= profiles2pointPath({ profiles2point_id: profiles2point.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Profile</strong>: <%= profiles2point.Profile %>
+</p>
+<p>
+  <strong>Point</strong>: <%= profiles2point.Point %>
+</p>
