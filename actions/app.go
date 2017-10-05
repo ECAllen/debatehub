@@ -243,31 +243,9 @@ func App() *buffalo.App {
 		//  Debates
 		// ------------------------
 
-		// app.Resource("/points", PointsResource{&buffalo.BaseResource{}})
-		// points := app.Group("/points")
-		// points.Use(CheckAuth, CheckAdmin)
-
-		/*
-			debates := app.Group("/debates")
-			debates.Use(CheckAuth)
-			debates.Use(CheckAdmin)
-			app.Resource("/debates", DebatesResource{&buffalo.BaseResource{}})
-		*/
-
-		var dbt buffalo.Resource
-		dbt = &DebatesResource{&buffalo.BaseResource{}}
-		debates := app.Group("/debates")
+		dbt := &DebatesResource{&buffalo.BaseResource{}}
+		debates := app.Resource("/debates", dbt)
 		debates.Use(CheckAuth, CheckAdmin)
-		debates.GET("/", dbt.List)
-
-		// app.Resource("/debates2points", Debates2pointsResource{&buffalo.BaseResource{}})
-		// debates2points := app.Group("/debates2points")
-		// debates2points.Use(CheckAuth, CheckAdmin)
-
-		// app.Resource("/points2counterpoints", Points2counterpointsResource{&buffalo.BaseResource{}})
-		// points2counterpoints := app.Group("/points2counterpoints")
-		// points2counterpoints.Use(CheckAuth, CheckAdmin)
-		// debate_pages.POST("/{debate_page_id}/addpoint", db.AddPoint)
 
 		var db buffalo.Resource
 		db = &DebatePagesResource{&buffalo.BaseResource{}}
@@ -285,6 +263,13 @@ func App() *buffalo.App {
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
 		app.Resource("/profiles2debates", Profiles2debatesResource{&buffalo.BaseResource{}})
 		app.Resource("/profiles2points", Profiles2pointsResource{&buffalo.BaseResource{}})
+		app.Resource("/threads", ThreadsResource{&buffalo.BaseResource{}})
+		app.Resource("/debates2threads", Debates2threadsResource{&buffalo.BaseResource{}})
+		app.Resource("/debates2threads", Debates2threadsResource{&buffalo.BaseResource{}})
+		app.Resource("/threads", ThreadsResource{&buffalo.BaseResource{}})
+		app.Resource("/debate2threads", Debate2threadsResource{&buffalo.BaseResource{}})
+		app.Resource("/thread2counterthreads", Thread2counterthreadsResource{&buffalo.BaseResource{}})
+		app.Resource("/profile2threads", Profile2threadsResource{&buffalo.BaseResource{}})
 	}
 
 	return app

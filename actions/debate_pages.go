@@ -27,21 +27,21 @@ type Ptree struct {
 	Children []Ptree
 }
 
-// TODO OK this shit is ugly... move to render.go later and refactor
+/* Keping this around for general forum discussion later
 var pointHTML = `
-   <li class="media"> 
+   <li class="media">
      <div class="media-left">
        <a href="#">
          <img class="media-object" src="" alt="">
        </a>
      </div>
      <div class="media-body">
-         <h4 class="media-heading">{{.Profile.NickName}}</h4>
-         <p>{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">reply</button>`
+         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <p class="lead">{{.Topic}}</p>
+	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">supporting point</button>`
 
 var pointEndHTML = `
-     </div> 
+     </div>
     </li>`
 
 var counterPointHTML = `
@@ -52,9 +52,9 @@ var counterPointHTML = `
        </a>
      </div>
      <div class="media-body">
-         <h4 class="media-heading">{{.Profile.NickName}}</h4>
-         <p>{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">reply</button>`
+         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <p class="lead">{{.Topic}}</p>
+	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">counterpoint</button>`
 
 var counterPointEndHTML = `
      </div>
@@ -80,14 +80,6 @@ var debateFormHTML = `
 		<button class="btn btn-success" role="submit">Add</button>
 </form>`
 
-var pointTmpl, _ = template.New("Point").Parse(pointHTML)
-
-var counterPointTmpl, _ = template.New("CounterPoint").Parse(counterPointHTML)
-
-var formTmpl, _ = template.New("Form").Parse(formHTML)
-
-var debateFormTmpl, _ = template.New("Form").Parse(debateFormHTML)
-
 func buildHTML(ptree *Ptree, counterPoint bool) string {
 	// Slice to hold the templates and tags.
 	var html []string
@@ -100,7 +92,7 @@ func buildHTML(ptree *Ptree, counterPoint bool) string {
 	if counterPoint {
 		counterPointTmpl.Execute(&tpl, ptree)
 	} else {
-		pointTmpl.Execute(&tpl, ptree)
+		debateTmpl.Execute(&tpl, ptree)
 	}
 
 	// Build form and append
@@ -130,6 +122,149 @@ func buildHTML(ptree *Ptree, counterPoint bool) string {
 	// Join the slice into one big string
 	return strings.Join(html, "\n")
 }
+*/
+// TODO OK this shit is ugly... move to render.go later and refactor
+var debateHTML = `
+<div class="media">
+     <div class="media-left">
+       <a href="#">
+         <img class="media-object" src="" alt="">
+       </a>
+     </div>
+     <div class="media-body">
+         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <p class="lead">{{.Topic}}</p>
+	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">supporting point</button>`
+
+var debateEndHTML = `
+     </div> 
+     </div> <!-- close debate row -->`
+
+var pointHTML = `
+<div class="media">
+     <div class="media-left">
+       <a href="#">
+         <img class="media-object" src="" alt="">
+       </a>
+     </div>
+     <div class="media-body">
+         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <p class="lead">{{.Topic}}</p>
+	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">counter point</button>`
+
+var pointEndHTML = `
+     </div> `
+
+var counterPointHTML = `
+<div class="media">
+     <div class="media-left">
+       <a href="#">
+         <img class="media-object" src="" alt="">
+       </a>
+     </div>
+     <div class="media-body">
+         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <p class="lead">{{.Topic}}</p>`
+
+var counterPointEndHTML = `
+</div> <!-- close point row -->`
+
+var pointFormHTML = `
+<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.Point.ID}}" id="{{.Point.ID}}" method="POST" style="display:none">
+	<input class="counterpoint_form" name="authenticity_token" value="{{.Token}}" type="hidden">
+   		<div class="form-group">
+			<label>Topic</label>
+			<textarea class=" form-control" id="debate-Topic" name="Topic" rows="3"></textarea>
+		</div>
+		<button class="btn btn-success" role="submit">Add</button>
+</form>`
+
+var debateFormHTML = `
+<form action="/debate_pages/{{.DebateID}}/addpoint" id="{{.DebateID}}" method="POST" style="display:none">
+	<input class="debate_form" name="authenticity_token" value="{{.Token}}" type="hidden">
+   		<div class="form-group">
+			<label>Topic</label>
+			<textarea class=" form-control" id="point-Topic" name="Topic" rows="3"></textarea>
+		</div>
+		<button class="btn btn-success" role="submit">Add</button>
+</form>`
+
+var debateTmpl, _ = template.New("Debate").Parse(debateHTML)
+
+var pointTmpl, _ = template.New("Point").Parse(pointHTML)
+
+var counterPointTmpl, _ = template.New("CounterPoint").Parse(counterPointHTML)
+
+var formTmpl, _ = template.New("Form").Parse(pointFormHTML)
+
+var debateFormTmpl, _ = template.New("Form").Parse(debateFormHTML)
+
+// TODO move level int ptree
+func buildHTML(ptree *Ptree, level int) (string, error) {
+	// TODO restructure code, oh so smelly !!!
+	// TODO change level to enum
+	// Slice to hold the templates and tags.
+	var html []string
+
+	// Buffer to hold template until
+	// it is converted to string.
+	var tpl bytes.Buffer
+
+	switch level {
+	case 1:
+		html = append(html, `<div class="row"> <div class="col-md-9">`)
+		debateTmpl.Execute(&tpl, ptree)
+		debateFormTmpl.Execute(&tpl, ptree)
+		html = append(html, tpl.String())
+		html = append(html, `</div> <!-- close media body--></div> <!-- close media-->`)
+		html = append(html, `</div> <!-- close column --></div> <!-- close debate row -->`)
+	case 2:
+		html = append(html, `<div class="row"> <div class="col-md-5">`)
+		pointTmpl.Execute(&tpl, ptree)
+		formTmpl.Execute(&tpl, ptree)
+		html = append(html, tpl.String())
+		html = append(html, `</div> <!-- close media body--></div> <!-- close media--> </div> <!-- close column--> `)
+		if len(ptree.Children) == 0 {
+			html = append(html, `</div> <!-- close point row -->`)
+		}
+	case 3:
+		html = append(html, `<div class="col-md-4">`)
+		counterPointTmpl.Execute(&tpl, ptree)
+		formTmpl.Execute(&tpl, ptree)
+		html = append(html, tpl.String())
+		if len(ptree.Children) > 0 {
+			for child, _ := range ptree.Children {
+				counterPointTmpl.Execute(&tpl, child)
+				formTmpl.Execute(&tpl, child)
+				html = append(html, tpl.String())
+				//TODO Left off here
+			}
+		}
+		html = append(html, `</div> <!-- close media body--></div> <!-- close media--></div> <!-- close column -->`)
+		html = append(html, `</div> <!-- close point row -->`)
+	default:
+		err := errors.New("should not have gotten here, check level buildHTML")
+		return "", errors.WithStack(err)
+	}
+
+	// If the Point has children then recusrsivly
+	// call buildHTML on them. Set couterpoint to true
+	if level < 3 {
+		if len(ptree.Children) > 0 {
+			childLevel := level + 1
+			for _, child := range ptree.Children {
+				h, err := buildHTML(&child, childLevel)
+				if err != nil {
+					return "", errors.WithStack(err)
+				}
+				html = append(html, h)
+			}
+		}
+	}
+
+	// Join the slice into one big string
+	return strings.Join(html, "\n"), nil
+}
 
 func Point(id uuid.UUID, tx *pop.Connection) (models.Point, error) {
 
@@ -146,8 +281,7 @@ func Point(id uuid.UUID, tx *pop.Connection) (models.Point, error) {
 		return *point, err
 	}
 
-	// Collect point into
-	// points slice.
+	// Collect point.
 	if exists {
 		err = q.First(point)
 		if err != nil {
@@ -163,6 +297,7 @@ func Profile(id uuid.UUID, tx *pop.Connection) (models.Profile, error) {
 }
 */
 
+// TODO combine buildroot and build tree
 func buildTree(id uuid.UUID, debateID uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 
 	// Get point.
@@ -266,6 +401,30 @@ func buildTreeRoot(id uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 	return errors.WithStack(err)
 }
 
+func insertProfile2Point(pointID uuid.UUID, tx *pop.Connection, c buffalo.Context) error {
+
+	// Associate profile with debate
+	profile2point := &models.Profiles2point{}
+
+	// Assume userID set otherwise should not have gotten
+	// here raise error and abort
+	if userID := c.Session().Get("UserID"); userID == nil {
+		err := errors.New("should not have gotten here, check authentication path")
+		return errors.WithStack(err)
+	} else {
+		profile2point.Profile = userID.(uuid.UUID)
+	}
+
+	profile2point.Point = pointID
+
+	// Validate the data from the html form
+	verrs, err := tx.ValidateAndCreate(profile2point)
+	if err != nil || verrs.HasAny() {
+		return errors.WithStack(err)
+	}
+	return nil
+}
+
 // List gets all Debates. This function is mapped to the path
 // GET /debate_pages
 func (v DebatePagesResource) List(c buffalo.Context) error {
@@ -315,9 +474,9 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	// Query for the profile ID for debate ID
 	// ==================================
 
-	profile2debate := []models.Profiles2debate{}
+	profile2debate := models.Profiles2debate{}
 	q := tx.Where("debate = ?", debate_id)
-	err = q.All(&profile2debate)
+	err = q.First(&profile2debate)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -326,8 +485,8 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	// ==================================
 
 	profile := &models.Profile{}
-	// TODO redo [0]
-	err = tx.Find(profile, profile2debate[0].Profile)
+	// TODO redo
+	err = tx.Find(profile, profile2debate.Profile)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -367,9 +526,13 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 		}
 	}
 
-	htm := buildHTML(&ptree, false)
+	htm, err := buildHTML(&ptree, 1)
+	if err != nil {
+		return errors.WithStack(err)
+	}
 
 	c.Set("debate_html", htm)
+	c.Set("threads", ptree)
 
 	return c.Render(200, r.HTML("debate_pages/show.html"))
 }
@@ -395,15 +558,6 @@ func (v DebatePagesResource) Create(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	// Assume userID set otherwise should not have gotten
-	// here raise error and abort
-	if userID := c.Session().Get("UserID"); userID == nil {
-		err = errors.New("should not have gotten here, check authentication")
-		return errors.WithStack(err)
-	} else {
-		profile2debate.Profile = userID.(uuid.UUID)
-	}
-
 	// Get the DB connection from the context
 	tx := c.Value("tx").(*pop.Connection)
 
@@ -423,7 +577,18 @@ func (v DebatePagesResource) Create(c buffalo.Context) error {
 		return c.Render(422, r.HTML("debate_pages/new.html"))
 	}
 
+	// Assume userID set otherwise should not have gotten
+	// here raise error and abort
+	if userID := c.Session().Get("UserID"); userID == nil {
+		err = errors.New("should not have gotten here, check authentication")
+		return errors.WithStack(err)
+	} else {
+		profile2debate.Profile = userID.(uuid.UUID)
+	}
+
 	profile2debate.Debate = debate.ID
+
+	fmt.Printf("\n\n%v\n", debate.ID)
 
 	// Validate the data from the html form
 	verrs, err = tx.ValidateAndCreate(profile2debate)
@@ -433,6 +598,7 @@ func (v DebatePagesResource) Create(c buffalo.Context) error {
 
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Debate was created successfully")
+
 	// and redirect to the debate_pages index page
 	return c.Redirect(302, "/debate_pages/%s", debate.ID)
 }
@@ -561,23 +727,8 @@ func AddPoint(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	// Associate profile with debate
-	profile2point := &models.Profiles2point{}
-
-	// Assume userID set otherwise should not have gotten
-	// here raise error and abort
-	if userID := c.Session().Get("UserID"); userID == nil {
-		err = errors.New("should not have gotten here, check authentication")
-		return errors.WithStack(err)
-	} else {
-		profile2point.Profile = userID.(uuid.UUID)
-	}
-
-	profile2point.Point = point.ID
-
-	// Validate the data from the html form
-	verrs, err = tx.ValidateAndCreate(profile2point)
-	if err != nil || verrs.HasAny() {
+	insertProfile2Point(point.ID, tx, c)
+	if err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -641,6 +792,11 @@ func AddCounterPoint(c buffalo.Context) error {
 	// add point id
 	point2counterpoint.Counterpoint = counterpoint.ID
 	verrs, err = tx.ValidateAndCreate(point2counterpoint)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	insertProfile2Point(counterpoint.ID, tx, c)
 	if err != nil {
 		return errors.WithStack(err)
 	}
