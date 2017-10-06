@@ -1,0 +1,6 @@
+- id: "threads.created.success"
+  translation: "Thread was successfully created."
+- id: "threads.updated.success"
+  translation: "Thread was successfully updated."
+- id: "threads.destroyed.success"
+  translation: "Thread was successfully destroyed."

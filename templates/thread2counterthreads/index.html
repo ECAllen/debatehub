@@ -1,0 +1,31 @@
+<h1>Thread2counterthreads</h1>
+<p>
+  <a href="<%= newThread2counterthreadsPath() %>" class="btn btn-primary">Create New Thread2counterthread</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Thread</th>
+    <th>Counterthread</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (thread2counterthread) in thread2counterthreads { %>
+      <tr>
+      <td><%= thread2counterthread.Thread %></td>
+        <td><%= thread2counterthread.Counterthread %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= thread2counterthreadPath({ thread2counterthread_id: thread2counterthread.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editThread2counterthreadPath({ thread2counterthread_id: thread2counterthread.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= thread2counterthreadPath({ thread2counterthread_id: thread2counterthread.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

@@ -1,0 +1,6 @@
+<h1>Edit Thread</h1>
+
+<%= form_for(thread, {action: threadPath({ thread_id: thread.ID }), method: "PUT"}) { %>
+  <%= partial("threads/form.html") %>
+  <a href="<%= threadsPath({ thread_id: thread.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

@@ -1,0 +1,6 @@
+- id: "profile2threads.created.success"
+  translation: "Profile2thread was successfully created."
+- id: "profile2threads.updated.success"
+  translation: "Profile2thread was successfully updated."
+- id: "profile2threads.destroyed.success"
+  translation: "Profile2thread was successfully destroyed."

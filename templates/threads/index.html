@@ -1,0 +1,29 @@
+<h1>Threads</h1>
+<p>
+  <a href="<%= newThreadsPath() %>" class="btn btn-primary">Create New Thread</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Rank</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (thread) in threads { %>
+      <tr>
+      <td><%= thread.Rank %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= threadPath({ thread_id: thread.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editThreadPath({ thread_id: thread.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= threadPath({ thread_id: thread.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

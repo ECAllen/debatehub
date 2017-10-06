@@ -1,0 +1,14 @@
+<h1>Thread2counterthread#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= thread2counterthreadsPath() %>" class="btn btn-info">Back to all Thread2counterthreads</a></li>
+  <li><a href="<%= editThread2counterthreadPath({ thread2counterthread_id: thread2counterthread.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= thread2counterthreadPath({ thread2counterthread_id: thread2counterthread.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Thread</strong>: <%= thread2counterthread.Thread %>
+</p>
+<p>
+  <strong>Counterthread</strong>: <%= thread2counterthread.Counterthread %>
+</p>

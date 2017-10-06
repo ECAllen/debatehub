@@ -67,6 +67,7 @@ func App() *buffalo.App {
 				"Demagogues hate this website.",
 				"Elevating the new conciousness one debate at a time.",
 				"An opinionated platform.",
+				"Wolves not sheep.",
 				"Popping filter bubbles since 2017"}
 
 			// Set the sites motto to a random tag line.
@@ -259,17 +260,16 @@ func App() *buffalo.App {
 		debate_pages.GET("/{debate_page_id}/edit", db.Edit)
 		debate_pages.POST("/{debate_page_id}/addpoint", AddPoint)
 		debate_pages.POST("/{debate_page_id}/addcounterpoint", AddCounterPoint)
+		debate_pages.POST("/{debate_page_id}/addthread", AddThread)
 		debate_pages.PUT("/{debate_page_id}", db.Update)
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
-		app.Resource("/profiles2debates", Profiles2debatesResource{&buffalo.BaseResource{}})
-		app.Resource("/profiles2points", Profiles2pointsResource{&buffalo.BaseResource{}})
-		app.Resource("/threads", ThreadsResource{&buffalo.BaseResource{}})
-		app.Resource("/debates2threads", Debates2threadsResource{&buffalo.BaseResource{}})
-		app.Resource("/debates2threads", Debates2threadsResource{&buffalo.BaseResource{}})
-		app.Resource("/threads", ThreadsResource{&buffalo.BaseResource{}})
-		app.Resource("/debate2threads", Debate2threadsResource{&buffalo.BaseResource{}})
-		app.Resource("/thread2counterthreads", Thread2counterthreadsResource{&buffalo.BaseResource{}})
-		app.Resource("/profile2threads", Profile2threadsResource{&buffalo.BaseResource{}})
+
+		/*		app.Resource("/profiles2debates", Profiles2debatesResource{&buffalo.BaseResource{}})
+				app.Resource("/profiles2points", Profiles2pointsResource{&buffalo.BaseResource{}})
+				app.Resource("/threads", ThreadsResource{&buffalo.BaseResource{}})
+				app.Resource("/thread2counterthreads", Thread2counterthreadsResource{&buffalo.BaseResource{}})
+				app.Resource("/profile2threads", Profile2threadsResource{&buffalo.BaseResource{}})
+		*/
 	}
 
 	return app

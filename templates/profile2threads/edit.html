@@ -1,0 +1,6 @@
+<h1>Edit Profile2thread</h1>
+
+<%= form_for(profile2thread, {action: profile2threadPath({ profile2thread_id: profile2thread.ID }), method: "PUT"}) { %>
+  <%= partial("profile2threads/form.html") %>
+  <a href="<%= profile2threadsPath({ profile2thread_id: profile2thread.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

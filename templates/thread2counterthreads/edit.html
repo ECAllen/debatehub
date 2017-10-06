@@ -1,0 +1,6 @@
+<h1>Edit Thread2counterthread</h1>
+
+<%= form_for(thread2counterthread, {action: thread2counterthreadPath({ thread2counterthread_id: thread2counterthread.ID }), method: "PUT"}) { %>
+  <%= partial("thread2counterthreads/form.html") %>
+  <a href="<%= thread2counterthreadsPath({ thread2counterthread_id: thread2counterthread.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>
