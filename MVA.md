@@ -77,4 +77,40 @@ Specifically why would he buy from you and not from the competition? debate flow
 
 What are the repetitive questions that you constantly need to answer before he makes the final call?
 
+## Marketing
+### Core Emotions
 
+fear
+- missing out on trends
+- world changing 
+
+hubris/ego/greed
+- better informed than the masses
+- speculations market beating everyone else
+- collect coin accolades
+- invite only???/ exclusivity
+- people ask why so well informed
+
+
+anger 
+- F*ck the mainstream people
+- seeing the truth 
+
+### better version of self
+
+## Monetization
+
+### ads
+
+### coin
+
+### patreon
+
+### ebook
+
+### newsletter ??? $12 year
+- samples
+
+### sell services
+
+### sell software
