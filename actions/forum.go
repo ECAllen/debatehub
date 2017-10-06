@@ -1,8 +1,9 @@
 package actions
 
 import (
+	"fmt"
 	"github.com/ECAllen/debatehub/models"
-	// "github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/buffalo"
 	"github.com/markbates/pop"
 	"github.com/pkg/errors"
 	"github.com/satori/go.uuid"
@@ -133,4 +134,115 @@ func buildFTreeRoot(id uuid.UUID, tx *pop.Connection, ftree *Ftree) error {
 		ftree.Children = append(ftree.Children, ft)
 	}
 	return nil
+}
+
+func insertProfile2Thread(threadID uuid.UUID, tx *pop.Connection, c buffalo.Context) error {
+
+	// Associate profile with debate
+	profile2thread := &models.Profile2thread{}
+
+	// Assume userID set otherwise should not have gotten
+	// here raise error and abort
+	if userID := c.Session().Get("UserID"); userID == nil {
+		err := errors.New("should not have gotten here, check authentication path")
+		return errors.WithStack(err)
+	} else {
+		profile2thread.Profile = userID.(uuid.UUID)
+	}
+
+	profile2thread.Thread = threadID
+
+	// Validate the data from the html form
+	verrs, err := tx.ValidateAndCreate(profile2thread)
+	if err != nil || verrs.HasAny() {
+		return errors.WithStack(err)
+	}
+	return nil
+}
+
+func AddThread(c buffalo.Context) error {
+	// ==================================
+	// Pull out params
+
+	// The debate page id is needed in case we need to redirect
+	// debate page if errors.
+	debate_page_id := c.Param("debate_page_id")
+	// Point_id is the existing point which this "counter point"
+	// is attached.
+	parent_thread_id := c.Param("parent_thread_id")
+
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+
+	// ==================================
+	// Create the new thread.
+	// ==================================
+	newthread := &models.Thread{}
+	newthread.Rank = 1
+
+	// Bind thread to the html form elements
+	err := c.Bind(newthread)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// Validate the data from the html form.
+	verrs, err := tx.ValidateAndCreate(newthread)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if verrs.HasAny() {
+		// Make point available inside the html template.
+		c.Set("newthread", newthread)
+		// Make the errors available inside the html template.
+		c.Set("errors", verrs)
+		// Render again the new.html template that the user can
+		// correct the input.
+		c.Flash().Add("warning", fmt.Sprintf("%s", verrs))
+		// Redirect to the original debate page where the
+		// counter point was created.
+		return c.Redirect(422, "/debate_pages/%s", debate_page_id)
+	}
+
+	// If the debate ID and thread ID are the same
+	// then add entry into debate2threads table
+	// otherwise add entry into thread2counterthreads
+	// table.
+	if debate_page_id == parent_thread_id {
+		debate2thread := &models.Debate2thread{}
+		debate2thread.Debate, err = uuid.FromString(debate_page_id)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		// add point id
+		debate2thread.Thread = newthread.ID
+		verrs, err = tx.ValidateAndCreate(debate2thread)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	} else {
+		// Put new thread and parent thread into
+		// thread2counterthreads table.
+		thread2counterthread := &models.Thread2counterthread{}
+
+		thread2counterthread.Thread, err = uuid.FromString(parent_thread_id)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		thread2counterthread.Counterthread = newthread.ID
+		verrs, err = tx.ValidateAndCreate(thread2counterthread)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		insertProfile2Thread(newthread.ID, tx, c)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	}
+	// and redirect to the points index page
+	return c.Redirect(302, "/debate_pages/%s", debate_page_id)
 }
