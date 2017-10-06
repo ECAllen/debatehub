@@ -13,7 +13,7 @@ import (
 
 var r *render.Engine
 
-var forumPointHTML = `
+var forumThreadHTML = `
 <ul class="media-list">
    <li class="media">
      <div class="media-left">
@@ -24,14 +24,14 @@ var forumPointHTML = `
      <div class="media-body">
          <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p class="lead">{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">reply</button>`
+	 <button class="btn btn-default btn-xs point-button" value="{{.Thread.ID}}">reply</button>`
 
-var forumPointEndHTML = `
+var forumThreadEndHTML = `
      </div> <!-- close media-body -->
     </li> <!-- close media -->
    </ul> <!-- close media list -->`
 
-var forumCounterPointHTML = `
+var forumCounterThreadHTML = `
 <div class="media">
      <div class="media-left">
        <a href="#">
@@ -41,29 +41,28 @@ var forumCounterPointHTML = `
      <div class="media-body">
          <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p class="lead">{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">reply</button>`
+	 <button class="btn btn-default btn-xs point-button" value="{{.Thread.ID}}">reply</button>`
 
-var forumCounterPointEndHTML = `
+var forumCounterThreadEndHTML = `
      </div> <!-- close media body -->
 </div><!-- close media  --> `
 
 var forumFormHTML = `
-<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.Point.ID}}" id="{{.Point.ID}}" method="POST" style="display:none">
-	<input class="counterpoint_form" name="authenticity_token" value="{{.Token}}" type="hidden">
+<form action="/debate_pages/{{.DebateID}}/addthread?parent_thread_id={{.Thread.ID}}" id="{{.Thread.ID}}" method="POST" style="display:none">
+	<input class="counterthread_form" name="authenticity_token" value="{{.Token}}" type="hidden">
    		<div class="form-group">
-			<label>Reply</label>
 			<textarea class=" form-control" id="debate-Topic" name="Topic" rows="3"></textarea>
 		</div>
 		<button class="btn btn-success" role="submit">Add</button>
  </form>`
 
-var forumPointTmpl, _ = template.New("Point").Parse(forumPointHTML)
+var forumThreadTmpl, _ = template.New("Thread").Parse(forumThreadHTML)
 
-var forumCounterPointTmpl, _ = template.New("CounterPoint").Parse(forumCounterPointHTML)
+var forumCounterThreadTmpl, _ = template.New("CounterThread").Parse(forumCounterThreadHTML)
 
 var forumFormTmpl, _ = template.New("Form").Parse(forumFormHTML)
 
-func buildForum(ptree *Ptree, counterPoint bool) string {
+func buildForum(ftree *Ftree, counterThread bool) string {
 	// Slice to hold the templates and tags.
 	var html []string
 
@@ -71,29 +70,29 @@ func buildForum(ptree *Ptree, counterPoint bool) string {
 	// it is converted to string.
 	var tpl bytes.Buffer
 
-	if counterPoint {
-		forumCounterPointTmpl.Execute(&tpl, ptree)
+	if counterThread {
+		forumCounterThreadTmpl.Execute(&tpl, ftree)
 	} else {
-		forumPointTmpl.Execute(&tpl, ptree)
+		forumThreadTmpl.Execute(&tpl, ftree)
 	}
 
-	forumFormTmpl.Execute(&tpl, ptree)
+	forumFormTmpl.Execute(&tpl, ftree)
 
 	html = append(html, tpl.String())
 
-	// If the Point has children then recusrsivly
+	// If the Thread has children then recusrsivly
 	// call buildHTML on them. Set couterpoint to true
-	if len(ptree.Children) > 0 {
-		for _, child := range ptree.Children {
+	if len(ftree.Children) > 0 {
+		for _, child := range ftree.Children {
 			html = append(html, buildForum(&child, true))
 		}
 	}
 
 	// Append end tags to html.
-	if counterPoint {
-		html = append(html, forumCounterPointEndHTML)
+	if counterThread {
+		html = append(html, forumCounterThreadEndHTML)
 	} else {
-		html = append(html, forumPointEndHTML)
+		html = append(html, forumThreadEndHTML)
 	}
 
 	// Join the slice into one big string
@@ -116,7 +115,7 @@ func init() {
 			},
 			"Forum": func(opts tags.Options, help plush.HelperContext) (template.HTML, error) {
 				t := tags.New("div", opts)
-				threads := help.Value("threads").(Ptree)
+				threads := help.Value("threads").(Ftree)
 				s := buildForum(&threads, false)
 				t.Append(s)
 				return t.HTML(), nil

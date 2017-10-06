@@ -85,9 +85,6 @@ $(document).ready(function() {
 		}
 	});
 
-	// TODO possibly remove.
-	var token = $("input, [name=authenticity_token]").attr("value");
-
 	// Map to hold the clicked count of each
 	// button indexed by id.
 	var clickedMap = new Map();

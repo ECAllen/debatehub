@@ -27,102 +27,6 @@ type Ptree struct {
 	Children []Ptree
 }
 
-/* Keping this around for general forum discussion later
-var pointHTML = `
-   <li class="media">
-     <div class="media-left">
-       <a href="#">
-         <img class="media-object" src="" alt="">
-       </a>
-     </div>
-     <div class="media-body">
-         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
-         <p class="lead">{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">supporting point</button>`
-
-var pointEndHTML = `
-     </div>
-    </li>`
-
-var counterPointHTML = `
-<div class="media">
-     <div class="media-left">
-       <a href="#">
-         <img class="media-object" src="" alt="">
-       </a>
-     </div>
-     <div class="media-body">
-         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
-         <p class="lead">{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">counterpoint</button>`
-
-var counterPointEndHTML = `
-     </div>
-</div>`
-
-var formHTML = `
-<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.Point.ID}}" id="{{.Point.ID}}" method="POST" style="display:none">
-	<input class="counterpoint_form" name="authenticity_token" value="{{.Token}}" type="hidden">
-   		<div class="form-group">
-			<label>Topic</label>
-			<textarea class=" form-control" id="debate-Topic" name="Topic" rows="3"></textarea>
-		</div>
-		<button class="btn btn-success" role="submit">Add</button>
- </form>`
-
-var debateFormHTML = `
-<form action="/debate_pages/{{.DebateID}}/addpoint" id="{{.DebateID}}" method="POST" style="display:none">
-	<input class="debate_form" name="authenticity_token" value="{{.Token}}" type="hidden">
-   		<div class="form-group">
-			<label>Topic</label>
-			<textarea class=" form-control" id="point-Topic" name="Topic" rows="3"></textarea>
-		</div>
-		<button class="btn btn-success" role="submit">Add</button>
-</form>`
-
-func buildHTML(ptree *Ptree, counterPoint bool) string {
-	// Slice to hold the templates and tags.
-	var html []string
-
-	// Buffer to hold template until
-	// it is converted to string.
-	var tpl bytes.Buffer
-
-	// Bind vars in template for beginning.
-	if counterPoint {
-		counterPointTmpl.Execute(&tpl, ptree)
-	} else {
-		debateTmpl.Execute(&tpl, ptree)
-	}
-
-	// Build form and append
-	if counterPoint {
-		formTmpl.Execute(&tpl, ptree)
-	} else {
-		debateFormTmpl.Execute(&tpl, ptree)
-	}
-
-	html = append(html, tpl.String())
-
-	// If the Point has children then recusrsivly
-	// call buildHTML on them. Set couterpoint to true
-	if len(ptree.Children) > 0 {
-		for _, child := range ptree.Children {
-			html = append(html, buildHTML(&child, true))
-		}
-	}
-
-	// Append end tags to html.
-	if counterPoint {
-		html = append(html, counterPointEndHTML)
-	} else {
-		html = append(html, pointEndHTML)
-	}
-
-	// Join the slice into one big string
-	return strings.Join(html, "\n")
-}
-*/
 // TODO OK this shit is ugly... move to render.go later and refactor
 var debateHTML = `
 <div class="media">
@@ -291,12 +195,6 @@ func Point(id uuid.UUID, tx *pop.Connection) (models.Point, error) {
 	return *point, err
 }
 
-/*
-func Profile(id uuid.UUID, tx *pop.Connection) (models.Profile, error) {
-
-}
-*/
-
 // TODO combine buildroot and build tree
 func buildTree(id uuid.UUID, debateID uuid.UUID, tx *pop.Connection, ptree *Ptree) error {
 
@@ -425,6 +323,30 @@ func insertProfile2Point(pointID uuid.UUID, tx *pop.Connection, c buffalo.Contex
 	return nil
 }
 
+func insertProfile2Thread(threadID uuid.UUID, tx *pop.Connection, c buffalo.Context) error {
+
+	// Associate profile with debate
+	profile2thread := &models.Profile2thread{}
+
+	// Assume userID set otherwise should not have gotten
+	// here raise error and abort
+	if userID := c.Session().Get("UserID"); userID == nil {
+		err := errors.New("should not have gotten here, check authentication path")
+		return errors.WithStack(err)
+	} else {
+		profile2thread.Thread = userID.(uuid.UUID)
+	}
+
+	profile2thread.Thread = threadID
+
+	// Validate the data from the html form
+	verrs, err := tx.ValidateAndCreate(profile2thread)
+	if err != nil || verrs.HasAny() {
+		return errors.WithStack(err)
+	}
+	return nil
+}
+
 // List gets all Debates. This function is mapped to the path
 // GET /debate_pages
 func (v DebatePagesResource) List(c buffalo.Context) error {
@@ -532,7 +454,41 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	}
 
 	c.Set("debate_html", htm)
-	c.Set("threads", ptree)
+
+	// ==================================
+	// Create the root node of Ftree
+	// ==================================
+
+	var ftree Ftree
+	ftree.Topic = debate.Topic
+	ftree.Thread.ID = debate.ID
+	ftree.DebateID = debate.ID
+	ftree.Profile = *profile
+	ftree.Token = auth_token
+
+	// check for counter threads
+
+	// Check for the existence of counter
+	// threads for the forum in the debates2threads
+	// table.
+	debates2thread := &models.Debate2thread{}
+	q = tx.Where("debate = ?", debate_id)
+	exists, err = q.Exists(debates2thread)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// If there are counter threads then build
+	// Ftree.
+	if exists {
+		// Build the tree of comments.
+		err = buildFTreeRoot(debate.ID, tx, &ftree)
+		if err != nil {
+			return err
+		}
+	}
+
+	c.Set("threads", ftree)
 
 	return c.Render(200, r.HTML("debate_pages/show.html"))
 }
@@ -801,6 +757,93 @@ func AddCounterPoint(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
+	// and redirect to the points index page
+	return c.Redirect(302, "/debate_pages/%s", debate_page_id)
+}
+
+func AddThread(c buffalo.Context) error {
+	// ==================================
+	// Pull out params
+
+	// The debate page id is needed in case we need to redirect
+	// debate page if errors.
+	debate_page_id := c.Param("debate_page_id")
+	// Point_id is the existing point which this "counter point"
+	// is attached.
+	parent_thread_id := c.Param("parent_thread_id")
+
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+
+	// ==================================
+	// Create the new thread.
+	// ==================================
+	newthread := &models.Thread{}
+	newthread.Rank = 1
+
+	// Bind thread to the html form elements
+	err := c.Bind(newthread)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// Validate the data from the html form.
+	verrs, err := tx.ValidateAndCreate(newthread)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if verrs.HasAny() {
+		// Make point available inside the html template.
+		c.Set("newthread", newthread)
+		// Make the errors available inside the html template.
+		c.Set("errors", verrs)
+		// Render again the new.html template that the user can
+		// correct the input.
+		c.Flash().Add("warning", fmt.Sprintf("%s", verrs))
+		// Redirect to the original debate page where the
+		// counter point was created.
+		return c.Redirect(422, "/debate_pages/%s", debate_page_id)
+	}
+
+	// If the debate ID and thread ID are the same
+	// then add entry into debate2threads table
+	// otherwise add entry into thread2counterthreads
+	// table.
+	if debate_page_id == parent_thread_id {
+		debate2thread := &models.Debate2thread{}
+		debate2thread.Debate, err = uuid.FromString(debate_page_id)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		// add point id
+		debate2thread.Thread = newthread.ID
+		verrs, err = tx.ValidateAndCreate(debate2thread)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	} else {
+		// Put new thread and parent thread into
+		// thread2counterthreads table.
+		thread2counterthread := &models.Thread2counterthread{}
+
+		thread2counterthread.Thread, err = uuid.FromString(parent_thread_id)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		thread2counterthread.Counterthread = newthread.ID
+		verrs, err = tx.ValidateAndCreate(thread2counterthread)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		insertProfile2Thread(newthread.ID, tx, c)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	}
 	// and redirect to the points index page
 	return c.Redirect(302, "/debate_pages/%s", debate_page_id)
 }
