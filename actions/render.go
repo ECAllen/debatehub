@@ -2,6 +2,7 @@ package actions
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"strings"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/gobuffalo/plush"
 	"github.com/gobuffalo/tags"
 	"github.com/pkg/errors"
+	"github.com/satori/go.uuid"
 )
 
 var r *render.Engine
@@ -27,7 +29,7 @@ var forumThreadHTML = `
        </a>
      </div>
      <div class="media-body">
-         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p class="lead">{{.Topic}}</p>
 	 <button class="btn btn-default btn-xs point-button" value="{{.Thread.ID}}">reply</button>`
 
@@ -44,8 +46,8 @@ var forumCounterThreadHTML = `
        </a>
      </div>
      <div class="media-body">
-         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
-         <p class="lead">{{.Topic}}</p>
+         <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <p>{{.Topic}}</p>
 	 <button class="btn btn-default btn-xs point-button" value="{{.Thread.ID}}">reply</button>`
 
 var forumCounterThreadEndHTML = `
@@ -107,47 +109,51 @@ func buildForum(ftree *Ftree, counterThread bool) string {
 // ==================================================
 
 var debateHTML = `
-         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p class="lead">{{.Topic}}</p>
+         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>`
+
+var debateButtonHTML = `
 	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">supporting point</button>`
-
-var pointHTML = `
-         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
-         <p class="lead">{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">counter point</button>`
-
-var counterPointHTML = `
-         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
-         <p class="lead">{{.Topic}}</p>`
-
-var pointFormHTML = `
-<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.Point.ID}}" id="{{.Point.ID}}" method="POST" style="display:none">
-	<input class="counterpoint_form" name="authenticity_token" value="{{.Token}}" type="hidden">
-   		<div class="form-group">
-			<label>Topic</label>
-			<textarea class=" form-control" id="debate-Topic" name="Topic" rows="3"></textarea>
-		</div>
-		<button class="btn btn-success" role="submit">Add</button>
-</form>`
 
 var debateFormHTML = `
 <form action="/debate_pages/{{.DebateID}}/addpoint" id="{{.DebateID}}" method="POST" style="display:none">
 	<input class="debate_form" name="authenticity_token" value="{{.Token}}" type="hidden">
    		<div class="form-group">
-			<label>Topic</label>
 			<textarea class=" form-control" id="point-Topic" name="Topic" rows="3"></textarea>
 		</div>
 		<button class="btn btn-success" role="submit">Add</button>
 </form>`
 
+var pointHTML = `
+         <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <p>{{.Topic}}</p>`
+
+var pointButtonHTML = `
+	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">counter point</button>`
+
+var counterPointHTML = `
+         <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <p>{{.Topic}}</p>`
+
+var pointFormHTML = `
+<form action="/debate_pages/{{.DebateID}}/addcounterpoint?point_id={{.Point.ID}}" id="{{.Point.ID}}" method="POST" style="display:none">
+	<input class="counterpoint_form" name="authenticity_token" value="{{.Token}}" type="hidden">
+   		<div class="form-group">
+			<textarea class=" form-control" id="debate-Topic" name="Topic" rows="3"></textarea>
+		</div>
+		<button class="btn btn-success" role="submit">Add</button>
+</form>`
+
 var pointTmpl, _ = template.New("Point").Parse(pointHTML)
+var pointButtonTmpl, _ = template.New("PointButton").Parse(pointButtonHTML)
 var counterPointTmpl, _ = template.New("CounterPoint").Parse(counterPointHTML)
 var formTmpl, _ = template.New("Form").Parse(pointFormHTML)
 
 var debateTmpl, _ = template.New("Debate").Parse(debateHTML)
+var debateButtonTmpl, _ = template.New("DebateButton").Parse(debateButtonHTML)
 var debateFormTmpl, _ = template.New("Form").Parse(debateFormHTML)
 
-func buildHTML(ptree *Ptree, level int) (template.HTML, error) {
+func buildHTML(ptree *Ptree, level int, userUUID uuid.UUID) (template.HTML, error) {
 
 	// Slice to hold the templates and tags.
 	var html []string
@@ -156,7 +162,7 @@ func buildHTML(ptree *Ptree, level int) (template.HTML, error) {
 	// it is converted to string.
 	var tpl bytes.Buffer
 
-	divRowOpts := tags.Options{"class": "row"}
+	divRowOpts := tags.Options{"class": "row row-decoration"}
 	divRow := tags.New("div", divRowOpts)
 
 	divMediaBodyOpts := tags.Options{"class": "media-body"}
@@ -169,6 +175,7 @@ func buildHTML(ptree *Ptree, level int) (template.HTML, error) {
 	// If point and debate are same id then this is the
 	// root node and need diff html.
 	if ptree.DebateID == ptree.Point.ID {
+		block := tags.New("blockquote", tags.Options{})
 		debateTmpl.Execute(&tpl, ptree)
 		debateFormTmpl.Execute(&tpl, ptree)
 		html = append(html, tpl.String())
@@ -176,16 +183,38 @@ func buildHTML(ptree *Ptree, level int) (template.HTML, error) {
 		divOpts := tags.Options{"class": "col-md-9"}
 		divDebateCol := tags.New("div", divOpts)
 
-		divMediaBody.Append(strings.Join(html, "\n"))
-		divDebateCol.Append(divMediaBody)
-		divRow.Append(divDebateCol)
+		block.Append(strings.Join(html, "\n"))
+		divDebateCol.Append(block)
 
+		debateButton := tags.New("button", tags.Options{"class": "btn btn-default btn-xs point-button", "value": ptree.Point.ID})
+		debateButton.Append("supporting point")
+		divDebateCol.Append(debateButton)
+
+		/*
+			For testing
+			uid, err := uuid.FromString("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
+			if err != nil {
+				fmt.Printf("Something gone wrong: %s", err)
+			}
+		*/
+
+		if userUUID == ptree.Profile.ID {
+			strong := tags.New("strong", tags.Options{})
+			strong.Append("edit")
+			// /points/{point_id}/edit
+			link := fmt.Sprintf("/debate_pages/%s/edit", ptree.DebateID)
+			editLink := tags.New("a", tags.Options{"class": "edit", "href": link})
+			editLink.Append(strong)
+			divDebateCol.Append(editLink)
+		}
+
+		divRow.Append(divDebateCol)
 		divDebate.Append(divRow)
 
 		if len(ptree.Children) > 0 {
 			childLevel := level + 1
 			for _, child := range ptree.Children {
-				row, err := buildHTML(&child, childLevel)
+				row, err := buildHTML(&child, childLevel, userUUID)
 				if err != nil {
 					return row, errors.WithStack(err)
 				}
@@ -195,31 +224,59 @@ func buildHTML(ptree *Ptree, level int) (template.HTML, error) {
 	} else {
 		// Else child of main debate.
 		if level == 2 {
-			divOpts := tags.Options{"class": "col-md-5"}
+
+			divOpts := tags.Options{"class": "col-md-6"}
 			divPointCol := tags.New("div", divOpts)
-			// execute templates and put in string
-			pointTmpl.Execute(&tpl, ptree)
-			formTmpl.Execute(&tpl, ptree)
-			html = append(html, tpl.String())
+
+			// <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+			strong := tags.New("strong", tags.Options{})
+			small := tags.New("small", tags.Options{})
+			strong.Append(ptree.Profile.NickName)
+			small.Append(strong)
+			profileHref := fmt.Sprintf("/profiles/%s", ptree.Profile.ID)
+			profileLink := tags.New("a", tags.Options{"class": "profile", "href": profileHref})
+			profileLink.Append(small)
 
 			// add template to col
+			divMediaBody.Append(profileLink)
+
+			if userUUID == ptree.Profile.ID {
+				strong := tags.New("strong", tags.Options{})
+				small := tags.New("small", tags.Options{})
+				strong.Append("edit")
+				small.Append(strong)
+				link := fmt.Sprintf("/points/%s/edit", ptree.Point.ID)
+				editLink := tags.New("a", tags.Options{"class": "edit", "href": link})
+				editLink.Append(small)
+				divMediaBody.Append(editLink)
+			}
+
+			p := tags.New("p", tags.Options{})
+			p.Append(ptree.Topic)
+			divMediaBody.Append(p)
+
+			// execute templates and put in string
+			// pointTmpl.Execute(&tpl, ptree)
+			formTmpl.Execute(&tpl, ptree)
+			pointButtonTmpl.Execute(&tpl, ptree)
+			html = append(html, tpl.String())
+
 			divMediaBody.Append(strings.Join(html, "\n"))
 			divPointCol.Append(divMediaBody)
-
-			divOpts = tags.Options{"class": "col-md-4"}
-			divCounterPointCol := tags.New("div", divOpts)
+			divCounterPointCol := tags.New("div", tags.Options{"class": "col-md-6"})
 
 			// call child if any
 			if len(ptree.Children) > 0 {
 				childLevel := level + 1
+				// child := ptree.Children[0]
 				// At this point level should == 3.
-				// Take only first child for now.
-				child := ptree.Children[0]
-				c, err := buildHTML(&child, childLevel)
-				if err != nil {
-					return c, errors.WithStack(err)
+				for _, child := range ptree.Children {
+					c, err := buildHTML(&child, childLevel, userUUID)
+					if err != nil {
+						return c, errors.WithStack(err)
+					}
+					divCounterPointCol.Append(c)
 				}
-				divCounterPointCol.Append(c)
 			}
 
 			// build row from two cols
@@ -227,14 +284,59 @@ func buildHTML(ptree *Ptree, level int) (template.HTML, error) {
 			divRow.Append(divCounterPointCol)
 			return divRow.HTML(), nil
 		} else {
+			divCounterPointRowOpts := tags.Options{"class": "row"}
+			divCounterPointRow := tags.New("div", divCounterPointRowOpts)
+
+			// TODO move this to func
+			// <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+			strong := tags.New("strong", tags.Options{})
+			small := tags.New("small", tags.Options{})
+			strong.Append(ptree.Profile.NickName)
+			small.Append(strong)
+			profileHref := fmt.Sprintf("/profiles/%s", ptree.Profile.ID)
+			profileLink := tags.New("a", tags.Options{"class": "profile", "href": profileHref})
+			profileLink.Append(small)
+			divMediaBody.Append(profileLink)
+
+			if userUUID == ptree.Profile.ID {
+				strong := tags.New("strong", tags.Options{})
+				small := tags.New("small", tags.Options{})
+				strong.Append("edit")
+				small.Append(strong)
+				link := fmt.Sprintf("/points/%s/edit", ptree.Point.ID)
+				editLink := tags.New("a", tags.Options{"class": "edit", "href": link})
+				editLink.Append(small)
+				divMediaBody.Append(editLink)
+
+				// <a href="/points/3cae7237-32bd-413e-8240-75c181ac410e" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+				link = fmt.Sprintf("/points/%s", ptree.Point.ID)
+				destroyLinkOpts := tags.Options{
+					"class":        "edit",
+					"href":         link,
+					"data-method":  "DELETE",
+					"data-confirm": "Are you sure?"}
+				destroyLink := tags.New("a", destroyLinkOpts)
+				strong = tags.New("strong", tags.Options{})
+				small = tags.New("small", tags.Options{})
+				small.Append("delete")
+				strong.Append(small)
+				destroyLink.Append(strong)
+				divMediaBody.Append(destroyLink)
+			}
+
+			p := tags.New("p", tags.Options{})
+			p.Append(ptree.Topic)
+			divMediaBody.Append(p)
+
 			// execute templates and put in string
-			counterPointTmpl.Execute(&tpl, ptree)
+			// counterPointTmpl.Execute(&tpl, ptree)
 			formTmpl.Execute(&tpl, ptree)
 			html = append(html, tpl.String())
 
 			// add template to col
 			divMediaBody.Append(strings.Join(html, "\n"))
-			return divMediaBody.HTML(), nil
+			divCounterPointRow.Append(divMediaBody)
+			return divCounterPointRow.HTML(), nil
 		}
 	}
 	return divDebate.HTML(), nil
@@ -251,9 +353,12 @@ func init() {
 		// Add template helpers here:
 		Helpers: render.Helpers{
 			"Debate": func(opts tags.Options, help plush.HelperContext) (template.HTML, error) {
-				// p := help.Value("debate_html").(string)
+
+				userUUID := help.Value("UserID").(uuid.UUID)
+				// userID := fmt.Sprintf("%s", userUUID)
+
 				ptree := help.Value("debate").(Ptree)
-				t, err := buildHTML(&ptree, 1)
+				t, err := buildHTML(&ptree, 1, userUUID)
 				if err != nil {
 					return t, errors.WithStack(err)
 				}

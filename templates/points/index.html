@@ -12,8 +12,9 @@
     <%= for (point) in points { %>
       <tr>
       <td><%= point.Rank %></td>
+      <td><%= point.Topic %></td>
         <td>
-          <div class="pull-right">
+          <div>
             <a href="<%= pointPath({ point_id: point.ID }) %>" class="btn btn-info">View</a>
             <a href="<%= editPointPath({ point_id: point.ID }) %>" class="btn btn-warning">Edit</a>
             <a href="<%= pointPath({ point_id: point.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>

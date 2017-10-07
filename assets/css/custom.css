@@ -77,3 +77,33 @@ body { padding-top: 70px; }
 .profile {
 	border-radius: 10%;
 }
+
+.bs-callout-info {
+    border-left-color: #1b809e;
+}
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+        border-left-width: 1px;
+        border-left-color: rgb(238, 238, 238);
+    border-left-width: 5px;
+    border-radius: 3px;
+    height: 150px;
+    width: 100%;
+}
+
+.row-decoration {
+    padding-bottom: 25px;
+    padding-top: 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.profile {
+    color: #9d9d9d;
+}
+
+.edit {
+    padding-left: 7px;
+    color: #9d9d9d;
+}

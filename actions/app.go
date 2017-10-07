@@ -160,7 +160,8 @@ func App() *buffalo.App {
 		// ------------------
 		app.GET("/profiles/submit", ProfilesSubmit)
 		app.GET("/profiles/user", ProfileUserShow)
-		pr := &ProfilesResource{&buffalo.BaseResource{}}
+		var pr buffalo.Resource
+		pr = &ProfilesResource{&buffalo.BaseResource{}}
 		profiles := app.Resource("/profiles", pr)
 		profiles.Use(CheckAuth, CheckAdmin)
 		profiles.Middleware.Skip(CheckAdmin, pr.Create, pr.Show, pr.Update, pr.Edit)
@@ -169,13 +170,14 @@ func App() *buffalo.App {
 		//   Email Subscriptions
 		// ------------------------
 
-		er := &EmailsResource{&buffalo.BaseResource{}}
+		var er buffalo.Resource
+		er = &EmailsResource{&buffalo.BaseResource{}}
 		subscription := app.Resource("/emails", er)
 		subscription.Use(CheckAuth)
 		subscription.Middleware.Skip(CheckAuth, er.Create)
 		subscription.Middleware.Skip(CheckAdmin, er.Create)
 		// TODO fix this
-		subscription.Middleware.Skip(middleware.CSRF, er.Create)
+		// subscription.Middleware.Skip(middleware.CSRF, er.Create)
 
 		// ------------------------
 		//  Articles
@@ -264,13 +266,11 @@ func App() *buffalo.App {
 		debate_pages.PUT("/{debate_page_id}", db.Update)
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
 
-		/*		app.Resource("/profiles2debates", Profiles2debatesResource{&buffalo.BaseResource{}})
-				app.Resource("/profiles2points", Profiles2pointsResource{&buffalo.BaseResource{}})
-				app.Resource("/threads", ThreadsResource{&buffalo.BaseResource{}})
-				app.Resource("/thread2counterthreads", Thread2counterthreadsResource{&buffalo.BaseResource{}})
-				app.Resource("/profile2threads", Profile2threadsResource{&buffalo.BaseResource{}})
-		*/
+		var pt buffalo.Resource
+		pt = &PointsResource{&buffalo.BaseResource{}}
+		points := app.Resource("/points", pt)
+		points.Use(CheckAuth)
+		// profiles.Middleware.Skip(CheckAdmin, pr.Create, pr.Show, pr.Update, pr.Edit)
 	}
-
 	return app
 }
