@@ -165,6 +165,7 @@ func App() *buffalo.App {
 		profiles := app.Resource("/profiles", pr)
 		profiles.Use(CheckAuth, CheckAdmin)
 		profiles.Middleware.Skip(CheckAdmin, pr.Create, pr.Show, pr.Update, pr.Edit)
+		profiles.GET("/profile/{profile_id}", PublicProfile)
 
 		// ------------------------
 		//   Email Subscriptions
@@ -265,6 +266,10 @@ func App() *buffalo.App {
 		debate_pages.POST("/{debate_page_id}/addthread", AddThread)
 		debate_pages.PUT("/{debate_page_id}", db.Update)
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
+
+		debate_pages.GET("/{point_id}/pointedit", PointEdit)
+		debate_pages.PUT("/{point_id}/pointupdate", PointUpdate)
+		debate_pages.DELETE("/{point_id}/pointdestroy", PointDestroy)
 
 		var pt buffalo.Resource
 		pt = &PointsResource{&buffalo.BaseResource{}}

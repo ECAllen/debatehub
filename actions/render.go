@@ -29,7 +29,7 @@ var forumThreadHTML = `
        </a>
      </div>
      <div class="media-body">
-         <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <small><strong><a class="profile" href="/profiles/profile/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p class="lead">{{.Topic}}</p>
 	 <button class="btn btn-default btn-xs point-button" value="{{.Thread.ID}}">reply</button>`
 
@@ -46,7 +46,7 @@ var forumCounterThreadHTML = `
        </a>
      </div>
      <div class="media-body">
-         <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <small><strong><a class="profile" href="/profiles/profile/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p>{{.Topic}}</p>
 	 <button class="btn btn-default btn-xs point-button" value="{{.Thread.ID}}">reply</button>`
 
@@ -110,7 +110,7 @@ func buildForum(ftree *Ftree, counterThread bool) string {
 
 var debateHTML = `
          <p class="lead">{{.Topic}}</p>
-         <small><strong><a href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>`
+         <small><strong><a href="/profiles/profile/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>`
 
 var debateButtonHTML = `
 	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">supporting point</button>`
@@ -125,14 +125,14 @@ var debateFormHTML = `
 </form>`
 
 var pointHTML = `
-         <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <small><strong><a class="profile" href="/profiles/profile/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p>{{.Topic}}</p>`
 
 var pointButtonHTML = `
 	 <button class="btn btn-default btn-xs point-button" value="{{.Point.ID}}">counter point</button>`
 
 var counterPointHTML = `
-         <small><strong><a class="profile" href="/profiles/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
+         <small><strong><a class="profile" href="/profiles/profile/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p>{{.Topic}}</p>`
 
 var pointFormHTML = `
@@ -153,6 +153,7 @@ var debateTmpl, _ = template.New("Debate").Parse(debateHTML)
 var debateButtonTmpl, _ = template.New("DebateButton").Parse(debateButtonHTML)
 var debateFormTmpl, _ = template.New("Form").Parse(debateFormHTML)
 
+// TODO not DRY... refactor
 func buildHTML(ptree *Ptree, level int, userUUID uuid.UUID) (template.HTML, error) {
 
 	// Slice to hold the templates and tags.
@@ -233,7 +234,7 @@ func buildHTML(ptree *Ptree, level int, userUUID uuid.UUID) (template.HTML, erro
 			small := tags.New("small", tags.Options{})
 			strong.Append(ptree.Profile.NickName)
 			small.Append(strong)
-			profileHref := fmt.Sprintf("/profiles/%s", ptree.Profile.ID)
+			profileHref := fmt.Sprintf("/profiles/profile/%s", ptree.Profile.ID)
 			profileLink := tags.New("a", tags.Options{"class": "profile", "href": profileHref})
 			profileLink.Append(small)
 
@@ -245,10 +246,26 @@ func buildHTML(ptree *Ptree, level int, userUUID uuid.UUID) (template.HTML, erro
 				small := tags.New("small", tags.Options{})
 				strong.Append("edit")
 				small.Append(strong)
-				link := fmt.Sprintf("/points/%s/edit", ptree.Point.ID)
+				link := fmt.Sprintf("/debate_pages/%s/pointedit?debate_page_id=%s", ptree.Point.ID, ptree.DebateID)
 				editLink := tags.New("a", tags.Options{"class": "edit", "href": link})
 				editLink.Append(small)
 				divMediaBody.Append(editLink)
+
+				if len(ptree.Children) == 0 {
+					link := fmt.Sprintf("/debate_pages/%s/pointdestroy?debate_page_id=%s", ptree.Point.ID, ptree.DebateID)
+					destroyLinkOpts := tags.Options{
+						"class":        "edit",
+						"href":         link,
+						"data-method":  "DELETE",
+						"data-confirm": "Are you sure?"}
+					destroyLink := tags.New("a", destroyLinkOpts)
+					strong = tags.New("strong", tags.Options{})
+					small = tags.New("small", tags.Options{})
+					small.Append("delete")
+					strong.Append(small)
+					destroyLink.Append(strong)
+					divMediaBody.Append(destroyLink)
+				}
 			}
 
 			p := tags.New("p", tags.Options{})
@@ -277,6 +294,8 @@ func buildHTML(ptree *Ptree, level int, userUUID uuid.UUID) (template.HTML, erro
 					}
 					divCounterPointCol.Append(c)
 				}
+			} else {
+
 			}
 
 			// build row from two cols
@@ -293,7 +312,7 @@ func buildHTML(ptree *Ptree, level int, userUUID uuid.UUID) (template.HTML, erro
 			small := tags.New("small", tags.Options{})
 			strong.Append(ptree.Profile.NickName)
 			small.Append(strong)
-			profileHref := fmt.Sprintf("/profiles/%s", ptree.Profile.ID)
+			profileHref := fmt.Sprintf("/profiles/profile/%s", ptree.Profile.ID)
 			profileLink := tags.New("a", tags.Options{"class": "profile", "href": profileHref})
 			profileLink.Append(small)
 			divMediaBody.Append(profileLink)
@@ -303,13 +322,13 @@ func buildHTML(ptree *Ptree, level int, userUUID uuid.UUID) (template.HTML, erro
 				small := tags.New("small", tags.Options{})
 				strong.Append("edit")
 				small.Append(strong)
-				link := fmt.Sprintf("/points/%s/edit", ptree.Point.ID)
+				link := fmt.Sprintf("/debate_pages/%s/pointedit?debate_page_id=%s", ptree.Point.ID, ptree.DebateID)
 				editLink := tags.New("a", tags.Options{"class": "edit", "href": link})
 				editLink.Append(small)
 				divMediaBody.Append(editLink)
 
 				// <a href="/points/3cae7237-32bd-413e-8240-75c181ac410e" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
-				link = fmt.Sprintf("/points/%s", ptree.Point.ID)
+				link = fmt.Sprintf("/debate_pages/%s/pointdestroy?debate_page_id=%s", ptree.Point.ID, ptree.DebateID)
 				destroyLinkOpts := tags.Options{
 					"class":        "edit",
 					"href":         link,

@@ -590,3 +590,89 @@ func AddCounterPoint(c buffalo.Context) error {
 	// and redirect to the points index page
 	return c.Redirect(302, "/debate_pages/%s", debate_page_id)
 }
+
+// Edit renders a edit formular for a point. This function is
+// mapped to the path GET /debate_pages/{point_id}/pointedit?debate_page_id=
+func PointEdit(c buffalo.Context) error {
+
+	// The debate page id is needed in case we need to redirect
+	// debate page if errors.
+	debate_page_id := c.Param("debate_page_id")
+
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+	// Allocate an empty Point
+	point := &models.Point{}
+	err := tx.Find(point, c.Param("point_id"))
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	// Make point available inside the html template
+	action := fmt.Sprintf("/debate_pages/%s/pointupdate?debate_page_id=%s", point.ID, debate_page_id)
+	c.Set("point", point)
+	c.Set("action", action)
+	return c.Render(200, r.HTML("debate_pages/pointedit.html"))
+}
+
+// Update changes a point in the DB. This function is mapped to
+// the path PUT /debate_pages/{point_id}/updatepoint?debate_page_id=
+func PointUpdate(c buffalo.Context) error {
+
+	// The debate page id is needed in case we need to redirect
+	// debate page if errors.
+	debate_page_id := c.Param("debate_page_id")
+
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+	// Allocate an empty Point
+	point := &models.Point{}
+	err := tx.Find(point, c.Param("point_id"))
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	// Bind Point to the html form elements
+	err = c.Bind(point)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	verrs, err := tx.ValidateAndUpdate(point)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	if verrs.HasAny() {
+		// Make point available inside the html template
+		c.Set("point", point)
+		// Make the errors available inside the html template
+		c.Set("errors", verrs)
+		// Render again the edit.html template that the user can
+		// correct the input.
+		return c.Render(422, r.HTML("points/edit.html"))
+	}
+	// If there are no errors set a success message
+	c.Flash().Add("success", "Point was updated successfully")
+	// and redirect to the points index page
+	return c.Redirect(302, "/debate_pages/%s", debate_page_id)
+}
+
+// Destroy deletes a point from the DB. This function is mapped
+// to the path DELETE /debate_pages/{point_id}/pointdestroy?debate_page_id=
+func PointDestroy(c buffalo.Context) error {
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+	// Allocate an empty Point
+	point := &models.Point{}
+	// To find the Point the parameter point_id is used.
+	err := tx.Find(point, c.Param("point_id"))
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	err = tx.Destroy(point)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	// If there are no errors set a flash message
+	c.Flash().Add("success", "Point was destroyed successfully")
+	// Redirect to the points index page
+	return c.Redirect(302, "/debate_pages/%s", c.Param("debate_page_id"))
+}

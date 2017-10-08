@@ -235,3 +235,20 @@ func ProfileUserShow(c buffalo.Context) error {
 //	c.Set("profiles", profiles)
 //	return c.Render(200, r.HTML("profiles/admin.html"))
 //}
+
+// Show gets the data for one Profile. This function is mapped to
+// the path GET /profiles/profile/{profile_id}
+func PublicProfile(c buffalo.Context) error {
+	// Get the DB connection from the context
+	tx := c.Value("tx").(*pop.Connection)
+	// Allocate an empty Profile
+	profile := &models.Profile{}
+	// To find the Profile the parameter profile_id is used.
+	err := tx.Find(profile, c.Param("profile_id"))
+	if err != nil {
+		return err
+	}
+	// Make profile available inside the html template
+	c.Set("profile", profile)
+	return c.Render(200, r.HTML("profiles/profile.html"))
+}
