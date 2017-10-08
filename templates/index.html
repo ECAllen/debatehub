@@ -15,7 +15,7 @@
 	</div>
 	<div class="col-md-8">
 		<div class="row">
-			<div class="col-md-5">
+			<div class="col-md-6">
 				<% let lsections = ["news"] %>
 				<%= for (section) in lsections { %>
 				<div id="<%= section %>">
@@ -23,7 +23,7 @@
 				</div>
 				<% } %>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-6">
 				<% let lsections = ["trends"] %>
 				<%= for (section) in lsections { %>
 				<div id="<%= section %>">
@@ -33,7 +33,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-12" align="center">
 					<%= partial("amazon.html") %> 
 			</div>
 		</div>
