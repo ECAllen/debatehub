@@ -237,7 +237,6 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	// ==================================
 
 	profile := &models.Profile{}
-	// TODO redo
 	err = tx.Find(profile, profile2debate.Profile)
 	if err != nil {
 		return errors.WithStack(err)

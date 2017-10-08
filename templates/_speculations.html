@@ -1,9 +1,17 @@
-<h3>Speculations
-	<small>
-		<a class="btn btn-default btn-xs" href="/speculations/submit">submit</a>
-	</small>
-</h3>
 
-<%= for (speculation) in speculations{ %>
+<div class="panel panel-default">
+	<div class="panel-body">
+
+		<h3>Speculations
+			<small>
+				<a class="btn btn-default btn-xs" href="/speculations/submit">submit</a>
+			</small>
+		</h3>
+		<hr>
+
+		<%= for (speculation) in speculations{ %>
 		<div><%= speculation.Summary%></div>
-<% } %>
+		<% } %>
+	</div>
+</div>
+

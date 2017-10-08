@@ -8,8 +8,6 @@
   <thead>
   <th>Summary</th>
     <th>Description</th>
-    <th>Publish</th>
-    <th>Reject</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
@@ -17,13 +15,9 @@
       <tr>
       <td><%= trend.Summary %></td>
         <td><%= trend.Description %></td>
-        <td><%= trend.Publish %></td>
-        <td><%= trend.Reject %></td>
         <td>
           <div class="pull-right">
             <a href="<%= trendPath({ trend_id: trend.ID }) %>" class="btn btn-info">View</a>
-            <a href="<%= editTrendPath({ trend_id: trend.ID }) %>" class="btn btn-warning">Edit</a>
-            <a href="<%= trendPath({ trend_id: trend.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
           </div>
         </td>
       </tr>

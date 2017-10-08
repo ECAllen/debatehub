@@ -1,7 +1,7 @@
 <h1>Speculations</h1>
 
 <p>
-  <a href="<%= newSpeculationPath() %>" class="btn btn-primary">Create New Speculation</a>
+  <a href="<%= speculationsSubmitPath() %>" class="btn btn-primary">Create New Speculation</a>
 </p>
 
 <table class="table table-striped">
@@ -22,8 +22,6 @@
         <td>
           <div class="pull-right">
             <a href="<%= speculationPath({ speculation_id: speculation.ID }) %>" class="btn btn-info">View</a>
-            <a href="<%= editSpeculationPath({ speculation_id: speculation.ID }) %>" class="btn btn-warning">Edit</a>
-            <a href="<%= speculationPath({ speculation_id: speculation.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
           </div>
         </td>
       </tr>

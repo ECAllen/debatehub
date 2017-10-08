@@ -1,28 +1,56 @@
 
 <div class="row">
 	<div class="page-header">
-		<h1>Debatehub <small><%= motto %></small></h1>
+		<h1 class="text-center">Debatehub <small><%= motto %></small></h1>
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-9">
-		<%= partial("jumbotron.html") %> 
-		<% let lsections = ["news", "trends"] %>
-		<%= for (section) in lsections { %>
-		<div id="<%= section %>">
-			<%= partial(section + ".html") %> 
+	<div class="hidden-xs hidden-sm col-md-2">
+		<div>
+			<a class="twitter-timeline" data-width="500" data-height="768" href="https://twitter.com/DebateHubOrg">Tweets by DebateHubOrg</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 		</div>
-		<% } %>
-	</div>
-	<div class="col-md-3">
-		<!-- TODO make discord disappear on mobile and tablet -->
-		<!-- TODO make discord dimensions like jumbotron height -->
 		<div class="embed-responsive embed-responsive-350by500">
 			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" allowtransparency="true"></iframe>
 		</div>
-		<div>
-			<a class="twitter-timeline" data-width="500" data-height="350" href="https://twitter.com/DebateHubOrg">Tweets by DebateHubOrg</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+	</div>
+	<div class="col-md-8">
+		<div class="row">
+			<div class="col-md-5">
+				<% let lsections = ["news"] %>
+				<%= for (section) in lsections { %>
+				<div id="<%= section %>">
+					<%= partial(section + ".html") %> 
+				</div>
+				<% } %>
+			</div>
+			<div class="col-md-3">
+				<% let lsections = ["trends"] %>
+				<%= for (section) in lsections { %>
+				<div id="<%= section %>">
+					<%= partial(section + ".html") %> 
+				</div>
+				<% } %>
+			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-8">
+				<script type="text/javascript">
+amzn_assoc_placement = "adunit0";
+amzn_assoc_search_bar = "true";
+amzn_assoc_tracking_id = "ebatub-20";
+amzn_assoc_ad_mode = "manual";
+amzn_assoc_ad_type = "smart";
+amzn_assoc_marketplace = "amazon";
+amzn_assoc_region = "US";
+amzn_assoc_title = "My Amazon Picks";
+amzn_assoc_linkid = "d1822f2853bc1f61d05fba4209bc284f";
+amzn_assoc_asins = "B019KYLOKQ,1548650218,0767900464,1480284769,052138673X";
+				</script>
+				<script src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-2">
 		<% let rsections = ["blog", "speculations","warPulse", "radar", "reading"] %>
 		<%= for (section) in rsections { %>
 		<div id="<%= section %>">

@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
 
@@ -67,7 +68,6 @@ func App() *buffalo.App {
 				"Demagogues hate this website.",
 				"Elevating the new conciousness one debate at a time.",
 				"An opinionated platform.",
-				"Wolves not sheep.",
 				"Popping filter bubbles since 2017"}
 
 			// Set the sites motto to a random tag line.
@@ -100,16 +100,16 @@ func App() *buffalo.App {
 			}
 			c.Set("speculations", speculations)
 
-			return c.Render(200, r.HTML("index.html"))
+			return c.Render(200, r.HTML("index.html", "landing.html"))
 		})
 
 		app.GET("/blog", func(c buffalo.Context) error {
 			return c.Render(200, r.HTML("/blog/index.md"))
 		})
 
-		// TODO check this for injection
 		app.GET("/blog/{post}", func(c buffalo.Context) error {
-			return c.Render(200, r.HTML("blog/"+c.Param("post")+".md"))
+			path := fmt.Sprintf("blog/%s.md", c.Param("post"))
+			return c.Render(200, r.HTML(path))
 		})
 
 		app.GET("/mission", func(c buffalo.Context) error {
@@ -125,10 +125,12 @@ func App() *buffalo.App {
 		})
 
 		// Returns an error stack just to print out useful info.
-		app.GET("/context", func(c buffalo.Context) error {
-			err := errors.New("Context")
-			return errors.WithStack(err)
-		})
+		/*
+			app.GET("/context", func(c buffalo.Context) error {
+				err := errors.New("Context")
+				return errors.WithStack(err)
+			})
+		*/
 
 		// -----------------
 		//   Authentication
@@ -163,22 +165,22 @@ func App() *buffalo.App {
 		var pr buffalo.Resource
 		pr = &ProfilesResource{&buffalo.BaseResource{}}
 		profiles := app.Resource("/profiles", pr)
-		profiles.Use(CheckAuth, CheckAdmin)
-		profiles.Middleware.Skip(CheckAdmin, pr.Create, pr.Show, pr.Update, pr.Edit)
 		profiles.GET("/profile/{profile_id}", PublicProfile)
+		profiles.Use(CheckAuth, CheckAdmin)
+		profiles.Middleware.Skip(CheckAdmin, pr.Create, pr.Show, pr.Update, pr.Edit, PublicProfile)
+		profiles.Middleware.Skip(CheckAuth, PublicProfile)
 
 		// ------------------------
 		//   Email Subscriptions
 		// ------------------------
-
-		var er buffalo.Resource
-		er = &EmailsResource{&buffalo.BaseResource{}}
-		subscription := app.Resource("/emails", er)
-		subscription.Use(CheckAuth)
-		subscription.Middleware.Skip(CheckAuth, er.Create)
-		subscription.Middleware.Skip(CheckAdmin, er.Create)
-		// TODO fix this
-		// subscription.Middleware.Skip(middleware.CSRF, er.Create)
+		/*
+			var er buffalo.Resource
+			er = &EmailsResource{&buffalo.BaseResource{}}
+			subscription := app.Resource("/emails", er)
+			subscription.Use(CheckAuth)
+			subscription.Middleware.Skip(CheckAuth, er.Create)
+			subscription.Middleware.Skip(CheckAdmin, er.Create)
+		*/
 
 		// ------------------------
 		//  Articles
@@ -191,8 +193,7 @@ func App() *buffalo.App {
 		app.GET("/articles/submit", ArticleSubmit)
 		// authentication
 		articles := app.Group("/articles")
-		articles.Use(CheckAuth)
-		articles.Use(CheckAdmin)
+		articles.Use(CheckAuth, CheckAdmin)
 		articles.GET("/", ar.List)
 		articles.GET("/admin", ArticlesAdmin)
 		articles.GET("/new", ar.New)
@@ -210,14 +211,13 @@ func App() *buffalo.App {
 		// no authentication needed
 		app.GET("/trends/submit", TrendsSubmit)
 		app.POST("/trends", tr.Create)
+		app.GET("/trends", tr.List)
+		app.GET("/trends/new", tr.New)
+		app.GET("/trends/{trend_id}", tr.Show)
 		// authentication
 		trends := app.Group("/trends")
-		trends.Use(CheckAuth)
-		trends.Use(CheckAdmin)
-		trends.GET("/", tr.List)
+		trends.Use(CheckAuth, CheckAdmin)
 		trends.GET("/admin", TrendsAdmin)
-		trends.GET("/new", tr.New)
-		trends.GET("/{trend_id}", tr.Show)
 		trends.GET("/{trend_id}/edit", tr.Edit)
 		trends.PUT("/{trend_id}", tr.Update)
 		trends.DELETE("/{trend_id}", tr.Destroy)
@@ -231,14 +231,13 @@ func App() *buffalo.App {
 		// no authentication needed
 		app.GET("/speculations/submit", SpeculationsSubmit)
 		app.POST("/speculations", sp.Create)
+		app.GET("/speculations", sp.List)
+		app.GET("/new", sp.New)
+		app.GET("/speculations/{speculation_id}", sp.Show)
 		// authentication
 		speculations := app.Group("/speculations")
-		speculations.Use(CheckAuth)
-		speculations.Use(CheckAdmin)
-		speculations.GET("/", sp.List)
+		speculations.Use(CheckAuth, CheckAdmin)
 		speculations.GET("/admin", SpeculationsAdmin)
-		speculations.GET("/new", sp.New)
-		speculations.GET("/{speculation_id}", sp.Show)
 		speculations.GET("/{speculation_id}/edit", sp.Edit)
 		speculations.PUT("/{speculation_id}", sp.Update)
 		speculations.DELETE("/{speculation_id}", sp.Destroy)
@@ -274,8 +273,7 @@ func App() *buffalo.App {
 		var pt buffalo.Resource
 		pt = &PointsResource{&buffalo.BaseResource{}}
 		points := app.Resource("/points", pt)
-		points.Use(CheckAuth)
-		// profiles.Middleware.Skip(CheckAdmin, pr.Create, pr.Show, pr.Update, pr.Edit)
+		points.Use(CheckAuth, CheckAdmin)
 	}
 	return app
 }

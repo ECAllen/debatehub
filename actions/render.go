@@ -372,9 +372,10 @@ func init() {
 		// Add template helpers here:
 		Helpers: render.Helpers{
 			"Debate": func(opts tags.Options, help plush.HelperContext) (template.HTML, error) {
-
-				userUUID := help.Value("UserID").(uuid.UUID)
-				// userID := fmt.Sprintf("%s", userUUID)
+				userUUID := uuid.NewV4()
+				if help.Value("UserID") != nil {
+					userUUID = help.Value("UserID").(uuid.UUID)
+				}
 
 				ptree := help.Value("debate").(Ptree)
 				t, err := buildHTML(&ptree, 1, userUUID)
