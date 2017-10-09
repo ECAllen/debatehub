@@ -202,7 +202,7 @@ func ArticlesAdmin(c buffalo.Context) error {
 	// err := tx.All(articles)
 	// to:
 	// err := tx.Order("create_at desc").All(articles)
-	err := tx.Where("reject = false").Where("publish = false").All(articles)
+	err := tx.All(articles)
 	if err != nil {
 		return errors.WithStack(err)
 	}

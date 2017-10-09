@@ -9,11 +9,11 @@
 <div class="media">
 	<div class="media-left media-middle">
 		<a href="<%= article.Url %>">
-			<img class="media-object" src="<%= article.Thumbnail %>" alt="thumbnail" style="width:60px">
+			<img class="media-object" src="<%= article.Thumbnail %>" alt="" style="width:60px">
 		</a>
 	</div>
 	<div class="media-body">
-		<h4 class="media-heading"><%= article.Headline %></h4>
+		<h4 class="media-heading"><a href="<%= article.Url %>"><%= article.Headline %></a></h4>
 		<%= article.Description %>
 	</div>
 </div>
