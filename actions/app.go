@@ -213,11 +213,11 @@ func App() *buffalo.App {
 		app.POST("/trends", tr.Create)
 		app.GET("/trends", tr.List)
 		app.GET("/trends/new", tr.New)
-		app.GET("/trends/{trend_id}", tr.Show)
 		// authentication
 		trends := app.Group("/trends")
 		trends.Use(CheckAuth, CheckAdmin)
 		trends.GET("/admin", TrendsAdmin)
+		trends.GET("/{trend_id}", tr.Show)
 		trends.GET("/{trend_id}/edit", tr.Edit)
 		trends.PUT("/{trend_id}", tr.Update)
 		trends.DELETE("/{trend_id}", tr.Destroy)

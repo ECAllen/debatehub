@@ -198,7 +198,7 @@ func TrendsAdmin(c buffalo.Context) error {
 	// err := tx.All(trends)
 	// to:
 	// err := tx.Order("create_at desc").All(trends)
-	err := tx.Where("reject = false").Where("publish = false").All(trends)
+	err := tx.All(trends)
 	if err != nil {
 		return errors.WithStack(err)
 	}
