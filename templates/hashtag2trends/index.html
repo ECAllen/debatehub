@@ -1,0 +1,31 @@
+<h1>Hashtag2trends</h1>
+<p>
+  <a href="<%= newHashtag2trendsPath() %>" class="btn btn-primary">Create New Hashtag2trend</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Trend</th>
+    <th>Hashtag</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (hashtag2trend) in hashtag2trends { %>
+      <tr>
+      <td><%= hashtag2trend.Trend %></td>
+        <td><%= hashtag2trend.Hashtag %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= hashtag2trendPath({ hashtag2trend_id: hashtag2trend.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editHashtag2trendPath({ hashtag2trend_id: hashtag2trend.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= hashtag2trendPath({ hashtag2trend_id: hashtag2trend.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

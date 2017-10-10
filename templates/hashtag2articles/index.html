@@ -1,0 +1,31 @@
+<h1>Hashtag2articles</h1>
+<p>
+  <a href="<%= newHashtag2articlesPath() %>" class="btn btn-primary">Create New Hashtag2article</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>Hashtag</th>
+    <th>Article</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (hashtag2article) in hashtag2articles { %>
+      <tr>
+      <td><%= hashtag2article.Hashtag %></td>
+        <td><%= hashtag2article.Article %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= hashtag2articlePath({ hashtag2article_id: hashtag2article.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editHashtag2articlePath({ hashtag2article_id: hashtag2article.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= hashtag2articlePath({ hashtag2article_id: hashtag2article.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

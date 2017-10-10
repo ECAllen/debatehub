@@ -1,26 +1,19 @@
 <h1>Trends</h1>
 
 <p>
-  <a href="<%= newTrendsPath() %>" class="btn btn-primary">Create New Trend</a>
+<a href="<%= newTrendsPath() %>" class="btn btn-primary">Create New Trend</a>
 </p>
 
-<table class="table table-striped">
-  <thead>
-  <th>Summary</th>
-    <th>Description</th>
-    <th>&nbsp;</th>
-  </thead>
-  <tbody>
-    <%= for (trend) in trends { %>
-      <tr>
-      <td><%= trend.Summary %></td>
-        <td><%= trend.Description %></td>
-        <td>
-          <div class="pull-right">
-            <a href="<%= trendPath({ trend_id: trend.ID }) %>" class="btn btn-info">View</a>
-          </div>
-        </td>
-      </tr>
-    <% } %>
-  </tbody>
-</table>
+<%= for (trend) in trends { %>
+<div class="media">
+	<div class="media-left media-middle">
+		<a href="<%= trendPath({trend_id : trend.ID}) %> ">
+			<img class="media-object" src="<%= trend.Thumbnail %>" alt="<%= trend.Summary %><" style="width:60px">
+		</a>
+	</div>
+	<div class="media-body">
+		<h4 class="media-heading"><a href="<%= trendPath({trend_id : trend.ID}) %> "><%= trend.Summary %></a></h4>
+		<%= trend.Description %>
+	</div>
+</div>
+<% } 

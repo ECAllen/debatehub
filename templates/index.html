@@ -6,6 +6,12 @@
 </div>
 <div class="row">
 	<div class="hidden-xs hidden-sm col-md-2">
+		<% let lsections = ["debates"] %>
+		<%= for (section) in lsections { %>
+		<div id="<%= section %>">
+			<%= partial(section + ".html") %> 
+		</div>
+		<% } %>
 		<div>
 			<a class="twitter-timeline" data-width="500" data-height="768" href="https://twitter.com/DebateHubOrg">Tweets by DebateHubOrg</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 		</div>
@@ -16,16 +22,16 @@
 	<div class="col-md-8">
 		<div class="row">
 			<div class="col-md-6">
-				<% let lsections = ["news"] %>
-				<%= for (section) in lsections { %>
+				<% let lmsections = ["news"] %>
+				<%= for (section) in lmsections { %>
 				<div id="<%= section %>">
 					<%= partial(section + ".html") %> 
 				</div>
 				<% } %>
 			</div>
 			<div class="col-md-6">
-				<% let lsections = ["trends"] %>
-				<%= for (section) in lsections { %>
+				<% let rmsections = ["trends"] %>
+				<%= for (section) in rmsections { %>
 				<div id="<%= section %>">
 					<%= partial(section + ".html") %> 
 				</div>

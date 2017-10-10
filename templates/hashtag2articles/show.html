@@ -1,0 +1,14 @@
+<h1>Hashtag2article#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= hashtag2articlesPath() %>" class="btn btn-info">Back to all Hashtag2articles</a></li>
+  <li><a href="<%= editHashtag2articlePath({ hashtag2article_id: hashtag2article.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= hashtag2articlePath({ hashtag2article_id: hashtag2article.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Hashtag</strong>: <%= hashtag2article.Hashtag %>
+</p>
+<p>
+  <strong>Article</strong>: <%= hashtag2article.Article %>
+</p>

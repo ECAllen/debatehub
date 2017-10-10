@@ -1,0 +1,6 @@
+<h1>Edit Hashtag2trend</h1>
+
+<%= form_for(hashtag2trend, {action: hashtag2trendPath({ hashtag2trend_id: hashtag2trend.ID }), method: "PUT"}) { %>
+  <%= partial("hashtag2trends/form.html") %>
+  <a href="<%= hashtag2trendsPath({ hashtag2trend_id: hashtag2trend.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

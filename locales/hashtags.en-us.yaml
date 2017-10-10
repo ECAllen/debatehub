@@ -1,0 +1,6 @@
+- id: "hashtags.created.success"
+  translation: "Hashtag was successfully created."
+- id: "hashtags.updated.success"
+  translation: "Hashtag was successfully updated."
+- id: "hashtags.destroyed.success"
+  translation: "Hashtag was successfully destroyed."

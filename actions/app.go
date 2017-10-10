@@ -100,6 +100,133 @@ func App() *buffalo.App {
 			}
 			c.Set("speculations", speculations)
 
+			// for Debate Roll
+			type PointInfo struct {
+				models.Point
+				models.Profile
+				models.Debate
+			}
+
+			pinfos := []PointInfo{}
+
+			points := []models.Point{}
+			err = tx.Order("updated_at desc").Limit(7).All(&points)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+
+			for _, point := range points {
+				// Check if there is a profile associated
+				// with this point ID.
+				profile2point := &models.Profiles2point{}
+				q := tx.Where("point = ?", point.ID)
+				exists, err := q.Exists(profile2point)
+				if err != nil {
+					return errors.WithStack(err)
+				}
+
+				// If there is a profile then get it
+				profile := models.Profile{}
+
+				if exists {
+					err = q.First(profile2point)
+					if err != nil {
+						return errors.WithStack(err)
+					}
+
+					err = tx.Find(&profile, profile2point.Profile)
+					if err != nil {
+						return errors.WithStack(err)
+					}
+				}
+
+				// Check for the existence of counter
+				// points for the debate in the debates2point
+				// table.
+				debates2point := &models.Debates2point{}
+				q = tx.Where("point = ?", point.ID)
+				exists, err = q.Exists(debates2point)
+				if err != nil {
+					return errors.WithStack(err)
+				}
+
+				debate := models.Debate{}
+
+				if exists {
+					err = q.First(debates2point)
+					if err != nil {
+						return errors.WithStack(err)
+					}
+
+					err = tx.Find(&debate, debates2point.Debate)
+					if err != nil {
+						return errors.WithStack(err)
+					}
+				} else {
+					// point is counter point
+					// check if this point has any counterpoints
+					p2c := &models.Points2counterpoint{}
+					q = tx.Where("counterpoint = ?", point.ID)
+					exists, err = q.Exists(p2c)
+					if err != nil {
+						return errors.WithStack(err)
+					}
+
+					if exists {
+						err = q.First(p2c)
+						if err != nil {
+							return errors.WithStack(err)
+						}
+
+						// check parent exists
+						parent := models.Point{}
+
+						q = tx.Where("ID = ?", p2c.Point)
+						exists, err = q.Exists(parent)
+						if err != nil {
+							return errors.WithStack(err)
+						}
+
+						if exists {
+							err = tx.Find(&parent, p2c.Point)
+							if err != nil {
+								return errors.WithStack(err)
+							}
+
+							q = tx.Where("point = ?", point.ID)
+							exists, err = q.Exists(debates2point)
+							if err != nil {
+								return errors.WithStack(err)
+							}
+
+							if exists {
+								err = q.First(debates2point)
+								if err != nil {
+									return errors.WithStack(err)
+								}
+
+								err = tx.Find(&debate, debates2point.Debate)
+								if err != nil {
+									return errors.WithStack(err)
+								}
+							}
+						}
+					}
+				}
+
+				// set vars
+				pinfo := PointInfo{}
+				pinfo.Point = point
+				pinfo.Profile = profile
+				pinfo.Debate = debate
+
+				// append to pinfos
+				pinfos = append(pinfos, pinfo)
+
+			}
+
+			c.Set("points", pinfos)
+
 			return c.Render(200, r.HTML("index.html", "landing.html"))
 		})
 
@@ -274,6 +401,9 @@ func App() *buffalo.App {
 		pt = &PointsResource{&buffalo.BaseResource{}}
 		points := app.Resource("/points", pt)
 		points.Use(CheckAuth, CheckAdmin)
+		app.Resource("/hashtags", HashtagsResource{&buffalo.BaseResource{}})
+		app.Resource("/hashtag2articles", Hashtag2articlesResource{&buffalo.BaseResource{}})
+		app.Resource("/hashtag2trends", Hashtag2trendsResource{&buffalo.BaseResource{}})
 	}
 	return app
 }

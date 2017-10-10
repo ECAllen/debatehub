@@ -1,0 +1,14 @@
+<h1>Hashtag2trend#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= hashtag2trendsPath() %>" class="btn btn-info">Back to all Hashtag2trends</a></li>
+  <li><a href="<%= editHashtag2trendPath({ hashtag2trend_id: hashtag2trend.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= hashtag2trendPath({ hashtag2trend_id: hashtag2trend.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Trend</strong>: <%= hashtag2trend.Trend %>
+</p>
+<p>
+  <strong>Hashtag</strong>: <%= hashtag2trend.Hashtag %>
+</p>

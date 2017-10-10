@@ -1,0 +1,27 @@
+<h1>Hashtags</h1>
+<p>
+  <a href="<%= newHashtagsPath() %>" class="btn btn-primary">Create New Hashtag</a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+  <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (hashtag) in hashtags { %>
+      <tr>
+      <td>
+          <div class="pull-right">
+            <a href="<%= hashtagPath({ hashtag_id: hashtag.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editHashtagPath({ hashtag_id: hashtag.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= hashtagPath({ hashtag_id: hashtag.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

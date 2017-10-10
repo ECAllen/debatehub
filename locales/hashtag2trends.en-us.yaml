@@ -1,0 +1,6 @@
+- id: "hashtag2trends.created.success"
+  translation: "Hashtag2trend was successfully created."
+- id: "hashtag2trends.updated.success"
+  translation: "Hashtag2trend was successfully updated."
+- id: "hashtag2trends.destroyed.success"
+  translation: "Hashtag2trend was successfully destroyed."

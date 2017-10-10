@@ -8,14 +8,13 @@
 <%= for (trend) in trends { %>
 <div class="media">
 	<div class="media-left media-middle">
-		<!-- TODO figure out what the trend page will be -->
 		<a href="">
 			<img class="media-object" src="<%= trend.Thumbnail %>" alt="" style="width:60px">
 		</a>
 	</div>
 	<div class="media-body">
-		<h4 class="media-heading"><%= trend.Summary %></h4>
+		<h4 class="media-heading"><a href=" <%= trendPath({trend_id : trend.ID}) %> "><%= trend.Summary %></a></h4>
 		<%= trend.Description %>
 	</div>
 </div>
-<% } %>
+<% } 
