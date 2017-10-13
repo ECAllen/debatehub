@@ -6,8 +6,9 @@
 </div>
 <div class="row">
 	<div class="hidden-xs hidden-sm col-md-2">
-		<% let lsections = ["debates"] %>
-		<%= for (section) in lsections { %>
+
+		<% let rmsections = ["trends"] %>
+		<%= for (section) in rmsections { %>
 		<div id="<%= section %>">
 			<%= partial(section + ".html") %> 
 		</div>
@@ -15,9 +16,7 @@
 		<div>
 			<a class="twitter-timeline" data-width="500" data-height="768" href="https://twitter.com/DebateHubOrg">Tweets by DebateHubOrg</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 		</div>
-		<div class="embed-responsive embed-responsive-350by500">
-			<iframe src="https://discordapp.com/widget?id=315719137508982786&theme=dark" allowtransparency="true"></iframe>
-		</div>
+		<%= partial("discord.html") %> 
 	</div>
 	<div class="col-md-8">
 		<div class="row">
@@ -30,8 +29,8 @@
 				<% } %>
 			</div>
 			<div class="col-md-6">
-				<% let rmsections = ["trends"] %>
-				<%= for (section) in rmsections { %>
+				<% let lsections = ["debates"] %>
+				<%= for (section) in lsections { %>
 				<div id="<%= section %>">
 					<%= partial(section + ".html") %> 
 				</div>
@@ -40,12 +39,12 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12" align="center">
-					<%= partial("amazon.html") %> 
+				<%= partial("amazon.html") %> 
 			</div>
 		</div>
 	</div>
 	<div class="col-md-2">
-		<% let rsections = ["blog", "speculations","warPulse", "radar", "reading"] %>
+		<% let rsections = ["warPulse", "radar", "reading"] %>
 		<%= for (section) in rsections { %>
 		<div id="<%= section %>">
 			<%= partial(section + ".html") %> 

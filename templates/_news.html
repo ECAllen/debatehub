@@ -1,19 +1,19 @@
 
 <h2>News|Data
 	<small>
-		<a class="btn btn-default btn-xs" href="/articles/submit">submit</a>
+		<a class="btn btn-success btn-xs" href="/articles/submit">submit article</a>
 	</small>
 </h2>
-
+<hr>
 <%= for (article) in articles { %>
 <div class="media">
 	<div class="media-left media-middle">
-		<a href="<%= article.Url %>">
+		<a target="_blank" href="<%= article.Url %>">
 			<img class="media-object" src="<%= article.Thumbnail %>" alt="" style="width:60px">
 		</a>
 	</div>
 	<div class="media-body">
-		<h4 class="media-heading"><a href="<%= article.Url %>"><%= article.Headline %></a></h4>
+		<h4 class="media-heading"><a target="_blank" href="<%= article.Url %>"><%= article.Headline %></a></h4>
 		<%= article.Description %>
 	</div>
 </div>

@@ -289,10 +289,10 @@ func App() *buffalo.App {
 		// ------------------
 		app.GET("/profiles/submit", ProfilesSubmit)
 		app.GET("/profiles/user", ProfileUserShow)
+		app.GET("/profiles/profile/{profile_id}", PublicProfile)
 		var pr buffalo.Resource
 		pr = &ProfilesResource{&buffalo.BaseResource{}}
 		profiles := app.Resource("/profiles", pr)
-		profiles.GET("/profile/{profile_id}", PublicProfile)
 		profiles.Use(CheckAuth, CheckAdmin)
 		profiles.Middleware.Skip(CheckAdmin, pr.Create, pr.Show, pr.Update, pr.Edit, PublicProfile)
 		profiles.Middleware.Skip(CheckAuth, PublicProfile)

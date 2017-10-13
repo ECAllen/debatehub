@@ -1,23 +1,18 @@
 
-<div class="panel panel-default">
-	<div class="panel-body">
 		<h2><a href="/debate_pages">Debates</a></h2>
 		<hr>
 		<%= for (point) in points  { %>
-		<div class="panel-heading row">
-			<div class="col-xs-4">
-				<h5 class="panel-title text-left">
-					<strong><a class="profile" href="/profiles/profile/<%= point.Profile.ID %>"><%= point.Profile.NickName %></a></strong>
-				</h5>
-			</div>
-			<div class="col-xs-4 text-center"></div>
-			<div class="col-xs-4">
-				<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="pull-right twitter-share-button" data-text="<%= point.Point.Topic %>" data-url="https://debatehub.org/debate_pages/<%= point.Debate.ID %>" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-			</div>
-		</div>
-		<p><%= point.Point.Topic %></p>
-		<p><bold>debate:</bold> <em><a href="/debate_pages/<%= point.Debate.ID %>"><%= point.Debate.Title %></a></em></p>
+		<blockquote>
+			<%= point.Point.Topic %>
+			<footer>
+				<span class="glyphicon glyphicon-user" aria-hidden="true"></span><strong><a class="profile" href="/profiles/profile/<%= point.Profile.ID %>"><%= point.Profile.NickName %></a></strong>
+				<cite title="From Debate">
+					<p>from debate: <em><a href="/debate_pages/<%= point.Debate.ID %>"><%= point.Debate.Title %></a></em></p>
+					<div class="pull-right">
+						<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="pull-right twitter-share-button" data-text="<%= point.Point.Topic %>" data-url="https://debatehub.org/debate_pages/<%= point.Debate.ID %>" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+					</div>
+				</cite>
+			</footer>	
+		</blockquote>
 		<hr>
 		<% } %>
-	</div>
-</div>

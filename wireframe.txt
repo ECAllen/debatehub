@@ -6,7 +6,6 @@ buffalo g resource trends summary description thumbnail:nulls.Text publish:nulls
 
 buffalo g resource articles url description:nulls.Text type thumbnail:nulls.Text publish:nulls.Bool reject:nulls.Bool
 
-
 buffalo g resource debates topic:Text
 
 buffalo g resource points topic:Text rank:int
@@ -28,3 +27,11 @@ buffalo g resource debate2thread debate:uuid thread:uuid
 buffalo g resource thread2counterthread thread:uuid counterthread:uuid 
 
 buffalo g resource profile2thread profile:uuid thread:uuid 
+
+buffalo g resource hashtag tag:Text
+
+buffalo g resource hashtag2article hashtag:uuid article:uuid 
+
+buffalo g resource hashtag2trend trend:uuid hashtag:uuid 
+
+

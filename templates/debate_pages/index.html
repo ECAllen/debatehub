@@ -1,23 +1,17 @@
-<h1>Debates</h1>
-<h2>IN BETA: ping therewillbewar in the discord chat, or contact below with suggestions.</h2>
+<h2>Debates - IN BETA: feel free to <a href="/blog/contact">contact</a> us with any ideas or issues.</h2>
 <p>
 <a href="<%= newDebatePagesPath() %>" class="btn btn-primary">Create New Debate</a>
 </p>
 
-<table class="table table-striped">
+<table class="table">
 	<thead>
-		<th>&nbsp;</th>
+		<th>Debate Topic</th>
 	</thead>
 	<tbody>
 		<%= for (debate) in debates { %>
 		<tr>
 			<td>
-				<p><%= debate.Topic %></p>
-			</td>
-			<td>
-				<div class="pull-right">
-					<a href="<%= debatePagePath({ debate_page_id: debate.ID }) %>" class="btn btn-info">View</a>
-				</div>
+				<p><a href="<%= debatePagePath({ debate_page_id: debate.ID }) %>"><%= debate.Topic %></a></p>
 			</td>
 		</tr>
 		<% } %>

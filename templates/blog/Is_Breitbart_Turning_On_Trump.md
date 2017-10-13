@@ -1,4 +1,13 @@
 ## Is Breitbart turning on Trump?
+(10/11/17) Update
+
+It is still unclear were the Trump Bannon relationship stands. Bannon has stated that he wants to [remake the Republican party](http://prospect.org/article/steve-bannon-unleashed). My guess is that the Trump Bannon relationship depends on how much Trump furthers this aim. 
+
+
+(09/24/17) Update
+Things were going good for a while but now there seems to have been another falling out between Breitbart and Trump over Trump’s endorsement of Luther Strange. Breitbart has been equating the endorsement as the Swamp getting to Trump. Now zerohedge.com is reporting that a Breitbart reporter was barred from a Trump-Strange rally.
+
+
 (08/22/2017)
 
 Bannon has been out of the Whitehouse for a few days now. When he exited he says he is [going to war for Trump](https://www.bloomberg.com/news/articles/2017-08-18/bannon-says-he-s-going-to-war-for-trump-after-white-house-exit). However it was not clear from his statement whether he meant Trump or Trump's campaign agenda. [Ben Shapiro](http://www.dailywire.com/podcasts/19983/ep-366-everyones-nazi-now) (who used to work for Bannon) conjectured in his podcast that Bannon is a fighter and would turn on Trump if it benefited Bannon's populist agenda. It looks like this might be happening. 
