@@ -140,78 +140,10 @@ func App() *buffalo.App {
 					}
 				}
 
-				// Check for the existence of counter
-				// points for the debate in the debates2point
-				// table.
-				debates2point := &models.Debates2point{}
-				q = tx.Where("point = ?", point.ID)
-				exists, err = q.Exists(debates2point)
+				// Get the debate assoicted with this point.
+				debate, err := Point2Debate(point.ID, tx)
 				if err != nil {
 					return errors.WithStack(err)
-				}
-
-				debate := models.Debate{}
-
-				if exists {
-					err = q.First(debates2point)
-					if err != nil {
-						return errors.WithStack(err)
-					}
-
-					err = tx.Find(&debate, debates2point.Debate)
-					if err != nil {
-						return errors.WithStack(err)
-					}
-				} else {
-					// point is counter point
-					// check if this point has any counterpoints
-					p2c := &models.Points2counterpoint{}
-					q = tx.Where("counterpoint = ?", point.ID)
-					exists, err = q.Exists(p2c)
-					if err != nil {
-						return errors.WithStack(err)
-					}
-
-					if exists {
-						err = q.First(p2c)
-						if err != nil {
-							return errors.WithStack(err)
-						}
-
-						// check parent exists
-						parent := models.Point{}
-
-						q = tx.Where("ID = ?", p2c.Point)
-						exists, err = q.Exists(parent)
-						if err != nil {
-							return errors.WithStack(err)
-						}
-
-						if exists {
-							err = tx.Find(&parent, p2c.Point)
-							if err != nil {
-								return errors.WithStack(err)
-							}
-
-							q = tx.Where("point = ?", point.ID)
-							exists, err = q.Exists(debates2point)
-							if err != nil {
-								return errors.WithStack(err)
-							}
-
-							if exists {
-								err = q.First(debates2point)
-								if err != nil {
-									return errors.WithStack(err)
-								}
-
-								err = tx.Find(&debate, debates2point.Debate)
-								if err != nil {
-									return errors.WithStack(err)
-								}
-							}
-						}
-					}
 				}
 
 				// set vars
