@@ -513,3 +513,34 @@ func PointDestroy(c buffalo.Context) error {
 	// Redirect to the points index page
 	return c.Redirect(302, "/debate_pages/%s", c.Param("debate_page_id"))
 }
+
+func Article(c buffalo.Context) error {
+	// get param
+	title := c.Param("title")
+
+	// lookup up debate by article title
+	debate := &models.Debate{}
+	tx := c.Value("tx").(*pop.Connection)
+	q := tx.Where("title = ?", title)
+	exists, err := q.Exists(debate)
+	if err != nil {
+		return errors.WithStack(err)
+
+	}
+
+	// If exists then route to debate id.
+	if exists {
+		// Then lookup debate
+		err = q.First(debate)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		return c.Redirect(302, "/debate_pages/%s", debate.ID)
+	}
+
+	// Make debate available inside the html template
+	debate.Title = title
+	debate.Topic = title
+	c.Set("debate", debate)
+	return c.Render(200, r.HTML("debate_pages/newArticle.html"))
+}

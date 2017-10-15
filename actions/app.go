@@ -317,6 +317,7 @@ func App() *buffalo.App {
 		debate_pages.GET("/", db.List)
 		debate_pages.POST("/", db.Create)
 		debate_pages.GET("/new", db.New)
+		debate_pages.GET("/article", Article)
 		debate_pages.GET("/{debate_page_id}", db.Show)
 		debate_pages.GET("/{debate_page_id}/edit", db.Edit)
 		debate_pages.POST("/{debate_page_id}/addpoint", AddPoint)
@@ -324,7 +325,6 @@ func App() *buffalo.App {
 		debate_pages.POST("/{debate_page_id}/addthread", AddThread)
 		debate_pages.PUT("/{debate_page_id}", db.Update)
 		debate_pages.DELETE("/{debate_page_id}", db.Destroy)
-
 		debate_pages.GET("/{point_id}/pointedit", PointEdit)
 		debate_pages.PUT("/{point_id}/pointupdate", PointUpdate)
 		debate_pages.DELETE("/{point_id}/pointdestroy", PointDestroy)
