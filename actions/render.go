@@ -48,7 +48,7 @@ var forumCounterThreadHTML = `
      <div class="media-body">
          <small><strong><a class="profile" href="/profiles/profile/{{.Profile.ID}}">{{.Profile.NickName}}</a></strong></small>
          <p>{{.Topic}}</p>
-	 <button class="btn btn-default btn-xs point-button" value="{{.Thread.ID}}">reply</button>`
+	 <button class="btn btn-default btn-xs point-button" value="f{{.Thread.ID}}f">reply</button>`
 
 var forumCounterThreadEndHTML = `
      </div> <!-- close media body -->
@@ -392,17 +392,6 @@ func init() {
 				t.Append(s)
 				return t.HTML(), nil
 			},
-			/*
-				"DebateRoll": func(opts tags.Options, help plush.HelperContext) (template.HTML, error) {
-					debateRoll := help.Value("debateRoll").(Ptree)
-					t, err := buildHTML(&ptree, 1, userUUID)
-					if err != nil {
-						return t, errors.WithStack(err)
-					}
-					// return template.HTML(p), nil
-					return t, nil
-				},
-			*/
 		},
 	})
 }

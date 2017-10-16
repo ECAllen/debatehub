@@ -2,6 +2,6 @@
 
 <%= form_for(point, {action: action, method: "PUT"}) { %>
   <%= partial("debate_pages/pointEditForm.html") %>
-  <a href="<%= debatePagePath({ debate_page_id : debate_page_id }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+  <a href="<%= debatePagePath({ debate_page_id : debate_id }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
 <% } %>
 

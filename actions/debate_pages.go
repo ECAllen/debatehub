@@ -449,6 +449,7 @@ func PointEdit(c buffalo.Context) error {
 	action := fmt.Sprintf("/debate_pages/%s/pointupdate?debate_page_id=%s", point.ID, debate_page_id)
 	c.Set("point", point)
 	c.Set("action", action)
+	c.Set("debate_id", debate_page_id)
 	return c.Render(200, r.HTML("debate_pages/pointedit.html"))
 }
 
@@ -497,6 +498,8 @@ func PointUpdate(c buffalo.Context) error {
 func PointDestroy(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx := c.Value("tx").(*pop.Connection)
+
+	// TODO wrap in one transaction
 	// Allocate an empty Point
 	point := &models.Point{}
 	// To find the Point the parameter point_id is used.
@@ -504,10 +507,75 @@ func PointDestroy(c buffalo.Context) error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
+
+	q := tx.Where("point = ?", point.ID)
+
+	// Check it point in debate to points table and destroy.
+	debate2point := []models.Debates2point{}
+	exists, err := q.Exists(debate2point)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if exists {
+		err = q.All(&debate2point)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		for _, p := range debate2point {
+			err = tx.Destroy(&p)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+		}
+	}
+
+	// Check if point in points to counterpoints table
+	// and destroy all.
+	point2counterpoints := []models.Points2counterpoint{}
+	exists, err = q.Exists(point2counterpoints)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if exists {
+		err := q.All(&point2counterpoints)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		for _, p := range point2counterpoints {
+			err = tx.Destroy(&p)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+		}
+	}
+
+	q = tx.Where("counterpoint = ?", point.ID)
+	exists, err = q.Exists(point2counterpoints)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if exists {
+		err := q.All(&point2counterpoints)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		for _, p := range point2counterpoints {
+			err = tx.Destroy(&p)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+		}
+	}
+
 	err = tx.Destroy(point)
 	if err != nil {
 		return errors.WithStack(err)
 	}
+
 	// If there are no errors set a flash message
 	c.Flash().Add("success", "Point was destroyed successfully")
 	// Redirect to the points index page
