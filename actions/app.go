@@ -183,6 +183,10 @@ func App() *buffalo.App {
 			return c.Render(200, r.Plain("/robots.txt"))
 		})
 
+		app.GET("/sitemap.txt", func(c buffalo.Context) error {
+			return c.Render(200, r.Plain("/sitemap.txt"))
+		})
+
 		// Returns an error stack just to print out useful info.
 		/*
 			app.GET("/context", func(c buffalo.Context) error {
