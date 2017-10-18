@@ -1,0 +1,13 @@
+<div class="page-header">
+  <h1>Suggestion#Show</h1>
+</div>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= suggestionsPath() %>" class="btn btn-info">Back to all Suggestions</a></li>
+  <li><a href="<%= editSuggestionPath({ suggestion_id: suggestion.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= suggestionPath({ suggestion_id: suggestion.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Suggestion</strong>: <%= suggestion.Suggestion %>
+</p>

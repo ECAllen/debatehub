@@ -45,6 +45,9 @@ func (v DebatePagesResource) Show(c buffalo.Context) error {
 	// Setup
 	// ==================================
 
+	suggestion := &models.Suggestion{}
+	c.Set("suggestion", suggestion)
+
 	// Get params
 	debate_id := c.Param("debate_page_id")
 	tx := c.Value("tx").(*pop.Connection)

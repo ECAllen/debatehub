@@ -115,3 +115,7 @@ body { padding-top: 50px; }
 .top {
 	background-color: #f5f5f5;
 }
+
+.top-header {
+	display: inline-block;
+}

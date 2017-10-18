@@ -117,6 +117,27 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 		} else {
 			c.Set("loggedin", false)
 		}
+
+		session := c.Session()
+		curr := c.Value("current_path").(string)
+		var history []string
+		if h := session.Get("History"); h != nil {
+			history = h.([]string)
+			i := len(history) - 1
+			c.Set("previous_path", history[i])
+		} else {
+			c.Set("previous_path", curr)
+		}
+
+		history = append(history, curr)
+		session.Set("History", history)
+		err := session.Save()
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		// fmt.Printf("\ncurrent: %v\nprevious: %v\n", c.Value("current_path"), c.Value("previous_path"))
+
 		return next(c)
 	}
 }

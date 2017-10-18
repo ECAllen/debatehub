@@ -76,6 +76,9 @@ func App() *buffalo.App {
 			// Get the DB connection from the context
 			tx := c.Value("tx").(*pop.Connection)
 
+			suggestion := &models.Suggestion{}
+			c.Set("suggestion", suggestion)
+
 			// query for all published articles
 			articles := &models.Articles{}
 			err := tx.Where("reject = false").Where("publish = true").Order("updated_at desc").All(articles)
@@ -337,9 +340,13 @@ func App() *buffalo.App {
 		pt = &PointsResource{&buffalo.BaseResource{}}
 		points := app.Resource("/points", pt)
 		points.Use(CheckAuth, CheckAdmin)
-		app.Resource("/hashtags", HashtagsResource{&buffalo.BaseResource{}})
-		app.Resource("/hashtag2articles", Hashtag2articlesResource{&buffalo.BaseResource{}})
-		app.Resource("/hashtag2trends", Hashtag2trendsResource{&buffalo.BaseResource{}})
+
+		var sg buffalo.Resource
+		sg = &SuggestionsResource{&buffalo.BaseResource{}}
+		suggestions := app.Group("/suggestions")
+		suggestions.POST("/", sg.Create)
+		suggestions.Use(CheckAuth, CheckAdmin)
+		suggestions.GET("/", sg.List)
 	}
 	return app
 }

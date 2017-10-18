@@ -1,0 +1,6 @@
+- id: "suggestions.created.success"
+  translation: "Suggestion was successfully created."
+- id: "suggestions.updated.success"
+  translation: "Suggestion was successfully updated."
+- id: "suggestions.destroyed.success"
+  translation: "Suggestion was successfully destroyed."
