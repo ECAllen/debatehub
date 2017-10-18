@@ -43,7 +43,7 @@
 		</div>
 	</div>
 	<div class="col-md-2">
-		<% let rsections = ["warPulse", "radar", "reading"] %>
+		<% let rsections = ["radar", "warPulse"] %>
 		<%= for (section) in rsections { %>
 		<div id="<%= section %>">
 			<%= partial(section + ".html") %> 

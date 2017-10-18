@@ -153,7 +153,6 @@ var debateTmpl, _ = template.New("Debate").Parse(debateHTML)
 var debateButtonTmpl, _ = template.New("DebateButton").Parse(debateButtonHTML)
 var debateFormTmpl, _ = template.New("Form").Parse(debateFormHTML)
 
-// TODO not DRY... refactor
 func buildHTML(ptree *Ptree, level int, userUUID uuid.UUID) (template.HTML, error) {
 
 	// Slice to hold the templates and tags.

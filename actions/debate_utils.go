@@ -12,6 +12,7 @@ import (
 type Ptree struct {
 	models.Point
 	models.Profile
+	// TODO add models.Debate
 	DebateID uuid.UUID
 	Token    string
 	Children []Ptree
@@ -48,7 +49,7 @@ func Point2Debate(id uuid.UUID, tx *pop.Connection) (models.Debate, error) {
 	debate := models.Debate{}
 
 	// If UUID os 0 then null model and just
-	// return to avoind infinite loop.
+	// return to avoid infinite loop.
 	blank, err := uuid.FromString("00000000-0000-0000-0000-000000000000")
 	if err != nil {
 		return debate, errors.WithStack(err)
