@@ -347,6 +347,11 @@ func App() *buffalo.App {
 		suggestions.POST("/", sg.Create)
 		suggestions.Use(CheckAuth, CheckAdmin)
 		suggestions.GET("/", sg.List)
+		suggestions.DELETE("/{suggestion_id}", sg.Destroy)
+
+		app.GET("/{path:.+}", func(c buffalo.Context) error {
+			return c.Redirect(302, "/")
+		})
 	}
 	return app
 }

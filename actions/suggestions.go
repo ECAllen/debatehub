@@ -112,7 +112,7 @@ func (v SuggestionsResource) Create(c buffalo.Context) error {
 	}
 
 	// If there are no errors set a success message
-	c.Flash().Add("success", "Thank you for the suggestion. Contact debatehub@protonmail.com if you would like us to follow-up.")
+	c.Flash().Add("success", "Thank you. Contact debatehub@protonmail.com if you would like us to follow-up with you.")
 
 	// and redirect to the suggestions index page
 	return c.Redirect(302, c.Value("previous_path").(string))
